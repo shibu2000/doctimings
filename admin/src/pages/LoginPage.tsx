@@ -60,7 +60,7 @@ export const LoginPage: React.FC = () => {
               : 'bg-red-50 text-red-700 border-red-200'
           }`}>
             <span className={`w-2 h-2 rounded-full ${isBackendConnected ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></span>
-            <span>{isBackendConnected ? 'Backend Live' : 'Backend Offline (Port 4000)'}</span>
+            <span>{isBackendConnected ? 'Backend Live' : 'Backend Offline'}</span>
           </div>
         </div>
       </header>

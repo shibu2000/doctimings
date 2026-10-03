@@ -1,4 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://doctimings-api.docnear.workers.dev/api/v1' : 'http://localhost:4000/api/v1');
+const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (import.meta.env.PROD) {
+    if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+      return 'https://doctimings-api.docnear.workers.dev/api/v1';
+    }
+    return envUrl;
+  }
+  return envUrl || 'http://localhost:4000/api/v1';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem('wimd_jwt_token');
