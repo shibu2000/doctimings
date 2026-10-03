@@ -17,6 +17,7 @@ import {
   Lock
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
+import { formatTimeOnly12h } from '../utils/time';
 
 export const DashboardPage: React.FC = () => {
   const { establishments, doctors, reports, overrides, auditLogs } = useAdmin();
@@ -497,7 +498,7 @@ export const DashboardPage: React.FC = () => {
                         <div className="flex items-center justify-between gap-1">
                           <span className="font-semibold text-slate-900 truncate">{log.action}</span>
                           <span className="text-[10px] text-slate-400 font-mono shrink-0">
-                            {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {formatTimeOnly12h(log.timestamp)}
                           </span>
                         </div>
                         <p className="text-slate-600 mt-0.5 line-clamp-1">{log.entityName}</p>

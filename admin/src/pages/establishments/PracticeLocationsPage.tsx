@@ -29,6 +29,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
 import { Switch } from '../../components/ui/Switch';
+import { formatTimeRange12h } from '../../utils/time';
 
 export const PracticeLocationsPage: React.FC = () => {
   const { establishments, doctors, scheduleSlots, updateEstablishment, logAuditEvent } = useAdmin();
@@ -475,7 +476,7 @@ export const PracticeLocationsPage: React.FC = () => {
                                   <div>
                                     <span className="font-semibold text-slate-800">{docSlot.dayOfWeek}</span>
                                     <p className="font-mono text-[10px] text-slate-500">
-                                      {docSlot.startTime} – {docSlot.endTime}
+                                      {formatTimeRange12h(docSlot.startTime, docSlot.endTime)}
                                     </p>
                                   </div>
                                 ) : (

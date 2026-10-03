@@ -21,6 +21,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
+import { formatTimestamp12h } from '../../utils/time';
 
 export const CommunityReportsPage: React.FC = () => {
   const { reports } = useAdmin();
@@ -297,7 +298,7 @@ export const CommunityReportsPage: React.FC = () => {
                   </td>
 
                   <td className="py-3.5 px-4 text-slate-600">
-                    <div className="text-[11px] font-mono">{rpt.observedTimestamp}</div>
+                    <div className="text-[11px] font-mono">{formatTimestamp12h(rpt.observedTimestamp)}</div>
                     <div className="text-[10px] text-slate-400">{rpt.reporterTerritory}</div>
                   </td>
 

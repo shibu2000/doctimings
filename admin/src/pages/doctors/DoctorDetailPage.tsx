@@ -19,6 +19,7 @@ import { useAdmin } from '../../context/AdminContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
+import { formatTimeRange12h } from '../../utils/time';
 
 const PRESET_AVATARS = [
   {
@@ -266,7 +267,7 @@ export const DoctorDetailPage: React.FC = () => {
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-slate-800 w-20">{slot.dayOfWeek}</span>
                               <span className="font-mono text-teal-800 font-semibold">
-                                {slot.startTime} – {slot.endTime}
+                                {formatTimeRange12h(slot.startTime, slot.endTime)}
                               </span>
                             </div>
                             <span className="text-[10px] text-slate-500 font-medium">

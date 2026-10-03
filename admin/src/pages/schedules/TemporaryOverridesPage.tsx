@@ -16,6 +16,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
+import { formatTime12h, formatTimeRange12h } from '../../utils/time';
 
 const REASON_CHIPS = [
   'Personal Leave',
@@ -61,8 +62,8 @@ export const TemporaryOverridesPage: React.FC = () => {
       dayOfWeek,
       overrideType,
       standardShift: doctor.specialty ? `${doctor.specialty} Consultation` : 'Regular Consultation',
-      newStartTime: overrideType !== 'unavailable' ? newStartTime : undefined,
-      newEndTime: overrideType !== 'unavailable' ? newEndTime : undefined,
+      newStartTime: overrideType !== 'unavailable' ? formatTime12h(newStartTime) : undefined,
+      newEndTime: overrideType !== 'unavailable' ? formatTime12h(newEndTime) : undefined,
       publicReason: publicReason.trim() || 'Temporary schedule change',
       internalNote: internalNote.trim(),
       reportedBy: 'Super Admin'
@@ -217,7 +218,7 @@ export const TemporaryOverridesPage: React.FC = () => {
                       >
                         {ovr.overrideType === 'unavailable'
                           ? 'Unavailable (Cancelled)'
-                          : `${ovr.overrideType}: ${ovr.newStartTime} - ${ovr.newEndTime}`}
+                          : `${ovr.overrideType}: ${formatTimeRange12h(ovr.newStartTime, ovr.newEndTime)}`}
                       </Badge>
                     </td>
                     <td className="py-3.5 px-4 max-w-xs">

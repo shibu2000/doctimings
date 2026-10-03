@@ -23,6 +23,7 @@ import { ConfirmationModal } from '../../components/common/ConfirmationModal';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Radio } from '../../components/ui/Radio';
+import { formatTimestamp12h } from '../../utils/time';
 
 export const ReportDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -108,7 +109,7 @@ export const ReportDetailPage: React.FC = () => {
               </Badge>
             </div>
             <p className="text-xs text-slate-500">
-              Submitted by Community · Flagged for operational discrepancy verification · Received {report.observedTimestamp}
+              Submitted by Community · Flagged for operational discrepancy verification · Received {formatTimestamp12h(report.observedTimestamp)}
             </p>
           </div>
 

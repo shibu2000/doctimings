@@ -12,6 +12,7 @@ import { DayOfWeek } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
+import { formatTimeRange12h } from '../../utils/time';
 
 const DAYS: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -135,7 +136,7 @@ export const SchedulesPage: React.FC = () => {
                       <div className="font-bold text-slate-900">{slot.dayOfWeek}</div>
                       <div className="flex items-center gap-1 font-mono text-teal-800 text-[11px] font-semibold mt-0.5">
                         <Clock className="w-3 h-3 text-slate-400" />
-                        <span>{slot.startTime} – {slot.endTime}</span>
+                        <span>{formatTimeRange12h(slot.startTime, slot.endTime)}</span>
                       </div>
                     </td>
 

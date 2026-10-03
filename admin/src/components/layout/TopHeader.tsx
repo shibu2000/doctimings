@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { Input } from '../ui/Input';
+import { formatTimestamp12h } from '../../utils/time';
 
 export const TopHeader: React.FC = () => {
   const { currentUser, searchQuery, setSearchQuery, logout, reports, isBackendConnected, syncWithBackend } = useAdmin();
@@ -115,7 +116,7 @@ export const TopHeader: React.FC = () => {
                       {rpt.doctorName} at {rpt.establishmentName}
                     </p>
                     <span className="text-[9px] text-slate-400 block mt-1">
-                      {rpt.observedTimestamp}
+                      {formatTimestamp12h(rpt.observedTimestamp)}
                     </span>
                   </div>
                 ))}

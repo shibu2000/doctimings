@@ -17,6 +17,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
+import { formatTime12h, formatTimeRange12h } from '../../utils/time';
 
 const DAYS_OF_WEEK: DayOfWeek[] = [
   'Monday',
@@ -56,8 +57,8 @@ export const ManageDoctorSchedulePage: React.FC = () => {
   const handleEditClick = (slot: ScheduleSlot) => {
     setEditingSlotId(slot.id);
     setDayOfWeek(slot.dayOfWeek);
-    setStartTime(slot.startTime);
-    setEndTime(slot.endTime);
+    setStartTime(formatTime12h(slot.startTime));
+    setEndTime(formatTime12h(slot.endTime));
     setShiftName(slot.shiftName);
     setRoomNumber(slot.roomNumber || 'Room 1');
     setTokenPolicy(slot.tokenPolicy || '');
@@ -71,8 +72,8 @@ export const ManageDoctorSchedulePage: React.FC = () => {
     if (editingSlotId) {
       updateScheduleSlot(editingSlotId, {
         dayOfWeek,
-        startTime,
-        endTime,
+        startTime: formatTime12h(startTime),
+        endTime: formatTime12h(endTime),
         shiftName,
         roomNumber,
         tokenPolicy,
@@ -85,8 +86,8 @@ export const ManageDoctorSchedulePage: React.FC = () => {
         establishmentId: selectedEstablishmentId,
         practiceLocationId: selectedEstablishment?.practiceLocations[0]?.id || 'LOC-01',
         dayOfWeek,
-        startTime,
-        endTime,
+        startTime: formatTime12h(startTime),
+        endTime: formatTime12h(endTime),
         shiftName,
         roomNumber,
         tokenPolicy,
@@ -271,7 +272,7 @@ export const ManageDoctorSchedulePage: React.FC = () => {
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1.5 font-mono text-slate-800 font-semibold">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{slot.startTime} – {slot.endTime}</span>
+                        <span>{formatTimeRange12h(slot.startTime, slot.endTime)}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4">

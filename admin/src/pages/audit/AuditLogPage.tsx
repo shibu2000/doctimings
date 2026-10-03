@@ -21,6 +21,7 @@ import {
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
+import { formatTimestamp12h } from '../../utils/time';
 
 export const AuditLogPage: React.FC = () => {
   const { auditLogs } = useAdmin();
@@ -149,7 +150,7 @@ export const AuditLogPage: React.FC = () => {
                   <td className="py-3 px-4 text-slate-600 font-mono">
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{log.timestamp}</span>
+                      <span>{formatTimestamp12h(log.timestamp)}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4">
@@ -223,7 +224,7 @@ export const AuditLogPage: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-500 font-medium">Timestamp</span>
-                  <p className="font-mono text-slate-800 mt-0.5">{selectedEntry.timestamp}</p>
+                  <p className="font-mono text-slate-800 mt-0.5">{formatTimestamp12h(selectedEntry.timestamp)}</p>
                   <p className="text-[10px] text-slate-500">Asia/Kolkata (IST)</p>
                 </div>
                 <div>

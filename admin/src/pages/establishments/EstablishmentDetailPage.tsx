@@ -18,6 +18,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
+import { formatTimeRange12h } from '../../utils/time';
 
 export const EstablishmentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -195,7 +196,7 @@ export const EstablishmentDetailPage: React.FC = () => {
                         >
                           <span className="font-bold text-slate-800">{s.dayOfWeek}</span>
                           <span className="font-mono text-teal-800 font-semibold">
-                            {s.startTime} – {s.endTime}
+                            {formatTimeRange12h(s.startTime, s.endTime)}
                           </span>
                           <span className="text-[10px] text-slate-400">{s.roomNumber}</span>
                         </div>
