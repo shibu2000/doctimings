@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import type { Context } from 'hono';
-import { memoryStore } from '../db/index.js';
+import { db, getDb, memoryStore } from '../db/index.js';
+import * as schema from '../db/schema.js';
+import { eq } from 'drizzle-orm';
 import { signToken } from '../middleware/auth.js';
 import { LoginInput, RegisterInput } from '../validators/authValidator.js';
 import { JWTPayload } from '../types/index.js';
@@ -8,7 +10,17 @@ import { JWTPayload } from '../types/index.js';
 export const authController = {
   login: async (c: Context) => {
     const { email, password }: LoginInput = await c.req.json();
-    const user = memoryStore.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    let user = memoryStore.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    const activeDb = getDb();
+    if (activeDb) {
+      try {
+        const rows = await activeDb.select().from(schema.users).where(eq(schema.users.email, email.toLowerCase()));
+        if (rows[0]) {
+          user = rows[0] as any;
+        }
+      } catch {}
+    }
 
     if (!user) {
       return c.json(
@@ -156,7 +168,17 @@ export const authController = {
       );
     }
 
-    const user = memoryStore.users.find(u => u.id === currentUser.sub);
+    let user = memoryStore.users.find(u => u.id === currentUser.sub);
+    const activeDb = getDb();
+    if (activeDb) {
+      try {
+        const rows = await activeDb.select().from(schema.users).where(eq(schema.users.id, currentUser.sub));
+        if (rows[0]) {
+          user = rows[0] as any;
+        }
+      } catch {}
+    }
+
     if (!user) {
       return c.json(
         {
@@ -185,9 +207,18 @@ export const authController = {
   },
 
   getUsers: async (c: Context) => {
+    let usersList = memoryStore.users;
+    const activeDb = getDb();
+    if (activeDb) {
+      try {
+        const rows = await activeDb.select().from(schema.users);
+        usersList = rows as any[];
+      } catch {}
+    }
+
     return c.json({
       success: true,
-      data: memoryStore.users.map(u => ({
+      data: usersList.map(u => ({
         id: u.id,
         name: u.name,
         email: u.email,

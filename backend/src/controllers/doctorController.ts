@@ -3,7 +3,13 @@ import { db, memoryStore } from '../db/index.js';
 import * as schema from '../db/schema.js';
 import { eq } from 'drizzle-orm';
 import { CreateDoctorInput, UpdateDoctorInput, DoctorQueryParams } from '../validators/doctorValidator.js';
-import { DoctorRecord, JWTPayload } from '../types/index.js';
+import {
+  DoctorRecord,
+  EstablishmentRecord,
+  ScheduleRecord,
+  ScheduleOverrideRecord,
+  JWTPayload
+} from '../types/index.js';
 
 export const doctorController = {
   getDoctors: async (c: Context) => {
@@ -64,7 +70,10 @@ export const doctorController = {
   },
 
   getDoctorById: async (c: Context) => {
-    const id = c.req.param('id');
+    const id = c.req.param('id') as string;
+    if (!id) {
+      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Doctor ID is required' } }, 404);
+    }
     let doctor: DoctorRecord | undefined;
     let establishmentsList = memoryStore.establishments;
     let schedulesList = memoryStore.schedules;

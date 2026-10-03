@@ -26,18 +26,49 @@ import {
   HealthArticleRecord
 } from '../types/index.js';
 
-const connectionString = process.env.DATABASE_URL;
+let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
+let _cachedUrl = '';
 
-export let db: ReturnType<typeof drizzle<typeof schema>> | null = null;
-
-if (connectionString && !connectionString.includes('localhost:5432/docnear')) {
-  try {
-    const sql = neon(connectionString);
-    db = drizzle(sql, { schema });
-  } catch {
-    db = null;
+export const setDatabaseUrl = (url: string) => {
+  if (url && url !== _cachedUrl && !url.includes('localhost:5432/docnear')) {
+    try {
+      const sql = neon(url);
+      _db = drizzle(sql, { schema });
+      _cachedUrl = url;
+    } catch {
+      _db = null;
+    }
   }
-}
+};
+
+export const getDb = () => {
+  const url = process.env.DATABASE_URL || _cachedUrl;
+  if (!url || url.includes('localhost:5432/docnear')) {
+    return null;
+  }
+  if (!_db || _cachedUrl !== url) {
+    try {
+      const sql = neon(url);
+      _db = drizzle(sql, { schema });
+      _cachedUrl = url;
+    } catch {
+      _db = null;
+    }
+  }
+  return _db;
+};
+
+export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
+  get(_target, prop) {
+    const activeDb = getDb();
+    if (!activeDb) return undefined;
+    const value = (activeDb as any)[prop];
+    if (typeof value === 'function') {
+      return value.bind(activeDb);
+    }
+    return value;
+  }
+});
 
 export const memoryStore: {
   users: UserRecord[];

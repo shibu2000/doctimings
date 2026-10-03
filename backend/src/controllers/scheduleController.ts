@@ -76,7 +76,10 @@ export const scheduleController = {
   },
 
   getScheduleById: async (c: Context) => {
-    const id = c.req.param('id');
+    const id = c.req.param('id') as string;
+    if (!id) {
+      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Schedule ID is required' } }, 404);
+    }
     let schedule: ScheduleRecord | undefined;
     let doc: DoctorRecord | null = null;
     let est: EstablishmentRecord | null = null;

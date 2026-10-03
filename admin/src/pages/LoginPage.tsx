@@ -23,7 +23,7 @@ import { Input } from '../components/ui/Input';
 import { Checkbox } from '../components/ui/Checkbox';
 
 export const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('admin.ops@docnear.org');
+  const [email, setEmail] = useState('shibudhara147@gmail.com');
   const [password, setPassword] = useState('HealthcareSecure2025');
   const [showPassword, setShowPassword] = useState(false);
   const [errorBannerVisible, setErrorBannerVisible] = useState(false);
@@ -276,19 +276,19 @@ export const LoginPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
+                onClick={() => handleApplyPreset('shibudhara147@gmail.com', 'HealthcareSecure2025')}
+                className="p-1.5 text-left rounded-lg bg-white border border-slate-200 hover:border-teal-600 text-[11px] text-slate-700 hover:text-teal-900 transition-colors cursor-pointer"
+              >
+                <div className="font-bold text-slate-800">Owner (Shibu)</div>
+                <div className="text-[10px] text-slate-400 truncate">shibudhara147@gmail.com</div>
+              </button>
+              <button
+                type="button"
                 onClick={() => handleApplyPreset('admin.ops@docnear.org', 'HealthcareSecure2025')}
                 className="p-1.5 text-left rounded-lg bg-white border border-slate-200 hover:border-teal-600 text-[11px] text-slate-700 hover:text-teal-900 transition-colors cursor-pointer"
               >
                 <div className="font-bold text-slate-800">Ops Admin</div>
                 <div className="text-[10px] text-slate-400 truncate">admin.ops@docnear.org</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleApplyPreset('admin@docnear.internal', 'password123')}
-                className="p-1.5 text-left rounded-lg bg-white border border-slate-200 hover:border-teal-600 text-[11px] text-slate-700 hover:text-teal-900 transition-colors cursor-pointer"
-              >
-                <div className="font-bold text-slate-800">Super Admin</div>
-                <div className="text-[10px] text-slate-400 truncate">admin@docnear.internal</div>
               </button>
             </div>
           </div>

@@ -12,7 +12,23 @@ import { auditRoutes } from './routes/auditRoutes.js';
 import { healthRoutes } from './routes/healthRoutes.js';
 import { JWTPayload } from './types/index.js';
 
+import { setDatabaseUrl } from './db/index.js';
+
 export const app = new Hono<{ Variables: { user?: JWTPayload; validatedBody?: any } }>();
+
+app.use('*', async (c, next) => {
+  if (c.env) {
+    const envObj = c.env as any;
+    if (envObj.DATABASE_URL) {
+      setDatabaseUrl(envObj.DATABASE_URL);
+      process.env.DATABASE_URL = envObj.DATABASE_URL;
+    }
+    if (envObj.JWT_SECRET) {
+      process.env.JWT_SECRET = envObj.JWT_SECRET;
+    }
+  }
+  await next();
+});
 
 app.use('*', corsMiddleware());
 app.use('*', securityHeadersMiddleware());

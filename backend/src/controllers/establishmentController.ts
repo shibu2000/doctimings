@@ -99,7 +99,10 @@ export const establishmentController = {
   },
 
   getEstablishmentById: async (c: Context) => {
-    const id = c.req.param('id');
+    const id = c.req.param('id') as string;
+    if (!id) {
+      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Establishment ID is required' } }, 404);
+    }
     let establishment: EstablishmentRecord | undefined;
     let practiceLocations = memoryStore.practiceLocations.filter(p => p.establishmentId === id);
     let doctors = memoryStore.doctors.filter(d => d.affiliatedEstablishmentIds.includes(id));
@@ -279,7 +282,10 @@ export const establishmentController = {
   },
 
   getPracticeLocations: async (c: Context) => {
-    const establishmentId = c.req.param('id');
+    const establishmentId = c.req.param('id') as string;
+    if (!establishmentId) {
+      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Establishment ID is required' } }, 404);
+    }
     let locations: PracticeLocationRecord[];
     if (db) {
       try {

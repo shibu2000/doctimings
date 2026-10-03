@@ -1,8 +1,29 @@
 import type { Context } from 'hono';
-import { memoryStore } from '../db/index.js';
+import { db, memoryStore } from '../db/index.js';
+import * as schema from '../db/schema.js';
 
 export const healthController = {
   systemHealth: async (c: Context) => {
+    let doctorsCount = memoryStore.doctors.length;
+    let establishmentsCount = memoryStore.establishments.length;
+    let schedulesCount = memoryStore.schedules.length;
+    let reportsCount = memoryStore.reports.length;
+
+    try {
+      if (db) {
+        const [docs, ests, schs, reps] = await Promise.all([
+          db.select().from(schema.doctors),
+          db.select().from(schema.establishments),
+          db.select().from(schema.schedules),
+          db.select().from(schema.reports)
+        ]);
+        doctorsCount = docs.length;
+        establishmentsCount = ests.length;
+        schedulesCount = schs.length;
+        reportsCount = reps.length;
+      }
+    } catch {}
+
     return c.json({
       status: 'ok',
       service: 'DocTimings Backend API',
@@ -12,10 +33,10 @@ export const healthController = {
       database: {
         status: 'healthy',
         records: {
-          doctors: memoryStore.doctors.length,
-          establishments: memoryStore.establishments.length,
-          schedules: memoryStore.schedules.length,
-          reports: memoryStore.reports.length
+          doctors: doctorsCount,
+          establishments: establishmentsCount,
+          schedules: schedulesCount,
+          reports: reportsCount
         }
       }
     });
