@@ -156,7 +156,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       if (isConnectionFailed) {
         setIsBackendConnected(false);
-        setBackendError('Backend offline. Unable to reach http://localhost:4000. Start backend to view real data.');
+        setBackendError('Backend offline. Unable to reach DocTimings API server.');
         setDoctors([]);
         setEstablishments([]);
         setScheduleSlots([]);

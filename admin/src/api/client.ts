@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://doctimings-api.docnear.workers.dev/api/v1' : 'http://localhost:4000/api/v1');
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem('wimd_jwt_token');
