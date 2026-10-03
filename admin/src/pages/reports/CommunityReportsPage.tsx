@@ -129,11 +129,11 @@ export const CommunityReportsPage: React.FC = () => {
             </span>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-blue-700">{reviewCount + 8}</span>
+            <span className="text-2xl font-bold text-blue-700">{reviewCount}</span>
             <p className="text-xs text-slate-500 mt-0.5">Desk/field checks underway</p>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-            <span>Assigned to 3 agents</span>
+            <span>In investigation</span>
             <span className="text-blue-700 font-semibold">Desk audit</span>
           </div>
         </div>
@@ -143,11 +143,11 @@ export const CommunityReportsPage: React.FC = () => {
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Resolved</span>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-emerald-600">{resolvedCount + 140}</span>
+            <span className="text-2xl font-bold text-emerald-600">{resolvedCount}</span>
             <p className="text-xs text-slate-500 mt-0.5">Verified & updated</p>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-            <span>+19 this week</span>
+            <span>Confirmed reports</span>
             <span className="text-emerald-700 font-semibold">Record updated</span>
           </div>
         </div>
@@ -160,7 +160,7 @@ export const CommunityReportsPage: React.FC = () => {
             </span>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-slate-600">{rejectedCount + 28}</span>
+            <span className="text-2xl font-bold text-slate-600">{rejectedCount}</span>
             <p className="text-xs text-slate-500 mt-0.5">Unverifiable or duplicates</p>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">

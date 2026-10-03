@@ -24,6 +24,7 @@ export const Sidebar: React.FC = () => {
   const { currentUser, doctors, establishments, reports, logout } = useAdmin();
 
   const pendingReportsCount = reports.filter(r => r.status === 'pending').length;
+  const pendingVerificationsCount = establishments.filter(e => e.verificationStatus !== 'Verified').length + doctors.filter(d => d.verificationStatus !== 'Verified').length;
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-[#115E59] text-white z-50 flex flex-col justify-between overflow-y-auto border-r border-[#0D4A46] select-none shadow-xl">
@@ -193,9 +194,11 @@ export const Sidebar: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span>Verification Queue</span>
                 </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500 text-white font-mono">
-                  28
-                </span>
+                {pendingVerificationsCount > 0 && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500 text-white font-mono">
+                    {pendingVerificationsCount}
+                  </span>
+                )}
               </NavLink>
 
               <NavLink

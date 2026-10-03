@@ -13,8 +13,7 @@ import {
   Building2,
   ShieldCheck,
   Activity,
-  ExternalLink,
-  KeyRound
+  ExternalLink
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { BrandLogo } from '../components/common/BrandLogo';
@@ -24,7 +23,7 @@ import { Checkbox } from '../components/ui/Checkbox';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('shibudhara147@gmail.com');
-  const [password, setPassword] = useState('HealthcareSecure2025');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorBannerVisible, setErrorBannerVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('Email or password is incorrect.');
@@ -52,12 +51,6 @@ export const LoginPage: React.FC = () => {
       setErrorMessage(err?.message || 'Cannot reach DocTimings backend server.');
       setErrorBannerVisible(true);
     }
-  };
-
-  const handleApplyPreset = (presetEmail: string, presetPass: string) => {
-    setEmail(presetEmail);
-    setPassword(presetPass);
-    setErrorBannerVisible(false);
   };
 
   return (
@@ -264,34 +257,6 @@ export const LoginPage: React.FC = () => {
               Sign In to Command Portal
             </Button>
           </form>
-
-          <div className="mt-5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col gap-2">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-teal-700" />
-                Quick Auth Presets
-              </span>
-              <span className="text-[10px] text-slate-400">Click to fill</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleApplyPreset('shibudhara147@gmail.com', 'HealthcareSecure2025')}
-                className="p-1.5 text-left rounded-lg bg-white border border-slate-200 hover:border-teal-600 text-[11px] text-slate-700 hover:text-teal-900 transition-colors cursor-pointer"
-              >
-                <div className="font-bold text-slate-800">Owner (Shibu)</div>
-                <div className="text-[10px] text-slate-400 truncate">shibudhara147@gmail.com</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleApplyPreset('admin.ops@docnear.org', 'HealthcareSecure2025')}
-                className="p-1.5 text-left rounded-lg bg-white border border-slate-200 hover:border-teal-600 text-[11px] text-slate-700 hover:text-teal-900 transition-colors cursor-pointer"
-              >
-                <div className="font-bold text-slate-800">Ops Admin</div>
-                <div className="text-[10px] text-slate-400 truncate">admin.ops@docnear.org</div>
-              </button>
-            </div>
-          </div>
         </div>
 
         <div className="w-full pt-3 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">

@@ -36,7 +36,7 @@ export const UsersAccessPage: React.FC = () => {
   const [role, setRole] = useState<AdminRole>('Operations Admin');
   const [scopedEstablishmentId, setScopedEstablishmentId] = useState('');
 
-  const platformAdminsCount = users.filter(u => u.role === 'Platform Admin' || u.role === 'Operations Admin').length;
+  const platformAdminsCount = users.filter(u => u.role === 'Platform Admin' || u.role === 'Super Admin' || u.role === 'Operations Admin').length;
   const establishmentAdminsCount = users.filter(u => u.role === 'Establishment Admin').length;
   const pendingCount = users.filter(u => u.status === 'Pending').length;
   const suspendedCount = users.filter(u => u.status === 'Suspended').length;
@@ -184,7 +184,7 @@ export const UsersAccessPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Badge
                     variant={
-                      u.role === 'Platform Admin'
+                      u.role === 'Platform Admin' || (u.role as string) === 'Super Admin'
                         ? 'teal'
                         : u.role === 'Establishment Admin'
                         ? 'neutral'

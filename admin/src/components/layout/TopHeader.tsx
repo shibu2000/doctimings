@@ -82,7 +82,9 @@ export const TopHeader: React.FC = () => {
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-600"></span>
+            {pendingReports.length > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-600"></span>
+            )}
           </button>
 
           {notificationsOpen && (

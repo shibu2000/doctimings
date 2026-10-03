@@ -183,7 +183,7 @@ export interface HealthArticle {
   updatedAt: string;
 }
 
-export type AdminRole = 'Platform Admin' | 'Operations Admin' | 'Verification Admin' | 'Establishment Admin';
+export type AdminRole = 'Super Admin' | 'Platform Admin' | 'Operations Admin' | 'Verification Admin' | 'Establishment Admin';
 
 export interface AdminUser {
   id: string;
