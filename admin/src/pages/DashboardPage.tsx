@@ -27,6 +27,8 @@ export const DashboardPage: React.FC = () => {
   const needsVerificationEstablishments = establishments.filter(e => e.verificationStatus !== 'Verified').length;
   const accountManagedEstablishments = establishments.filter(e => e.accountStatus === 'Account Active').length;
   const pendingReports = reports.filter(r => r.status === 'pending');
+  const pendingDoctors = doctors.filter(d => d.verificationStatus !== 'Verified');
+  const totalPendingActions = needsVerificationEstablishments + pendingReports.length + pendingDoctors.length;
 
   const exportSummaryCsv = () => {
     const csvContent = [
@@ -172,136 +174,137 @@ export const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center gap-2.5">
                 <h2 className="text-lg font-bold text-slate-900">Needs attention</h2>
-                <span className="px-2 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-bold">
-                  {pendingReports.length} Total Pending Actions
+                <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                  totalPendingActions > 0 ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'
+                }`}>
+                  {totalPendingActions} Total Pending Actions
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
                 Actionable items requiring admin verification or ground review today.
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-              <span>High Priority Items</span>
-            </div>
+            {totalPendingActions > 0 && (
+              <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span>High Priority Items</span>
+              </div>
+            )}
           </div>
 
           <div className="divide-y divide-slate-100">
-            <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <ShieldCheck className="w-4 h-4" />
+            {totalPendingActions === 0 ? (
+              <div className="p-8 text-center flex flex-col items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <div className="flex flex-col min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-slate-900">12 establishments need verification</span>
-                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-semibold">12 Pending</span>
+                <p className="text-sm font-bold text-slate-800">All queues are clear</p>
+                <p className="text-xs text-slate-400 mt-1 max-w-sm">
+                  No pending verifications, community reports, or doctor profile updates require attention right now.
+                </p>
+              </div>
+            ) : (
+              <>
+                {needsVerificationEstablishments > 0 && (
+                  <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <ShieldCheck className="w-4 h-4" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold text-slate-900">
+                            {needsVerificationEstablishments} establishment{needsVerificationEstablishments > 1 ? 's' : ''} need verification
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-semibold">
+                            {needsVerificationEstablishments} Pending
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          Physical address validation and chamber coordinate verification required.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/verification-queue')}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
+                      >
+                        <span>Review Queue</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Annual verification cycle due or coordinate drift detected from physical map coordinates.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <span className="text-xs font-mono text-slate-400 hidden xl:inline">SLA: Due Today</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/verification-queue')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  <span>Review Queue</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                )}
 
-            <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <Flag className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-slate-900">
-                      {pendingReports.length} establishment reports waiting for review
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-red-50 text-red-700 text-xs font-semibold">
-                      {pendingReports.length} Reports
-                    </span>
+                {pendingReports.length > 0 && (
+                  <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <Flag className="w-4 h-4" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold text-slate-900">
+                            {pendingReports.length} establishment report{pendingReports.length > 1 ? 's' : ''} waiting for review
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-red-50 text-red-700 text-xs font-semibold">
+                            {pendingReports.length} Reports
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          Community user reports regarding closed clinics, relocated chambers, or shifted doctor timings.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/reports')}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
+                      >
+                        <span>Resolve Reports</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Community user reports regarding closed clinics, relocated chambers, or shifted doctor timings.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <span className="text-xs font-mono text-slate-400 hidden xl:inline">SLA: 2h Remaining</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/reports')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  <span>Resolve Reports</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                )}
 
-            <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <UserCheck className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-slate-900">8 doctors need information updates</span>
-                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-semibold">8 Profiles</span>
+                {pendingDoctors.length > 0 && (
+                  <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <UserCheck className="w-4 h-4" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold text-slate-900">
+                            {pendingDoctors.length} doctor profile{pendingDoctors.length > 1 ? 's' : ''} need verification
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-semibold">
+                            {pendingDoctors.length} Profiles
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          Missing WBMC registration confirmation or degrees record verification.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/verification-queue')}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
+                      >
+                        <span>Verify Doctors</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Missing WBMC registration confirmation, degree records incomplete, or chamber phone unreachable.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <span className="text-xs font-mono text-slate-400 hidden xl:inline">SLA: In Progress</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/doctors')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  <span>Update Doctors</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-4 sm:px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <Calendar className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-slate-900">6 schedules need confirmation</span>
-                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-xs font-semibold">6 Schedules</span>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Upcoming holiday overrides, chamber compounder shifts, and temporary roster modifications.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <span className="text-xs font-mono text-slate-400 hidden xl:inline">SLA: Next 48h</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/schedules')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-teal-800 border border-slate-200 hover:border-teal-600 text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  <span>Verify Shifts</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -322,30 +325,30 @@ export const DashboardPage: React.FC = () => {
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-3 border-t border-slate-100">
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
-                  <span className="text-[11px] text-slate-500 block">New (Month)</span>
+                  <span className="text-[11px] text-slate-500 block">Total Enrolled</span>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-base font-bold text-slate-900">8</span>
-                    <span className="text-[10px] text-teal-700 font-semibold">Identified</span>
+                    <span className="text-base font-bold text-slate-900">{totalEstablishments}</span>
+                    <span className="text-[10px] text-teal-700 font-semibold">In Registry</span>
                   </div>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
-                  <span className="text-[11px] text-slate-500 block">Verified (14d)</span>
+                  <span className="text-[11px] text-slate-500 block">Verified Units</span>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-base font-bold text-slate-900">14</span>
+                    <span className="text-base font-bold text-slate-900">{verifiedEstablishments}</span>
                     <span className="text-[10px] text-emerald-600 font-semibold">Audited</span>
                   </div>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
-                  <span className="text-[11px] text-slate-500 block">Invites Pending</span>
+                  <span className="text-[11px] text-slate-500 block">Needs Review</span>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-base font-bold text-slate-900">3</span>
-                    <span className="text-[10px] text-amber-600 font-semibold">Awaiting</span>
+                    <span className="text-base font-bold text-slate-900">{needsVerificationEstablishments}</span>
+                    <span className="text-[10px] text-amber-600 font-semibold">Pending</span>
                   </div>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
                   <span className="text-[11px] text-slate-500 block">Active Accounts</span>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-base font-bold text-slate-900">12</span>
+                    <span className="text-base font-bold text-slate-900">{accountManagedEstablishments}</span>
                     <span className="text-[10px] text-slate-500 font-semibold">Claimed</span>
                   </div>
                 </div>
@@ -371,79 +374,97 @@ export const DashboardPage: React.FC = () => {
                 </button>
               </div>
               <span className="text-xs font-mono text-slate-400">
-                Preview: 3 Active Units
+                Preview: {Math.min(totalEstablishments, 3)} Active Units
               </span>
             </div>
 
             <div className="p-5 flex-1 flex flex-col justify-between overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
-                    <th className="pb-2">Establishment</th>
-                    <th className="pb-2">Location / Type</th>
-                    <th className="pb-2">Verification</th>
-                    <th className="pb-2 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {establishments.slice(0, 3).map(est => (
-                    <tr key={est.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 pr-3">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded bg-teal-50 text-teal-800 flex items-center justify-center font-bold text-xs shrink-0">
-                            {est.name.charAt(0)}
-                          </div>
-                          <div>
-                            <span className="font-semibold text-slate-900 block truncate max-w-xs">{est.name}</span>
-                            <span className="font-mono text-[10px] text-slate-400">{est.id}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-3 text-slate-600">
-                        <div>{est.type}</div>
-                        <div className="text-[10px] text-slate-400">{est.subDistrict}, {est.district}</div>
-                      </td>
-                      <td className="py-3 pr-3">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold ${
-                            est.verificationStatus === 'Verified'
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-amber-50 text-amber-700'
-                          }`}
-                        >
-                          {est.verificationStatus === 'Verified' ? (
-                            <CheckCircle2 className="w-3 h-3" />
-                          ) : (
-                            <Clock className="w-3 h-3" />
-                          )}
-                          <span>{est.verificationStatus}</span>
-                        </span>
-                      </td>
-                      <td className="py-3 text-right">
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/establishments/${est.id}`)}
-                          className="text-teal-700 hover:underline font-semibold cursor-pointer"
-                        >
-                          View Details
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {totalEstablishments === 0 ? (
+                <div className="py-12 text-center text-slate-500">
+                  <Building2 className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+                  <p className="text-sm font-bold text-slate-700">No establishments in registry</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Get started by creating your first clinic, chamber, or pharmacy entry.</p>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/establishments/new')}
+                    className="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-semibold hover:bg-teal-800 transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add First Establishment</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
+                        <th className="pb-2">Establishment</th>
+                        <th className="pb-2">Location / Type</th>
+                        <th className="pb-2">Verification</th>
+                        <th className="pb-2 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {establishments.slice(0, 3).map(est => (
+                        <tr key={est.id} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-3 pr-3">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-7 h-7 rounded bg-teal-50 text-teal-800 flex items-center justify-center font-bold text-xs shrink-0">
+                                {est.name.charAt(0)}
+                              </div>
+                              <div>
+                                <span className="font-semibold text-slate-900 block truncate max-w-xs">{est.name}</span>
+                                <span className="font-mono text-[10px] text-slate-400">{est.id}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 pr-3 text-slate-600">
+                            <div>{est.type}</div>
+                            <div className="text-[10px] text-slate-400">{est.subDistrict}, {est.district}</div>
+                          </td>
+                          <td className="py-3 pr-3">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold ${
+                                est.verificationStatus === 'Verified'
+                                  ? 'bg-emerald-50 text-emerald-700'
+                                  : 'bg-amber-50 text-amber-700'
+                              }`}
+                            >
+                              {est.verificationStatus === 'Verified' ? (
+                                <CheckCircle2 className="w-3 h-3" />
+                              ) : (
+                                <Clock className="w-3 h-3" />
+                              )}
+                              <span>{est.verificationStatus}</span>
+                            </span>
+                          </td>
+                          <td className="py-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/establishments/${est.id}`)}
+                              className="text-teal-700 hover:underline font-semibold cursor-pointer"
+                            >
+                              View Details
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
 
-              <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>Showing 3 most recent registrations</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/establishments')}
-                  className="text-teal-700 hover:underline font-semibold inline-flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Inspect All ({totalEstablishments})</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+                  <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <span>Showing {Math.min(totalEstablishments, 3)} of {totalEstablishments} registrations</span>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/establishments')}
+                      className="text-teal-700 hover:underline font-semibold inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Inspect All ({totalEstablishments})</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -460,27 +481,35 @@ export const DashboardPage: React.FC = () => {
               </div>
 
               <div className="mt-3 flex flex-col gap-3">
-                {auditLogs.slice(0, 5).map(log => (
-                  <div key={log.id} className="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0">
-                    <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
-                      <Clock className="w-4 h-4" />
-                    </div>
-                    <div className="flex flex-col min-w-0 flex-1 text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-semibold text-slate-900 truncate">{log.action}</span>
-                        <span className="text-[10px] text-slate-400 font-mono shrink-0">
-                          {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                      <p className="text-slate-600 mt-0.5 line-clamp-1">{log.entityName}</p>
-                      <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-1">
-                        <span>{log.actorName}</span>
-                        <span>·</span>
-                        <span className="truncate">{log.details}</span>
-                      </div>
-                    </div>
+                {auditLogs.length === 0 ? (
+                  <div className="py-8 text-center text-slate-400 text-xs">
+                    <Clock className="w-7 h-7 mx-auto text-slate-300 mb-2" />
+                    <p className="font-semibold text-slate-600">No activity logged yet</p>
+                    <p className="mt-0.5 text-slate-400">Actions taken across doctors and chambers will appear here in real time.</p>
                   </div>
-                ))}
+                ) : (
+                  auditLogs.slice(0, 5).map(log => (
+                    <div key={log.id} className="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0">
+                      <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
+                        <Clock className="w-4 h-4" />
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1 text-xs">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="font-semibold text-slate-900 truncate">{log.action}</span>
+                          <span className="text-[10px] text-slate-400 font-mono shrink-0">
+                            {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        <p className="text-slate-600 mt-0.5 line-clamp-1">{log.entityName}</p>
+                        <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-1">
+                          <span>{log.actorName}</span>
+                          <span>·</span>
+                          <span className="truncate">{log.details}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -531,14 +560,14 @@ export const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <div>
-                <span className="font-semibold text-slate-800">12 Active Accounts</span>
+                <span className="font-semibold text-slate-800">{accountManagedEstablishments} Active Accounts</span>
                 <span className="text-[11px] text-slate-500 block">Managed by verified chemist desk</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50">
               <Clock className="w-4 h-4 text-amber-600 shrink-0" />
               <div>
-                <span className="font-semibold text-slate-800">3 Invitations Pending</span>
+                <span className="font-semibold text-slate-800">{establishments.filter(e => e.accountStatus === 'Invitation Pending').length} Invitations Pending</span>
                 <span className="text-[11px] text-slate-500 block">Awaiting phone verification</span>
               </div>
             </div>

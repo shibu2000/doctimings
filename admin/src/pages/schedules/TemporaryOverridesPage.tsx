@@ -37,12 +37,12 @@ export const TemporaryOverridesPage: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
-  const [targetDate, setTargetDate] = useState('2026-09-28');
+  const [targetDate, setTargetDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [overrideType, setOverrideType] = useState<OverrideType>('unavailable');
   const [newStartTime, setNewStartTime] = useState('06:00 PM');
   const [newEndTime, setNewEndTime] = useState('08:00 PM');
-  const [publicReason, setPublicReason] = useState('Personal leave / Attending medical conference');
-  const [internalNote, setInternalNote] = useState('Informed by pharmacist via telephone at 10:30 AM.');
+  const [publicReason, setPublicReason] = useState('');
+  const [internalNote, setInternalNote] = useState('');
 
   if (!doctor) {
     return <div className="p-8 text-slate-500">Doctor not found.</div>;
@@ -56,16 +56,16 @@ export const TemporaryOverridesPage: React.FC = () => {
 
     addOverride({
       doctorId: doctor.id,
-      establishmentId: doctor.affiliatedEstablishmentIds[0] || 'EST-BWN-842',
+      establishmentId: doctor.affiliatedEstablishmentIds[0] || '',
       date: targetDate,
       dayOfWeek,
       overrideType,
-      standardShift: '5:00 PM – 8:00 PM (Chamber 1)',
+      standardShift: doctor.specialty ? `${doctor.specialty} Consultation` : 'Regular Consultation',
       newStartTime: overrideType !== 'unavailable' ? newStartTime : undefined,
       newEndTime: overrideType !== 'unavailable' ? newEndTime : undefined,
       publicReason: publicReason.trim() || 'Temporary schedule change',
       internalNote: internalNote.trim(),
-      reportedBy: 'Operations Admin'
+      reportedBy: 'Super Admin'
     });
 
     setIsAddModalOpen(false);
