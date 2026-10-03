@@ -78,9 +78,9 @@ export interface DoctorRecord {
   qualifications: string;
   experienceYears: number;
   primaryPhone: string;
-  email?: string;
+  email?: string | null;
   languages: string[];
-  photoUrl?: string;
+  photoUrl?: string | null;
   verificationStatus: string;
   isActive: boolean;
   affiliatedEstablishmentIds: string[];
