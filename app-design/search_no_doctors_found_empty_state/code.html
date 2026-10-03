@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "inverse-on-surface": "#eef0ff", "on-surface-variant": "#3e4947", "on-primary-container": "#a3faef", "surface-tint": "#006a63", "on-background": "#131b2e", "on-primary-fixed-variant": "#00504a", "on-secondary": "#ffffff", "on-tertiary-fixed": "#00201c", "warning": "#D97706", "inverse-surface": "#283044", "secondary-fixed-dim": "#8fd3cc", "error": "#DC2626", "tertiary": "#2d5951", "success-soft": "#DCFCE7", "error-soft": "#FEE2E2", "on-error-container": "#93000a", "secondary-fixed": "#abefe8", "on-tertiary-container": "#c5f3ea", "secondary-container": "#a8ece5", "success": "#16A34A", "tertiary-container": "#467169", "surface-dim": "#d2d9f4", "bg-canvas": "#F8FAFC", "primary-fixed-dim": "#80d5cb", "on-surface": "#131b2e", "outline": "#6e7977", "error-container": "#ffdad6", "outline-variant": "#bdc9c6", "surface-variant": "#dae2fd", "surface-container": "#eaedff", "surface-container-low": "#f2f3ff", "text-muted": "#475569", "primary-fixed": "#9cf2e8", "border-subtle": "#E2E8F0", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "primary": "#005c55", "on-primary-fixed": "#00201d", "tertiary-fixed": "#bdece2", "surface": "#FFFFFF", "primary-container": "#0f766e", "info": "#2563EB", "warning-soft": "#FEF3C7", "on-secondary-container": "#266d68", "surface-container-high": "#e2e7ff", "on-tertiary-fixed-variant": "#224e47", "on-secondary-fixed": "#00201e", "background": "#faf8ff", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#a2d0c6", "status-unknown": "#64748B", "inverse-primary": "#80d5cb", "secondary": "#216963", "surface-bright": "#faf8ff", "on-error": "#ffffff", "on-tertiary": "#ffffff", "on-secondary-fixed-variant": "#00504b" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-xl": "1.5rem", "space-lg": "1rem", "gutter": "1rem", "space-2xl": "2rem", "margin-lg": "2rem", "gutter-lg": "1.5rem", "margin-sm": "0.75rem", "space-sm": "0.5rem", "space-md": "0.75rem", "margin": "1rem", "gutter-sm": "0.75rem" }, fontFamily: { "label-md": ["Noto Sans"], "headline-xl": ["Noto Sans"], "body-md": ["Noto Sans"], "label-lg": ["Noto Sans"], "headline-lg": ["Noto Sans"], "headline-lg-mobile": ["Noto Sans"], "headline-xl-mobile": ["Noto Sans"], "headline-md": ["Noto Sans"], "body-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "body-sm": ["Noto Sans"] }, fontSize: { "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-xl": ["32px", { "lineHeight": "40px", "fontWeight": "700" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "700" }], "headline-xl-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "700" }], "headline-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }] } } } };</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-bg-canvas font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-xs min-w-0 flex-1"><button aria-label="Go back" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface hover:text-primary transition-colors flex-shrink-0" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><div class="flex items-center gap-space-xs min-w-0 flex-1"><img alt="Clean minimalist vector brand mark for Where Is My Doctor featuring a location map pin seamlessly combined with a doctor person silhouette or medical cross motif, rendered in primary teal #0F766E with clean soft teal accent #CCFBF1, flat geometric healthcare icon on transparent background.. Brand logo. - Primary color: #0f766e
+- Font: notoSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-7 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1Vdqe5Zk7ng-4nX5X_CAb-mgnSy-7WVvqKd9upXP5XTQClGxEt8T0GdBfLLptXL44m0QQAZNKP72sSERXVYstuXyMRomR6sVKmlJNObo6WzhzUncmIYVYkn8KsZHi3nEzqvPCrws0yZdbbXm0mWz1IE0KHoH2gbqt9DPoo2hyshIY6dwIyFQU1YvPvpOAHrQFVkTlllk7wJ_G4rH95Rv3pv79rTRzcnH3ijuKXFVE6Xyq0s39u1bjvsdlU"/><div class="flex flex-col min-w-0 pr-space-xs"><h1 class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Doctors Near You</h1><p class="font-body-sm text-body-sm text-text-muted truncate leading-tight">Skin problem · Near Gopiballavpur</p></div></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><button aria-label="Filter search" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">tune</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col w-full pt-16 pb-safe bg-bg-canvas"><div class="flex flex-col w-full pb-8">
+<!-- 1. Search Context Summary Bar -->
+<section class="px-gutter pt-space-md pb-space-sm">
+<div class="bg-surface rounded-xl p-space-md shadow-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-container/40 flex items-center justify-center flex-shrink-0 text-primary">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface truncate">Skin doctor</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm text-text-muted">Specialty</span>
+</div>
+<div class="flex items-center gap-space-xs text-text-muted">
+<span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+<span class="font-body-sm text-body-sm truncate">Near Gopiballavpur</span>
+</div>
+</div>
+</div>
+<button class="h-10 px-space-md rounded-lg bg-surface-container-low text-primary font-label-md text-label-md flex items-center gap-space-xs flex-shrink-0 active:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Modify</span>
+</button>
+</div>
+</section>
+<!-- 2. Primary Empty State View Container -->
+<section class="px-gutter py-space-md flex flex-col items-center text-center transition-all duration-300" id="empty-state-view">
+<!-- Gentle Animated Calm Healthcare Illustration -->
+<div class="relative w-40 h-40 flex items-center justify-center my-space-sm">
+<div class="absolute inset-0 rounded-full bg-secondary-container/25 animate-pulse"></div>
+<div class="absolute inset-3 rounded-full bg-surface shadow-sm flex items-center justify-center">
+<!-- SVG Vector Art: Village/Town Clinic with Compassionate Search Ring -->
+<svg class="w-24 h-24" fill="none" viewbox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+<!-- Compass Grid Circles -->
+<circle cx="48" cy="48" r="42" stroke="#CCFBF1" stroke-dasharray="4 4" stroke-width="2"></circle>
+<circle cx="48" cy="48" fill="#F8FAFC" r="32"></circle>
+<!-- Serene Rural Clinic Silhouette -->
+<path d="M28 62V46L40 37L52 46V62H28Z" fill="#E2E8F0"></path>
+<path d="M48 62V50H58V62H48Z" fill="#CBD5E1"></path>
+<!-- Medical Cross on Facade -->
+<path d="M38 48H42M40 46V50" stroke="#0F766E" stroke-linecap="round" stroke-width="2"></path>
+<!-- Nearby Trees / Landscape Silhouette -->
+<path d="M22 62C22 58 25 56 28 56C30 56 32 58 32 62H22Z" fill="#A8ECE5"></path>
+<path d="M58 62C58 57 61 54 64 54C67 54 70 57 70 62H58Z" fill="#A8ECE5"></path>
+<!-- Gentle Discovery Pin & Lens -->
+<g class="transform -translate-y-1">
+<!-- Pin Shadow -->
+<ellipse cx="60" cy="50" fill="#CBD5E1" opacity="0.6" rx="6" ry="2.5"></ellipse>
+<!-- Pin Body -->
+<path d="M60 26C54.477 26 50 30.477 50 36C50 42.5 60 50 60 50C60 50 70 42.5 70 36C70 30.477 65.523 26 60 26Z" fill="#0F766E"></path>
+<circle cx="60" cy="35" fill="#FFFFFF" r="4"></circle>
+</g>
+<!-- Soft Search Glass Overlay -->
+<circle cx="42" cy="40" fill="#FFFFFF" fill-opacity="0.3" r="14" stroke="#005C55" stroke-width="3"></circle>
+<line stroke="#005C55" stroke-linecap="round" stroke-width="3.5" x1="52" x2="62" y1="50" y2="60"></line>
+</svg>
+</div>
+<!-- Small Sparkle Badges -->
+<div class="absolute top-1 right-3 w-6 h-6 rounded-full bg-secondary-fixed flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-on-secondary-fixed-variant">share_location</span>
+</div>
+</div>
+<!-- Clear Headline & Calm Guidance -->
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-space-sm mb-space-xs">
+      No doctors found nearby
+    </h2>
+<p class="font-body-md text-body-md text-text-muted max-w-xs mb-space-md">
+      We couldn't find a matching doctor in your immediate radius around Gopiballavpur.
+    </p>
+<!-- Context Reassurance Pill -->
+<div class="bg-secondary-container/40 rounded-xl px-space-md py-space-sm flex items-start gap-space-xs text-left max-w-sm mb-space-xl">
+<span class="material-symbols-outlined text-[18px] text-primary flex-shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-secondary-container">
+        Visiting skin specialists routinely attend consultations in nearby sub-divisional towns like Jhargram and Beliaberah on fixed days.
+      </p>
+</div>
+<!-- Action Group -->
+<div class="w-full flex flex-col gap-space-sm max-w-sm">
+<!-- Primary Expansion CTA -->
+<button class="w-full h-[52px] rounded-xl bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-sm shadow-md active:bg-primary-container transition-all" id="search-wider-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">radar</span>
+<span>Search a wider area</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<span class="font-body-sm text-body-sm text-text-muted -mt-1 mb-space-xs">
+        Expands search to verified clinics within accessible travel distance.
+      </span>
+<!-- Secondary Dual Action Buttons -->
+<div class="grid grid-cols-2 gap-space-sm w-full">
+<button class="h-12 rounded-xl bg-surface text-primary font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-bg-canvas transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_location_alt</span>
+<span class="truncate">Change location</span>
+</button>
+<button class="h-12 rounded-xl bg-surface text-on-surface font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-bg-canvas transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">manage_search</span>
+<span class="truncate">Other specialty</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 3. Helpful Alternatives Section -->
+<section class="px-gutter pt-space-lg pb-space-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<h3 class="font-label-md text-label-md text-text-muted tracking-wide">
+        Try searching for
+      </h3>
+<span class="font-body-sm text-body-sm text-primary flex items-center gap-0.5">
+        Frequently found nearby
+      </span>
+</div>
+<!-- Specialty Quick Tags -->
+<div class="flex flex-wrap gap-space-xs">
+<button class="h-10 px-space-md rounded-full bg-surface text-on-surface-variant font-label-md text-label-md shadow-sm active:bg-secondary-container/30 flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">medical_services</span>
+<span>General doctor</span>
+</button>
+<button class="h-10 px-space-md rounded-full bg-surface text-on-surface-variant font-label-md text-label-md shadow-sm active:bg-secondary-container/30 flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">child_care</span>
+<span>Child doctor</span>
+</button>
+<button class="h-10 px-space-md rounded-full bg-surface text-on-surface-variant font-label-md text-label-md shadow-sm active:bg-secondary-container/30 flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">visibility</span>
+<span>Eye doctor</span>
+</button>
+<button class="h-10 px-space-md rounded-full bg-surface text-on-surface-variant font-label-md text-label-md shadow-sm active:bg-secondary-container/30 flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">calendar_month</span>
+<span>All visiting doctors</span>
+</button>
+</div>
+</section>
+<!-- 4. Interactive State Switcher Bar & Wider Area Results Container -->
+<section class="px-gutter pt-space-lg">
+<!-- Demo Interactive Trigger Toggle -->
+<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between shadow-sm mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">explore</span>
+<span class="font-label-md text-label-md text-on-surface">Explore Wider Radius</span>
+</div>
+<button class="h-9 px-space-md rounded-lg bg-surface text-primary font-label-md text-label-md shadow-sm flex items-center gap-space-xs active:bg-surface-container transition-all" id="toggle-preview-btn" type="button">
+<span id="preview-btn-text">Show Jhargram Hub</span>
+<span class="material-symbols-outlined text-[16px]" id="preview-chevron">expand_more</span>
+</button>
+</div>
+<!-- Wider Area Content Drawer (Expandable state) -->
+<div class="hidden flex-col gap-space-md transition-all" id="wider-area-preview">
+<!-- Wider Area Disclaimer Banner -->
+<div class="bg-warning-soft rounded-xl p-space-md shadow-sm flex gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-warning/20 flex items-center justify-center flex-shrink-0 text-warning mt-0.5">
+<span class="material-symbols-outlined text-[20px]">near_me</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface">Showing doctors from a wider area</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">
+            These doctors visit chambers in <span class="font-semibold text-on-surface">Jhargram town</span> (approx. 22 km from Gopiballavpur). Please verify attendance before commuting.
+          </p>
+</div>
+</div>
+<!-- Real Doctor Listing Card (No star ratings, fully factual) -->
+<article class="bg-surface rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<!-- Top Row: Doctor Name & Distance Indicator -->
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/50 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[26px]">stethoscope</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-headline-md text-headline-md text-on-surface truncate">Dr. Amit Das</h4>
+<p class="font-body-sm text-body-sm text-text-muted truncate">Dermatologist / Skin Specialist</p>
+<span class="font-body-sm text-body-sm text-text-muted">MBBS, MD (Dermatology)</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-md bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex-shrink-0">
+<span class="material-symbols-outlined text-[13px] text-primary">distance</span>
+            22 km
+          </span>
+</div>
+<!-- Middle Timing & Location Data Strip -->
+<div class="bg-bg-canvas rounded-lg p-space-sm flex flex-col gap-space-xs">
+<!-- Timing Status Pill -->
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-warning-soft text-warning font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-warning animate-ping"></span>
+              Scheduled Saturday · 10:00 AM – 1:00 PM
+            </span>
+</div>
+<!-- Chamber & Landmark Details -->
+<div class="flex items-start gap-space-xs text-text-muted mt-1">
+<span class="material-symbols-outlined text-[18px] text-primary mt-0.5 flex-shrink-0">apartment</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface">Jhargram Nursing Home &amp; Polyclinic</span>
+<span class="font-body-sm text-body-sm text-text-muted">Near Sub-Divisional Hospital Road, Jhargram</span>
+</div>
+</div>
+<!-- Freshness Tag -->
+<div class="flex items-center gap-space-xs text-text-muted pt-1">
+<span class="material-symbols-outlined text-[15px] text-success">verified</span>
+<span class="font-body-sm text-body-sm">Visiting schedule confirmed yesterday</span>
+</div>
+</div>
+<!-- Action Strip -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<button class="h-12 rounded-xl bg-surface text-primary font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-bg-canvas transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">directions</span>
+<span>Get route</span>
+</button>
+<button class="h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span>Call clinic</span>
+</button>
+</div>
+</article>
+<!-- Second Option Card for Depth -->
+<article class="bg-surface rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/50 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[26px]">stethoscope</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-headline-md text-headline-md text-on-surface truncate">Dr. Sumana Roy</h4>
+<p class="font-body-sm text-body-sm text-text-muted truncate">Consultant Dermatologist</p>
+<span class="font-body-sm text-body-sm text-text-muted">MBBS, DVD</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-md bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex-shrink-0">
+<span class="material-symbols-outlined text-[13px] text-primary">distance</span>
+            24 km
+          </span>
+</div>
+<div class="bg-bg-canvas rounded-lg p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-success-soft text-success font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+              Available Tuesday &amp; Friday · 4:00 PM – 7:30 PM
+            </span>
+</div>
+<div class="flex items-start gap-space-xs text-text-muted mt-1">
+<span class="material-symbols-outlined text-[18px] text-primary mt-0.5 flex-shrink-0">storefront</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface">Modern Diagnostics &amp; Medical</span>
+<span class="font-body-sm text-body-sm text-text-muted">Ghoradhara Station Road, Jhargram</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<button class="h-12 rounded-xl bg-surface text-primary font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-bg-canvas transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>Full profile</span>
+</button>
+<button class="h-12 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm active:bg-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span>Chamber desk</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- Community Help Toast / Tip Strip -->
+<section class="px-gutter pt-space-xl pb-space-lg">
+<div class="bg-surface rounded-xl p-space-md shadow-sm flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">volunteer_activism</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-label-md text-label-md text-on-surface">Know a local visiting doctor?</span>
+<span class="font-body-sm text-body-sm text-text-muted">Help your neighbors find care by suggesting a chamber schedule.</span>
+</div>
+<button class="h-10 px-space-sm rounded-lg text-primary font-label-md text-label-md active:bg-surface-container-low transition-colors flex-shrink-0" type="button">
+        Add info
+      </button>
+</div>
+</section>
+</div>
+<script>
+  // Simple Micro-interaction to toggle the Wider Area preview
+  const toggleBtn = document.getElementById('toggle-preview-btn');
+  const searchWiderBtn = document.getElementById('search-wider-btn');
+  const widerPreview = document.getElementById('wider-area-preview');
+  const previewText = document.getElementById('preview-btn-text');
+  const previewChevron = document.getElementById('preview-chevron');
+
+  function toggleWiderArea() {
+    const isHidden = widerPreview.classList.contains('hidden');
+    if (isHidden) {
+      widerPreview.classList.remove('hidden');
+      widerPreview.classList.add('flex');
+      previewText.textContent = 'Hide Jhargram Hub';
+      previewChevron.textContent = 'expand_less';
+      widerPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      widerPreview.classList.add('hidden');
+      widerPreview.classList.remove('flex');
+      previewText.textContent = 'Show Jhargram Hub';
+      previewChevron.textContent = 'expand_more';
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', toggleWiderArea);
+  }
+
+  if (searchWiderBtn) {
+    searchWiderBtn.addEventListener('click', toggleWiderArea);
+  }
+</script></main></body></html>

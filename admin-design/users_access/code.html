@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"success-green":"#16A34A","surface":"#FFFFFF","on-secondary-container":"#266d68","surface-variant":"#dae2fd","outline":"#6e7977","surface-container-lowest":"#ffffff","secondary-fixed":"#abefe8","info-blue":"#2563EB","status-unknown":"#64748B","on-secondary":"#ffffff","inverse-primary":"#80d5cb","on-surface":"#131b2e","on-tertiary-container":"#c5f3ea","tertiary":"#2d5951","inverse-on-surface":"#eef0ff","app-bg":"#F8FAFC","error":"#ba1a1a","surface-container-high":"#e2e7ff","on-primary-fixed":"#00201d","warning-amber":"#D97706","surface-dim":"#d2d9f4","surface-bright":"#faf8ff","secondary-fixed-dim":"#8fd3cc","on-tertiary":"#ffffff","primary-container":"#0f766e","secondary":"#216963","primary":"#005c55","on-tertiary-fixed":"#00201c","tertiary-fixed":"#bdece2","error-red":"#DC2626","on-secondary-fixed-variant":"#00504b","tertiary-container":"#467169","tertiary-fixed-dim":"#a2d0c6","outline-variant":"#bdc9c6","text-secondary":"#475569","inverse-surface":"#283044","surface-tint":"#006a63","error-soft":"#FEE2E2","on-tertiary-fixed-variant":"#224e47","on-secondary-fixed":"#00201e","secondary-container":"#a8ece5","on-primary-fixed-variant":"#00504a","surface-container":"#eaedff","error-container":"#ffdad6","on-error":"#ffffff","on-background":"#131b2e","surface-container-low":"#f2f3ff","on-primary":"#ffffff","success-soft":"#DCFCE7","warning-soft":"#FEF3C7","on-surface-variant":"#3e4947","primary-fixed-dim":"#80d5cb","primary-fixed":"#9cf2e8","on-primary-container":"#a3faef","on-error-container":"#93000a","background":"#faf8ff","surface-container-highest":"#dae2fd","border-subtle":"#E2E8F0"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"margin-desktop":"2rem","space-xs":"0.25rem","space-2xl":"2rem","gutter-desktop":"1.5rem","space-lg":"1rem","space-sm":"0.5rem","margin":"1rem","space-md":"0.75rem","gutter":"1rem","space-xl":"1.5rem"},fontFamily:{"headline-xl":["Noto Sans"],"body-md":["Noto Sans"],"code-tabular":["Noto Sans"],"headline-sm":["Noto Sans"],"label-sm":["Noto Sans"],"label-lg":["Noto Sans"],"body-sm":["Noto Sans"],"headline-md":["Noto Sans"],"headline-lg":["Noto Sans"],"body-lg":["Noto Sans"],"label-md":["Noto Sans"]},fontSize:{"headline-xl":["30px",{lineHeight:"38px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"code-tabular":["12px",{lineHeight:"16px",fontWeight:"500"}],"headline-sm":["16px",{lineHeight:"24px",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"600"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}],"headline-md":["20px",{lineHeight:"28px",fontWeight:"600"}],"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-app-bg text-on-surface font-body-md text-body-md"><aside class="fixed left-0 top-0 h-screen w-64 bg-primary text-on-primary z-50 flex flex-col justify-between overflow-y-auto border-r border-tertiary"><div class="flex flex-col"><div class="p-space-lg border-b border-tertiary"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-surface-container-lowest/10 flex items-center justify-center text-secondary-fixed"><span class="material-symbols-outlined text-[20px]">local_hospital</span></div><div><span class="font-headline-sm text-headline-sm tracking-tight text-on-primary block leading-tight">Where Is My Doctor?</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim block">Internal OPS Portal v1.0</span></div></div><div class="mt-space-md inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-success-soft/20 text-secondary-fixed text-label-sm font-label-sm"><span class="w-1.5 h-1.5 rounded-full bg-success-green animate-pulse"></span>Live Data Sync</div></div><nav class="px-space-sm py-space-md flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary font-label-md rounded-lg"><div class="px-space-sm pt-space-xs pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">Overview</div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><div class="px-space-sm pt-space-md pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">Healthcare Catalog</div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="doctors-catalog" href="#"><span class="material-symbols-outlined text-[18px]">stethoscope</span><span>Doctors</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="establishments" href="#"><span class="material-symbols-outlined text-[18px]">domain</span><span>Establishments</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="practice-locations" href="#"><span class="material-symbols-outlined text-[18px]">pin_drop</span><span>Practice Locations</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="schedules" href="#"><span class="material-symbols-outlined text-[18px]">calendar_month</span><span>Schedules</span></a><div class="px-space-sm pt-space-md pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">Discovery</div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="health-topics" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span>Health Topics</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="health-guide" href="#"><span class="material-symbols-outlined text-[18px]">clinical_notes</span><span>Health Guide</span></a><div class="px-space-sm pt-space-md pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">Verification &amp; Audit</div><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="verification-queue" href="#"><span class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Queue</span></span><span class="px-1.5 py-0.2 bg-warning-amber text-on-primary font-code-tabular text-label-sm rounded">28</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="community-reports" href="#"><span class="material-symbols-outlined text-[18px]">report</span><span>Community Reports</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[18px]">history</span><span>Audit Log</span></a><div class="px-space-sm pt-space-md pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">Geography &amp; Access</div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="territories-pincodes" href="#"><span class="material-symbols-outlined text-[18px]">map</span><span>Territories &amp; PIN Codes</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="users-access" href="#"><span class="material-symbols-outlined text-[18px]">manage_accounts</span><span>Users &amp; Roles</span></a><div class="px-space-sm pt-space-md pb-1 font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed-dim/70">System</div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-secondary-fixed hover:bg-tertiary hover:text-on-primary transition-colors" data-path="system-settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>System Settings</span></a></nav></div><div class="p-space-md mx-space-sm mb-space-md rounded-lg border border-dashed border-tertiary-fixed-dim/30 bg-tertiary/40"><div class="flex items-center gap-space-xs text-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider mb-space-xs"><span class="material-symbols-outlined text-[14px]">schedule</span>Roadmap Preview</div><p class="font-body-sm text-body-sm text-secondary-fixed-dim/90 mb-space-xs">Scheduled Next Cycle:</p><ul class="font-label-sm text-label-sm text-secondary-fixed-dim/80 space-y-0.5 list-disc list-inside"><li class="truncate">Appointments Engine</li><li class="truncate">Doctor Self-Claim</li><li class="truncate">Real-time Availability</li><li class="truncate">Telemedicine Module</li></ul></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface border-b border-border-subtle z-40 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-lg flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-space-md py-1.5 bg-surface border border-border-subtle rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Search users, doctors, establishments, license IDs..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-sm py-1 rounded bg-success-soft text-success-green border border-success-green/20"><span class="material-symbols-outlined text-[16px]">sync</span><span class="font-label-sm text-label-sm">Operational Sync: Normal</span></div><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-1 rounded bg-warning-soft text-warning-amber border border-warning-amber/20"><span class="material-symbols-outlined text-[16px]">warning</span><span class="font-label-sm text-label-sm font-semibold">Queue: 28</span></div><button aria-label="Notifications" class="relative p-1.5 rounded-lg text-text-secondary hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error-red"></span></button><div class="h-6 w-px bg-border-subtle"></div><div class="flex items-center gap-space-sm"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-border-subtle" src="https://lh3.googleusercontent.com/aida/AEtjO1VzIdbRl2Ok25zQ3P8tlme7rwURWxHMkwGSNnLLtmrcq4xn-XLQbB9Znuu_P9SkeHZGkkcpAxFXfMIdcsJs0z80aATFl6p7oMiiNK-5LNMbhSXcJ_pdMJfWnBwhN_b-kFIpPPvDTF9AAnPPOpCKdywbSI5AFQuLvYaOvQS6lo1SDtIvQWZNm_aOde9hv5JZzsi6nXqG9Wg8jIoyx6f0pAQT3tnCErfnUx3Y0y8Xv-yQmbHcGC3AgD9uGNjR"/><div class="hidden md:flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Rajesh Sharma</span><span class="font-label-sm text-label-sm text-text-secondary leading-tight">Operations Admin</span></div></div></div></header><main class="w-full pt-16 bg-app-bg min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive View Script -->
+<script>
+    function toggleInviteDrawer(open) {
+      const drawer = document.getElementById('invite-user-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      if (open) {
+        backdrop.classList.remove('hidden');
+        drawer.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function toggleSuspendModal(open) {
+      const modal = document.getElementById('suspend-confirmation-modal');
+      if (open) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function toggleEstablishmentDropdown(role) {
+      const field = document.getElementById('establishment-selection-field');
+      const notice = document.getElementById('establishment-notice');
+      if (role === 'establishment') {
+        field.classList.remove('opacity-50', 'pointer-events-none');
+        notice.classList.remove('hidden');
+      } else {
+        field.classList.add('opacity-50', 'pointer-events-none');
+        notice.classList.add('hidden');
+      }
+    }
+
+    function selectUserRow(rowElement, name, role, email, phone, establishment, status) {
+      document.querySelectorAll('.user-table-row').forEach(r => {
+        r.classList.remove('bg-surface-container-low', 'border-l-4', 'border-l-primary-container');
+        r.classList.add('bg-surface');
+      });
+      rowElement.classList.add('bg-surface-container-low', 'border-l-4', 'border-l-primary-container');
+      
+      document.getElementById('inspected-user-name').innerText = name;
+      document.getElementById('inspected-header-name').innerText = name;
+      document.getElementById('inspected-user-email').innerText = email;
+      document.getElementById('inspected-user-phone').innerText = phone;
+      document.getElementById('inspected-user-establishment').innerText = establishment;
+      document.getElementById('inspected-scope-pill').innerText = establishment;
+      document.getElementById('inspected-boundary-text').innerText = 'Access Boundary: Strictly limited to ' + establishment;
+      
+      const badge = document.getElementById('inspected-user-role-badge');
+      if (role === 'Platform Admin') {
+        badge.className = 'px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary inline-flex items-center gap-1';
+        badge.innerHTML = '<span class="material-symbols-outlined text-[13px]">shield_person</span>Platform Admin';
+        document.getElementById('boundary-guidance-card').classList.add('bg-surface-container-low');
+      } else {
+        badge.className = 'px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container inline-flex items-center gap-1';
+        badge.innerHTML = '<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin';
+      }
+    }
+  </script>
+<!-- Main View Container -->
+<div class="px-margin-desktop py-space-xl space-y-space-xl max-w-[1600px] mx-auto w-full">
+<!-- Breadcrumb & Top Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-1">
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-label-sm font-label-sm text-text-secondary">
+<span>Administration</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary-container font-semibold">Users &amp; Access</span>
+</nav>
+<div class="flex items-baseline gap-space-md">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Users &amp; Access</h1>
+<span class="text-body-md font-body-md text-text-secondary hidden sm:inline">Manage platform staff and clinic administrative accounts</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface text-text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors text-label-md font-label-md flex items-center gap-space-xs shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export Audit Log</span>
+</button>
+<button class="px-space-lg py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md flex items-center gap-space-xs shadow-sm transition-all" onclick="toggleInviteDrawer(true)" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ Invite User</span>
+</button>
+</div>
+</div>
+<!-- Operational Metrics -->
+<section aria-label="Access summary metrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop">
+<!-- Metric 1 -->
+<div class="bg-surface p-space-lg rounded-xl shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Platform Admins</span>
+<span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">4</span>
+<span class="font-label-md text-label-md text-success-green font-semibold">Active</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-snug">Unrestricted catalog, territory, and user oversight</p>
+</div>
+<!-- Metric 2 -->
+<div class="bg-surface p-space-lg rounded-xl shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Establishment Admins</span>
+<span class="w-8 h-8 rounded-lg bg-secondary-container/40 text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">local_pharmacy</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">28</span>
+<span class="font-label-md text-label-md text-success-green font-semibold">Active</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-snug">Chambers, polyclinics, and chemist partners</p>
+</div>
+<!-- Metric 3 -->
+<div class="bg-surface p-space-lg rounded-xl shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Pending Invitations</span>
+<span class="w-8 h-8 rounded-lg bg-warning-soft text-warning-amber flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">mark_email_unread</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">3</span>
+<span class="font-label-md text-label-md text-warning-amber font-semibold">Pending</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-snug">Awaiting activation token verification</p>
+</div>
+<!-- Metric 4 -->
+<div class="bg-surface p-space-lg rounded-xl shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Suspended Accounts</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-high text-status-unknown flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">1</span>
+<span class="font-label-md text-label-md text-status-unknown font-semibold">Disabled</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-snug">Credential access revoked via governance rule</p>
+</div>
+</section>
+<!-- Search & Multi-Filter Bar -->
+<section class="bg-surface p-space-md rounded-xl shadow-sm space-y-space-md">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-sm items-center">
+<!-- Search Field -->
+<div class="md:col-span-4 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-2 bg-app-bg rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface transition-all" placeholder="Search users by name, email, phone, or establishment..." type="text"/>
+</div>
+<!-- Filter Role -->
+<div class="md:col-span-2">
+<select aria-label="Filter by Role" class="w-full px-space-sm py-2 bg-app-bg rounded-lg text-body-sm font-body-sm text-on-surface focus:outline-none">
+<option value="">Role: All Roles</option>
+<option value="platform">Platform Admin</option>
+<option value="establishment">Establishment Admin</option>
+</select>
+</div>
+<!-- Filter Status -->
+<div class="md:col-span-2">
+<select aria-label="Filter by Status" class="w-full px-space-sm py-2 bg-app-bg rounded-lg text-body-sm font-body-sm text-on-surface focus:outline-none">
+<option value="">Status: All Status</option>
+<option value="active">Active (32)</option>
+<option value="pending">Invitation Pending (3)</option>
+<option value="suspended">Suspended (1)</option>
+</select>
+</div>
+<!-- Filter Establishment -->
+<div class="md:col-span-3">
+<select aria-label="Filter by Establishment" class="w-full px-space-sm py-2 bg-app-bg rounded-lg text-body-sm font-body-sm text-on-surface focus:outline-none">
+<option value="">Establishment: All Facilities</option>
+<option value="maa">Maa Medical Centre (Gopiballavpur)</option>
+<option value="city">City Pharmacy &amp; Polyclinic (Jhargram)</option>
+<option value="burdwan">Burdwan Seva Polyclinic</option>
+<option value="shanti">Shanti Clinic &amp; Diagnostic</option>
+</select>
+</div>
+<!-- Reset Button -->
+<div class="md:col-span-1 flex justify-end">
+<button class="w-full py-2 px-space-xs rounded-lg text-text-secondary hover:text-error-red hover:bg-error-soft/30 text-label-sm font-label-sm flex items-center justify-center gap-1 transition-colors" title="Reset all applied filters" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset</span>
+</button>
+</div>
+</div>
+<!-- Filter Indicators / Active Filters chips -->
+<div class="flex items-center gap-space-xs pt-space-xs text-label-sm font-label-sm text-text-secondary overflow-x-auto">
+<span class="uppercase tracking-wider text-[10px] font-semibold text-outline">Active Constraints:</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface inline-flex items-center gap-1">
+          Region: Jhargram &amp; Paschim Medinipur
+          <button class="material-symbols-outlined text-[12px] hover:text-error-red" type="button">close</button>
+</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface inline-flex items-center gap-1">
+          Showing: Verified Records Only
+          <button class="material-symbols-outlined text-[12px] hover:text-error-red" type="button">close</button>
+</span>
+<span class="text-text-secondary/70 ml-auto font-code-tabular text-body-sm">36 Total Identified</span>
+</div>
+</section>
+<!-- Main Data & Inspection Bento Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter-desktop items-start">
+<!-- Users Table Panel -->
+<section class="xl:col-span-7 bg-surface rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="p-space-lg flex items-center justify-between bg-surface">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Registered User Directory</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Click row to inspect security boundary &amp; role authorizations</p>
+</div>
+<span class="px-space-sm py-1 bg-surface-container-low text-text-secondary rounded font-code-tabular text-label-sm">
+            Showing 6 of 36
+          </span>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-text-secondary text-label-sm font-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md">User Details</th>
+<th class="py-space-sm px-space-sm">Role Scope</th>
+<th class="py-space-sm px-space-sm">Target Scope</th>
+<th class="py-space-sm px-space-sm">Status</th>
+<th class="py-space-sm px-space-sm">Last Synced</th>
+<th class="py-space-sm pr-space-md text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Rajesh Sharma (Platform) -->
+<tr class="user-table-row hover:bg-surface-container-low/60 cursor-pointer transition-colors" onclick="selectUserRow(this, 'Rajesh Sharma', 'Platform Admin', 'rajesh.sharma@whereismydoctor.internal', '+91 98301 22410', 'Platform-wide Access', 'Active')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<img alt="Rajesh Sharma" class="w-8 h-8 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1VzIdbRl2Ok25zQ3P8tlme7rwURWxHMkwGSNnLLtmrcq4xn-XLQbB9Znuu_P9SkeHZGkkcpAxFXfMIdcsJs0z80aATFl6p7oMiiNK-5LNMbhSXcJ_pdMJfWnBwhN_b-kFIpPPvDTF9AAnPPOpCKdywbSI5AFQuLvYaOvQS6lo1SDtIvQWZNm_aOde9hv5JZzsi6nXqG9Wg8jIoyx6f0pAQT3tnCErfnUx3Y0y8Xv-yQmbHcGC3AgD9uGNjR"/>
+<div class="min-w-0">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold">Rajesh Sharma</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">rajesh.sharma@whereismydoctor.internal</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 98301 22410</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">shield_person</span>Platform Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-primary-container font-semibold truncate max-w-[150px]">Platform-wide Access</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Territory Operations</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>Active
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-text-secondary font-code-tabular text-body-sm whitespace-nowrap">
+                  Today, 10:45 AM
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded hover:bg-surface-container-high transition-colors" type="button">Inspect</button>
+</td>
+</tr>
+<!-- Row 2: Amit Kumar (Establishment - Pre-selected) -->
+<tr class="user-table-row bg-surface-container-low border-l-4 border-l-primary-container hover:bg-surface-container-low cursor-pointer transition-colors" onclick="selectUserRow(this, 'Amit Kumar', 'Establishment Admin', 'maa.medical.gop@gmail.com', '+91 94340 22109', 'Maa Medical Centre (Gopiballavpur)', 'Active')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-md text-label-md font-bold">
+                      AK
+                    </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold">Amit Kumar</span>
+<span class="text-label-sm text-text-secondary">(Store Mgr)</span>
+</div>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular truncate max-w-[190px]">maa.medical.gop@gmail.com</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 94340 22109</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[150px]">Maa Medical Centre</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Gopiballavpur (Chamber)</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>Active
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-text-secondary font-code-tabular text-body-sm whitespace-nowrap">
+                  Yesterday, 04:15 PM
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded bg-surface shadow-sm" type="button">Inspect</button>
+</td>
+</tr>
+<!-- Row 3: Dr. Ananya Sen (Platform) -->
+<tr class="user-table-row hover:bg-surface-container-low/60 cursor-pointer transition-colors" onclick="selectUserRow(this, 'Dr. Ananya Sen', 'Platform Admin', 'ananya.sen@whereismydoctor.internal', '+91 98311 55201', 'Platform-wide Access', 'Active')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-8 h-8 rounded-full object-cover shadow-sm" data-alt="Professional Indian female medical operations director with glasses, wearing clean formal attire, neutral clinical corporate backdrop with teal hues, high sharpness studio portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkEVm9poOMiaWvS7d9FOV3AXStTBcFMsegaZcgbqGKFxxacAMRjB5URnyp8ej5ZTO8ulz_kGwDu4MVw-bqckmAHD12Nzd-5cYNMZDOx2hdNZXCuX1romK6glaO-iK8HN9gymAsFBstAAWeiOJ8I-q4YkCieEFKAl4fy6mlNLKdbRMcJtwPDReABgQuOCE47kRo7Lfqh9lgDR-7-Fb-VQ1HWe3drsC9Kga5N6gcgVMpfGY3SagN63eJIQ"/>
+<div class="min-w-0">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold">Dr. Ananya Sen</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular truncate max-w-[190px]">ananya.sen@whereismydoctor.internal</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 98311 55201</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">shield_person</span>Platform Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-primary-container font-semibold truncate max-w-[150px]">Platform-wide Access</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Clinical Verification</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>Active
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-text-secondary font-code-tabular text-body-sm whitespace-nowrap">
+                  24 Sep 2026
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded hover:bg-surface-container-high transition-colors" type="button">Inspect</button>
+</td>
+</tr>
+<!-- Row 4: Priya Sen (Pending) -->
+<tr class="user-table-row hover:bg-surface-container-low/60 cursor-pointer transition-colors" onclick="selectUserRow(this, 'Priya Sen', 'Establishment Admin', 'info@citypharmacy-jhargram.com', '+91 94332 11094', 'City Pharmacy &amp; Polyclinic (Jhargram)', 'Invitation Pending')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-warning-soft text-warning-amber flex items-center justify-center font-label-md text-label-md font-bold">
+                      PS
+                    </div>
+<div class="min-w-0">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold">Priya Sen</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular truncate max-w-[190px]">info@citypharmacy-jhargram.com</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 94332 11094</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[150px]">City Pharmacy &amp; Polyclinic</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Jhargram Central</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-warning-soft text-warning-amber font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-warning-amber"></span>Invitation Pending
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-warning-amber font-code-tabular text-body-sm whitespace-nowrap">
+                  Sent 2 days ago
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded hover:bg-surface-container-high transition-colors" type="button">Resend</button>
+</td>
+</tr>
+<!-- Row 5: Sourav Mondal (Establishment) -->
+<tr class="user-table-row hover:bg-surface-container-low/60 cursor-pointer transition-colors" onclick="selectUserRow(this, 'Sourav Mondal', 'Establishment Admin', 'contact@burdwanseva.org', '+91 98320 44589', 'Burdwan Seva Polyclinic', 'Active')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-label-md text-label-md font-bold">
+                      SM
+                    </div>
+<div class="min-w-0">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold">Sourav Mondal</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular truncate max-w-[190px]">contact@burdwanseva.org</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 98320 44589</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[150px]">Burdwan Seva Polyclinic</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Station Road Complex</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>Active
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-text-secondary font-code-tabular text-body-sm whitespace-nowrap">
+                  21 Sep 2026
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded hover:bg-surface-container-high transition-colors" type="button">Inspect</button>
+</td>
+</tr>
+<!-- Row 6: Debashis Roy (Suspended) -->
+<tr class="user-table-row hover:bg-surface-container-low/60 cursor-pointer transition-colors opacity-80" onclick="selectUserRow(this, 'Debashis Roy', 'Establishment Admin', 'contact.roymedical@gmail.com', '+91 94345 88912', 'Roy Medical Hall', 'Suspended')">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container text-status-unknown flex items-center justify-center font-label-md text-label-md font-bold">
+                      DR
+                    </div>
+<div class="min-w-0">
+<span class="font-label-md text-label-md text-on-surface block leading-tight font-semibold line-through text-outline">Debashis Roy</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular truncate max-w-[190px]">contact.roymedical@gmail.com</span>
+<span class="text-body-sm text-body-sm text-text-secondary block font-code-tabular">+91 94345 88912</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-status-unknown inline-flex items-center gap-1 whitespace-nowrap">
+<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin
+                  </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="font-label-md text-label-md text-outline font-semibold truncate max-w-[150px]">Roy Medical Hall</div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Kharagpur Market</span>
+</td>
+<td class="py-space-md px-space-sm whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high text-status-unknown font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-unknown"></span>Suspended
+                  </span>
+</td>
+<td class="py-space-md px-space-sm text-text-secondary font-code-tabular text-body-sm whitespace-nowrap">
+                  14 Aug 2026
+                </td>
+<td class="py-space-md pr-space-md text-right whitespace-nowrap">
+<button class="text-primary-container hover:text-primary font-label-md text-label-md px-2 py-1 rounded hover:bg-surface-container-high transition-colors" type="button">Re-activate</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Bar -->
+<div class="p-space-md bg-surface-container-low/50 flex items-center justify-between text-body-sm text-text-secondary">
+<div class="flex items-center gap-space-sm">
+<span>Rows per page:</span>
+<select aria-label="Rows per page" class="bg-surface rounded px-space-xs py-0.5 text-body-sm text-on-surface">
+<option>10</option>
+<option selected="">20</option>
+<option>50</option>
+</select>
+</div>
+<div class="flex items-center gap-space-md">
+<span>Page 1 of 4</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-outline opacity-40 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="p-1 rounded text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- User Inspection & Security Boundary Panel -->
+<section class="xl:col-span-5 bg-surface rounded-xl shadow-sm overflow-hidden flex flex-col space-y-space-lg p-space-xl">
+<!-- Panel Header -->
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary">Inspection Console</span>
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-space-xs">
+<span id="inspected-header-name">Amit Kumar</span>
+</h2>
+<div class="flex items-center gap-space-sm pt-1">
+<span class="px-space-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container inline-flex items-center gap-1" id="inspected-user-role-badge">
+<span class="material-symbols-outlined text-[13px]">storefront</span>Establishment Admin
+              </span>
+<span class="text-body-sm font-code-tabular text-text-secondary">UID: #USR-78921-WB</span>
+</div>
+</div>
+<span class="p-2 rounded-lg bg-surface-container-low text-primary-container">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</span>
+</div>
+<!-- Identity Key-Value Card -->
+<div class="grid grid-cols-2 gap-space-md p-space-md rounded-lg bg-app-bg text-body-sm">
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Full Name</span>
+<span class="font-semibold text-on-surface block mt-0.5" id="inspected-user-name">Amit Kumar</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Phone Contact</span>
+<span class="font-code-tabular font-medium text-on-surface block mt-0.5" id="inspected-user-phone">+91 94340 22109</span>
+</div>
+<div class="col-span-2">
+<span class="text-label-sm font-label-sm text-text-secondary block">Registered Email</span>
+<span class="font-code-tabular font-medium text-on-surface block mt-0.5" id="inspected-user-email">maa.medical.gop@gmail.com</span>
+</div>
+<div class="col-span-2">
+<span class="text-label-sm font-label-sm text-text-secondary block">Primary Facility Scope</span>
+<span class="font-semibold text-primary-container block mt-0.5" id="inspected-user-establishment">Maa Medical Centre - Main Branch, Gopiballavpur</span>
+</div>
+</div>
+<!-- Authoritative Boundary Callout -->
+<div class="p-space-lg rounded-xl bg-secondary-fixed/30 space-y-space-md" id="boundary-guidance-card">
+<div class="flex items-center gap-space-sm text-tertiary">
+<span class="material-symbols-outlined text-[20px] text-primary-container">policy</span>
+<span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-primary" id="inspected-boundary-text">
+              Access Boundary: Strictly limited to Maa Medical Centre
+            </span>
+</div>
+<div class="space-y-space-sm text-body-sm font-body-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-container block font-bold">
+              ✓ Explicitly Permitted Operational Actions:
+            </span>
+<ul class="space-y-1.5 text-on-surface">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-success-green text-[16px] mt-0.5">check_circle</span>
+<span>Manage facility address, operational phone, and chamber timings.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-success-green text-[16px] mt-0.5">check_circle</span>
+<span>Manage attached practice locations &amp; consultation rooms inside the facility.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-success-green text-[16px] mt-0.5">check_circle</span>
+<span>Update roster of visiting doctors (e.g. Dr. Amit Das - Cardiology).</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-success-green text-[16px] mt-0.5">check_circle</span>
+<span>Broadcast real-time temporary absence notices and emergency schedule shifts.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-success-green text-[16px] mt-0.5">check_circle</span>
+<span>Review facility-specific community report flags and availability inquiries.</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-xs space-y-space-sm text-body-sm font-body-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error-red block font-bold">
+              ✕ Enforced Hard System Prohibitions:
+            </span>
+<ul class="space-y-1.5 text-text-secondary">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error-red text-[16px] mt-0.5">block</span>
+<span>No visibility or control over other clinics, chemist stores, or regional nodes.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error-red text-[16px] mt-0.5">block</span>
+<span>Cannot alter global doctor profiles or state medical council registrations.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error-red text-[16px] mt-0.5">block</span>
+<span>Cannot modify platform users, system configuration, or PIN code routing.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error-red text-[16px] mt-0.5">block</span>
+<span>Zero access to platform-level administrative audit logs.</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Administrative Action Buttons -->
+<div class="space-y-space-sm pt-space-xs">
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="px-space-md py-2.5 rounded-lg bg-surface hover:bg-surface-container-low text-primary-container font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+<span>Reset Password / Re-auth</span>
+</button>
+<button class="px-space-md py-2.5 rounded-lg bg-surface hover:bg-surface-container-low text-text-secondary hover:text-on-surface font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+<span>Edit Contact Info</span>
+</button>
+</div>
+<button class="w-full px-space-md py-2.5 rounded-lg bg-surface hover:bg-error-soft text-error-red font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm" onclick="toggleSuspendModal(true)" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+<span>Suspend Access</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Future Capability Notice Banner (Standard Operational Card) -->
+<div class="p-space-lg rounded-xl bg-app-bg text-text-secondary flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<span class="p-2 rounded-lg bg-surface text-outline">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</span>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Doctor Self-Claim Verification Interface</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">Roadmap Phase 2</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Self-service doctor portal registration and phone OTP identity assertions are currently managed by offline ground verification agents.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-label-md font-label-md text-primary-container">
+<span>Protocol Specs #V2-701</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- INLINE INVITE USER DRAWER / FLYOUT (SLIDE OVER) -->
+<div class="hidden fixed inset-0 bg-inverse-surface/40 z-50 backdrop-blur-xs flex justify-end" id="drawer-backdrop" onclick="toggleInviteDrawer(false)">
+<div class="translate-x-full transition-transform duration-300 ease-out w-full max-w-xl bg-surface h-full shadow-2xl p-space-xl flex flex-col justify-between overflow-y-auto" id="invite-user-drawer" onclick="event.stopPropagation()">
+<div class="space-y-space-xl">
+<!-- Drawer Header -->
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-primary-container font-bold">New Account Provisioning</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Invite User to Admin Portal</h2>
+<p class="font-body-md text-body-md text-text-secondary">Send an invitation email to a platform administrator or establishment manager.</p>
+</div>
+<button aria-label="Close drawer" class="p-1 rounded-lg hover:bg-surface-container text-text-secondary transition-colors" onclick="toggleInviteDrawer(false)" type="button">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<!-- Form Elements -->
+<form class="space-y-space-lg" onsubmit="event.preventDefault(); toggleInviteDrawer(false);">
+<!-- Full Name -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface block font-semibold">Full Legal Name <span class="text-error-red">*</span></label>
+<input class="w-full px-space-md py-2 bg-surface rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface transition-all shadow-sm" placeholder="e.g. Subir Mukherjee" required="" type="text"/>
+</div>
+<!-- Email Address -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface block font-semibold">Email Address <span class="text-error-red">*</span></label>
+<input class="w-full px-space-md py-2 bg-surface rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface transition-all shadow-sm" placeholder="manager@establishment.com" required="" type="email"/>
+<span class="text-body-sm font-body-sm text-text-secondary">Invitation key and credential activation will be dispatched here.</span>
+</div>
+<!-- Phone Number -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface block font-semibold">Mobile Phone Number <span class="text-error-red">*</span></label>
+<div class="flex gap-space-xs">
+<span class="px-space-md py-2 bg-surface-container text-on-surface font-code-tabular text-body-md rounded-lg flex items-center shadow-sm">+91</span>
+<input class="w-full px-space-md py-2 bg-surface rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface transition-all shadow-sm" pattern="[0-9]{10}" placeholder="98300 00000" required="" type="tel"/>
+</div>
+</div>
+<!-- Role Selection: Radio Cards -->
+<div class="space-y-space-xs">
+<label class="font-label-md text-label-md text-on-surface block font-semibold">Select Administrative Role <span class="text-error-red">*</span></label>
+<div class="grid grid-cols-1 gap-space-sm pt-1">
+<!-- Establishment Admin Radio -->
+<label class="p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container flex items-start gap-space-md cursor-pointer transition-all shadow-sm">
+<input checked="" class="mt-1 text-primary-container focus:ring-0" name="role_type" onchange="toggleEstablishmentDropdown('establishment')" type="radio" value="establishment"/>
+<div class="space-y-0.5">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Establishment Admin</span>
+<span class="px-space-xs py-0.2 bg-secondary-container text-on-secondary-container text-label-sm rounded font-semibold">Restricted</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+                    Restricted strictly to one physical facility. Can update doctors, visiting schedules, and localized notices.
+                  </p>
+</div>
+</label>
+<!-- Platform Admin Radio -->
+<label class="p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container flex items-start gap-space-md cursor-pointer transition-all shadow-sm">
+<input class="mt-1 text-primary-container focus:ring-0" name="role_type" onchange="toggleEstablishmentDropdown('platform')" type="radio" value="platform"/>
+<div class="space-y-0.5">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Platform Admin</span>
+<span class="px-space-xs py-0.2 bg-primary text-on-primary text-label-sm rounded font-semibold">Full Access</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+                    Full platform-wide operational authority across all PIN codes, catalogs, verification queues, and audit logs.
+                  </p>
+</div>
+</label>
+</div>
+</div>
+<!-- Dynamic Establishment Selector -->
+<div class="space-y-1 transition-opacity" id="establishment-selection-field">
+<label class="font-label-md text-label-md text-on-surface block font-semibold">Assign Physical Establishment <span class="text-error-red">*</span></label>
+<select class="w-full px-space-md py-2 bg-surface rounded-lg text-body-md font-body-md text-on-surface focus:outline-none focus:bg-surface transition-all shadow-sm" required="">
+<option disabled="" selected="" value="">Select an approved facility...</option>
+<option value="maa-gop">Maa Medical Centre (Gopiballavpur Branch)</option>
+<option value="city-jhar">City Pharmacy &amp; Polyclinic (Jhargram Central)</option>
+<option value="burdwan-seva">Burdwan Seva Polyclinic (Station Road)</option>
+<option value="shanti-med">Shanti Clinic &amp; Diagnostic Centre</option>
+<option value="roy-med">Roy Medical Hall (Kharagpur)</option>
+</select>
+</div>
+<!-- Notice Callout -->
+<div class="p-space-md rounded-lg bg-secondary-fixed/40 flex items-start gap-space-sm text-tertiary" id="establishment-notice">
+<span class="material-symbols-outlined text-[18px] text-primary-container mt-0.5">info</span>
+<p class="font-body-sm text-body-sm leading-relaxed">
+<strong class="font-semibold text-primary">Notice:</strong> This user will only have access to the selected establishment and its associated practice locations and schedules. They cannot view or modify records from any other facility.
+            </p>
+</div>
+<!-- Send Options -->
+<div class="pt-space-xs">
+<label class="flex items-center gap-space-sm cursor-pointer select-none">
+<input checked="" class="rounded text-primary-container focus:ring-0" type="checkbox"/>
+<span class="text-body-sm font-body-sm text-on-surface">Send invitation email immediately with 72-hour secure sign-up link</span>
+</label>
+</div>
+</form>
+</div>
+<!-- Drawer Footer Controls -->
+<div class="pt-space-lg flex items-center justify-end gap-space-md">
+<button class="px-space-lg py-2.5 rounded-lg bg-surface hover:bg-surface-container-low text-text-secondary font-label-md text-label-md transition-colors" onclick="toggleInviteDrawer(false)" type="button">
+          Cancel
+        </button>
+<button class="px-space-xl py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all flex items-center gap-space-xs" onclick="toggleInviteDrawer(false)" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Send Invitation</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SUSPEND ACCESS CONFIRMATION MODAL PREVIEW -->
+<div class="hidden fixed inset-0 bg-inverse-surface/40 z-50 backdrop-blur-xs items-center justify-center p-space-md" id="suspend-confirmation-modal" onclick="toggleSuspendModal(false)">
+<div class="bg-surface w-full max-w-md rounded-xl shadow-2xl p-space-xl space-y-space-lg relative" onclick="event.stopPropagation()">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-error-soft text-error-red flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-tight">
+            Suspend access for <span id="suspend-target-name">Amit Kumar</span>?
+          </h3>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed pt-1">
+            They will no longer be able to log in to the admin portal or update schedules for <strong class="text-on-surface" id="inspected-scope-pill">Maa Medical Centre</strong> until access is restored by a Platform Admin.
+          </p>
+</div>
+</div>
+<div class="p-space-md rounded-lg bg-app-bg text-body-sm font-code-tabular text-text-secondary space-y-1">
+<div>Account: <span class="text-on-surface">maa.medical.gop@gmail.com</span></div>
+<div>Scope: <span class="text-primary font-semibold">Maa Medical Centre (Gopiballavpur)</span></div>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-2 rounded-lg bg-surface hover:bg-surface-container-low text-text-secondary font-label-md text-label-md transition-colors" onclick="toggleSuspendModal(false)" type="button">
+          Cancel
+        </button>
+<button class="px-space-lg py-2 rounded-lg bg-error-red hover:bg-error text-on-error font-label-md text-label-md shadow-sm transition-all flex items-center gap-1" onclick="toggleSuspendModal(false)" type="button">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span>Suspend User</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

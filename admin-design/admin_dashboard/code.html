@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-primary": "#80d5cb", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "surface-bright": "#faf8ff", "outline-variant": "#bdc9c6", "on-primary-container": "#a3faef", "primary-container": "#0f766e", "on-surface": "#131b2e", "success-soft": "#DCFCE7", "surface-container": "#eaedff", "tertiary-fixed": "#bdece2", "on-error-container": "#93000a", "tertiary-fixed-dim": "#a2d0c6", "warning-soft": "#FEF3C7", "error-soft": "#FEE2E2", "on-secondary-fixed": "#00201e", "background": "#faf8ff", "on-error": "#ffffff", "secondary-container": "#a8ece5", "on-secondary-fixed-variant": "#00504b", "success-green": "#16A34A", "error": "#ba1a1a", "on-tertiary": "#ffffff", "app-bg": "#F8FAFC", "inverse-surface": "#283044", "outline": "#6e7977", "surface-dim": "#d2d9f4", "on-primary-fixed-variant": "#00504a", "on-primary-fixed": "#00201d", "surface-container-high": "#e2e7ff", "tertiary-container": "#467169", "secondary": "#216963", "secondary-fixed-dim": "#8fd3cc", "on-tertiary-fixed": "#00201c", "status-unknown": "#64748B", "surface-tint": "#006a63", "on-secondary-container": "#266d68", "warning-amber": "#D97706", "error-container": "#ffdad6", "on-tertiary-container": "#c5f3ea", "surface-container-lowest": "#ffffff", "info-blue": "#2563EB", "tertiary": "#2d5951", "primary-fixed-dim": "#80d5cb", "surface-variant": "#dae2fd", "primary-fixed": "#9cf2e8", "surface-container-low": "#f2f3ff", "inverse-on-surface": "#eef0ff", "on-background": "#131b2e", "secondary-fixed": "#abefe8", "text-secondary": "#475569", "on-secondary": "#ffffff", "border-subtle": "#E2E8F0", "surface": "#FFFFFF", "error-red": "#DC2626", "primary": "#005c55", "on-surface-variant": "#3e4947", "on-tertiary-fixed-variant": "#224e47" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin-desktop": "2rem", "margin": "1rem", "space-lg": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-md": "0.75rem", "space-2xl": "2rem", "space-xs": "0.25rem", "space-xl": "1.5rem", "gutter-desktop": "1.5rem" }, "fontFamily": { "body-md": ["Noto Sans"], "code-tabular": ["Noto Sans"], "label-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "label-md": ["Noto Sans"], "body-sm": ["Noto Sans"], "headline-md": ["Noto Sans"], "body-lg": ["Noto Sans"], "headline-sm": ["Noto Sans"], "headline-xl": ["Noto Sans"], "headline-lg": ["Noto Sans"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "code-tabular": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } }</script></head><body class="bg-app-bg text-on-surface font-body-md text-body-md antialiased"><aside class="fixed left-0 top-0 h-screen w-64 bg-primary text-on-primary z-50 flex flex-col justify-between overflow-y-auto border-r border-tertiary-container"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md border-b border-tertiary-container"><div class="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">add_location_alt</span></div><div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg tracking-tight truncate text-on-primary">Where Is My Doctor?</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider truncate">Admin Operations</span></div></div><nav class="flex flex-col gap-space-xs px-space-md py-space-lg" data-active-classes="bg-secondary-container text-on-secondary-container font-label-md"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-secondary-container text-on-secondary-container font-label-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Establishments</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="establishments" href="#"><span class="material-symbols-outlined text-[18px]">domain</span><span>Establishments</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Doctors</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="doctors" href="#"><span class="material-symbols-outlined text-[18px]">stethoscope</span><span>Doctors</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="schedules" href="#"><span class="material-symbols-outlined text-[18px]">calendar_month</span><span>Schedules</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Content</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="health-guide" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span>Health Guide</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Verification</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="reports" href="#"><span class="material-symbols-outlined text-[18px]">verified</span><span>Reports</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Administration</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="users-and-access" href="#"><span class="material-symbols-outlined text-[18px]">manage_accounts</span><span>Users &amp; Access</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>Settings</span></a></nav></div><div class="p-space-md mx-space-md mb-space-lg rounded-lg border border-dashed border-outline-variant bg-tertiary/40"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Roadmap Modules</span><span class="px-1.5 py-0.5 rounded-sm bg-tertiary text-on-primary font-label-sm text-[9px] uppercase tracking-wide">Queued</span></div><div class="flex flex-col gap-1 text-[11px] text-primary-fixed-dim"><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Appointments</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Real-time Availability</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Payments &amp; Billing</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Telemedicine Gateway</span></div></div></div></aside><div class="pl-64 flex flex-col min-h-screen"><header class="fixed top-0 left-64 right-0 h-16 bg-surface border-b border-border-subtle z-40 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-text-secondary font-label-md text-label-md"><span>Registry Ops</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-on-surface font-label-lg text-label-lg">Portal Control</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green border border-success-green/20 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[13px]">check_circle</span><span>Sync Active</span></div></div><div class="flex items-center gap-space-lg"><button class="flex items-center gap-1.5 text-text-secondary hover:text-on-surface transition-colors font-label-md text-label-md px-space-sm py-1 rounded-lg border border-border-subtle hover:bg-surface-container-low" type="button"><span class="material-symbols-outlined text-[16px] text-primary">sync</span><span class="hidden sm:inline">Live Feed</span></button><button class="relative p-space-xs text-text-secondary hover:text-on-surface transition-colors rounded-lg hover:bg-surface-container-low" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error-red"></span></button><div class="h-6 w-px bg-border-subtle"></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden sm:flex flex-col"><span class="font-label-md text-label-md text-on-surface leading-tight">Admin User</span><span class="font-label-sm text-label-sm text-text-secondary leading-tight">Super Admin</span></div><span class="material-symbols-outlined text-[16px] text-text-secondary">expand_more</span></div></div></header><main class="w-full pt-16 bg-app-bg px-space-xl py-space-xl max-w-[1600px]"><div class="flex flex-col w-full">
+<!-- PAGE HEADER -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-lg pb-space-xl border-b border-border-subtle">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Dashboard</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          Registry Live
+        </span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary">Manage healthcare information and keep it up to date across verified regional chambers.</p>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-space-md shrink-0">
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-surface-container-low font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export Summary</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-lg py-2 rounded-lg bg-primary-container text-on-primary hover:bg-secondary transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add Establishment</span>
+</button>
+</div>
+</div>
+<!-- SECTION 1 — ESTABLISHMENT OVERVIEW METRICS -->
+<section class="mt-space-xl">
+<div class="flex items-center justify-between mb-space-md">
+<h2 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider text-xs">Establishment Overview</h2>
+<span class="font-code-tabular text-code-tabular text-text-secondary">Updated 4m ago · Ground Verification Node 04</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- Metric 1: Total -->
+<div class="bg-surface rounded-xl p-space-lg border border-border-subtle hover:border-outline-variant transition-colors flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-secondary">Total Establishments</span>
+<span class="font-headline-xl text-headline-xl text-on-surface mt-1 tracking-tight">248</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">domain</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-border-subtle flex items-center gap-1.5 text-text-secondary">
+<span class="material-symbols-outlined text-[15px] text-primary">location_city</span>
+<span class="font-label-sm text-label-sm">Active Directory Units across 4 districts</span>
+</div>
+</div>
+<!-- Metric 2: Verified -->
+<div class="bg-surface rounded-xl p-space-lg border border-border-subtle hover:border-outline-variant transition-colors flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-secondary">Verified</span>
+<span class="font-headline-xl text-headline-xl text-on-surface mt-1 tracking-tight">192</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-success-soft text-success-green flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">verified</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-border-subtle flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">check</span>
+            77.4%
+          </span>
+<span class="font-label-sm text-label-sm text-text-secondary">verified accurate on ground</span>
+</div>
+</div>
+<!-- Metric 3: Needs Verification -->
+<div class="bg-surface rounded-xl p-space-lg border border-border-subtle hover:border-outline-variant transition-colors flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-secondary">Needs Verification</span>
+<span class="font-headline-xl text-headline-xl text-on-surface mt-1 tracking-tight">18</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-warning-soft text-warning-amber flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">warning</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-border-subtle flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">schedule</span>
+            Action Due
+          </span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">Stale records (&gt;90d) &amp; new</span>
+</div>
+</div>
+<!-- Metric 4: Account Managed -->
+<div class="bg-surface rounded-xl p-space-lg border border-border-subtle hover:border-outline-variant transition-colors flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-secondary">Account Managed</span>
+<span class="font-headline-xl text-headline-xl text-on-surface mt-1 tracking-tight">12</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-info-blue flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">badge</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-border-subtle flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-label-sm text-label-sm">
+            V1 Rollout
+          </span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">Establishment-claimed accounts</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2 — NEEDS ATTENTION (OPERATIONAL WORKQUEUE) -->
+<section class="mt-space-2xl">
+<div class="bg-surface rounded-xl border border-border-subtle overflow-hidden">
+<!-- Section Header -->
+<div class="p-space-lg bg-surface flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-sm border-b border-border-subtle">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">Needs attention</h2>
+<span class="px-2 py-0.5 rounded-full bg-error-soft text-error-red font-label-sm text-label-sm font-semibold">31 Total Pending Actions</span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary mt-0.5">Actionable items requiring admin verification or ground review today.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-warning-amber"></span> High Priority
+          </span>
+</div>
+</div>
+<!-- Action Items List -->
+<div class="divide-y divide-border-subtle">
+<!-- Row 1 -->
+<div class="p-space-md sm:px-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded-lg bg-warning-soft text-warning-amber flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[19px]">domain_verification</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">12 establishments need verification</span>
+<span class="px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm">12 Pending</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Annual verification cycle due or coordinate drift detected from physical map coordinates.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-center">
+<span class="font-code-tabular text-code-tabular text-text-secondary hidden xl:inline">SLA: Due Today</span>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-secondary-container/30 hover:border-primary font-label-md text-label-md transition-colors" type="button">
+<span>Review Queue</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="p-space-md sm:px-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded-lg bg-error-soft text-error-red flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[19px]">flag</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">5 establishment reports waiting for review</span>
+<span class="px-2 py-0.5 rounded bg-error-soft text-error-red font-label-sm text-label-sm">5 Reports</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Community user reports regarding closed clinics, relocated chambers, or shifted doctor timings.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-center">
+<span class="font-code-tabular text-code-tabular text-text-secondary hidden xl:inline">SLA: 2h Remaining</span>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-secondary-container/30 hover:border-primary font-label-md text-label-md transition-colors" type="button">
+<span>Resolve Reports</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="p-space-md sm:px-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded-lg bg-warning-soft text-warning-amber flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[19px]">id_card</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">8 doctors need information updates</span>
+<span class="px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm">8 Profiles</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Missing WBMC registration confirmation, degree records incomplete, or chamber phone unreachable.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-center">
+<span class="font-code-tabular text-code-tabular text-text-secondary hidden xl:inline">SLA: In Progress</span>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-secondary-container/30 hover:border-primary font-label-md text-label-md transition-colors" type="button">
+<span>Update Doctors</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="p-space-md sm:px-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high text-info-blue flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[19px]">event_busy</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">6 schedules need confirmation</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-info-blue font-label-sm text-label-sm">6 Schedules</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Upcoming holiday overrides, chamber compounder shifts, and temporary roster modifications.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-center">
+<span class="font-code-tabular text-code-tabular text-text-secondary hidden xl:inline">SLA: Next 48h</span>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-secondary-container/30 hover:border-primary font-label-md text-label-md transition-colors" type="button">
+<span>Verify Shifts</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TWO-COLUMN WORKSPACE: ONBOARDING PIPELINE & AUDIT FEED -->
+<div class="mt-space-2xl grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- LEFT COLUMN: ONBOARDING (~60% = 7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-xl">
+<div class="bg-surface rounded-xl border border-border-subtle flex flex-col h-full">
+<!-- Card Header -->
+<div class="p-space-lg border-b border-border-subtle">
+<div class="flex items-start justify-between gap-space-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Establishment onboarding</h2>
+<p class="font-body-sm text-body-sm text-text-secondary mt-1">Track onboarding pipeline from physical identification to digital verification and platform access.</p>
+</div>
+<span class="material-symbols-outlined text-text-secondary">corporate_fare</span>
+</div>
+<!-- Pipeline Metric Strip -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm mt-space-lg pt-space-md border-t border-border-subtle">
+<div class="p-space-sm rounded-lg bg-surface-container-low border border-border-subtle">
+<span class="font-label-sm text-label-sm text-text-secondary block">New (Month)</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">8</span>
+<span class="font-label-sm text-label-sm text-primary">Identified</span>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low border border-border-subtle">
+<span class="font-label-sm text-label-sm text-text-secondary block">Verified (14d)</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">14</span>
+<span class="font-label-sm text-label-sm text-success-green">Audited</span>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low border border-border-subtle">
+<span class="font-label-sm text-label-sm text-text-secondary block">Invites Pending</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">3</span>
+<span class="font-label-sm text-label-sm text-warning-amber">Awaiting</span>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low border border-border-subtle">
+<span class="font-label-sm text-label-sm text-text-secondary block">Active Accounts</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">12</span>
+<span class="font-label-sm text-label-sm text-text-secondary">Claimed</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Action Bar -->
+<div class="px-space-lg py-space-md bg-app-bg border-b border-border-subtle flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-secondary transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>Add Establishment</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-surface-container-low transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">travel_explore</span>
+<span>View Establishments Directory</span>
+</button>
+</div>
+<span class="font-code-tabular text-code-tabular text-text-secondary">Stage Preview: 3 Active Units</span>
+</div>
+<!-- Mini-pipeline Table -->
+<div class="p-space-lg overflow-x-auto flex-1 flex flex-col justify-between">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-subtle text-text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<th class="pb-space-sm font-semibold">Establishment Name</th>
+<th class="pb-space-sm font-semibold">Location / Category</th>
+<th class="pb-space-sm font-semibold">Stage &amp; Status</th>
+<th class="pb-space-sm font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle">
+<!-- Entity 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md pr-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-secondary-container text-primary flex items-center justify-center shrink-0 font-label-md text-label-md">
+                      M
+                    </div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Maa Medical Store &amp; Clinic</div>
+<div class="font-code-tabular text-code-tabular text-text-secondary">ID: EST-BWN-842</div>
+</div>
+</div>
+</td>
+<td class="py-space-md pr-space-md font-body-sm text-body-sm text-text-secondary">
+<div>Pharmacy &amp; Chamber</div>
+<div class="text-[11px] text-text-secondary">Burdwan Sadar</div>
+</td>
+<td class="py-space-md pr-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+                    Verified Active
+                  </span>
+</td>
+<td class="py-space-md text-right">
+<button class="font-label-md text-label-md text-primary hover:underline" type="button">View details</button>
+</td>
+</tr>
+<!-- Entity 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md pr-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-warning-soft text-warning-amber flex items-center justify-center shrink-0 font-label-md text-label-md">
+                      R
+                    </div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Ranaghat Matri Sadan OPD</div>
+<div class="font-code-tabular text-code-tabular text-text-secondary">ID: EST-NAD-119</div>
+</div>
+</div>
+</td>
+<td class="py-space-md pr-space-md font-body-sm text-body-sm text-text-secondary">
+<div>Polyclinic</div>
+<div class="text-[11px] text-text-secondary">Ranaghat, Nadia</div>
+</td>
+<td class="py-space-md pr-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">pending_actions</span>
+                    Awaiting Physical Audit
+                  </span>
+</td>
+<td class="py-space-md text-right">
+<button class="font-label-md text-label-md text-primary hover:underline" type="button">Audit Form</button>
+</td>
+</tr>
+<!-- Entity 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md pr-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container text-info-blue flex items-center justify-center shrink-0 font-label-md text-label-md">
+                      H
+                    </div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Hooghly Apex Medicare</div>
+<div class="font-code-tabular text-code-tabular text-text-secondary">ID: EST-HGY-034</div>
+</div>
+</div>
+</td>
+<td class="py-space-md pr-space-md font-body-sm text-body-sm text-text-secondary">
+<div>Diagnostic &amp; Clinic</div>
+<div class="text-[11px] text-text-secondary">Chinsurah</div>
+</td>
+<td class="py-space-md pr-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-info-blue font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">send</span>
+                    Invite Sent
+                  </span>
+</td>
+<td class="py-space-md text-right">
+<button class="font-label-md text-label-md text-primary hover:underline" type="button">Re-send Pin</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="pt-space-md mt-space-md border-t border-border-subtle flex items-center justify-between text-text-secondary">
+<span class="font-body-sm text-body-sm">Showing 3 most recent pipeline registrations</span>
+<a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" href="#">
+<span>Inspect All Pipeline Entries (27)</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: RECENT ACTIVITY FEED (~40% = 5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-xl">
+<div class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col h-full justify-between">
+<div>
+<!-- Feed Header -->
+<div class="flex items-center justify-between pb-space-md border-b border-border-subtle">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Recent activity</h2>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Operational updates across entities &amp; schedules.</p>
+</div>
+<button class="text-text-secondary hover:text-on-surface p-1 rounded hover:bg-surface-container-low" type="button">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+</div>
+<!-- Activity Item Stack -->
+<div class="mt-space-md flex flex-col gap-space-md">
+<!-- Activity 1 -->
+<div class="flex items-start gap-space-md pb-space-md border-b border-border-subtle/60">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">add_business</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Added Maa Medical Store</span>
+<span class="font-code-tabular text-code-tabular text-text-secondary shrink-0 text-[11px]">18 mins ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+                  Entity: <span class="text-on-surface font-medium">Maa Medical Store</span> (Pharmacy &amp; Chamber)
+                </div>
+<div class="flex items-center gap-1 text-[11px] text-text-secondary mt-1">
+<span class="material-symbols-outlined text-[12px]">account_circle</span>
+<span>Rajesh S. (Super Admin)</span>
+<span>·</span>
+<span class="font-code-tabular">Lat/Long tagged</span>
+</div>
+</div>
+</div>
+<!-- Activity 2 -->
+<div class="flex items-start gap-space-md pb-space-md border-b border-border-subtle/60">
+<div class="w-8 h-8 rounded-full bg-success-soft text-success-green flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Verified Shanti Clinic</span>
+<span class="font-code-tabular text-code-tabular text-text-secondary shrink-0 text-[11px]">1 hour ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+                  Entity: <span class="text-on-surface font-medium">Shanti Child Clinic</span> (Chamber)
+                </div>
+<div class="flex items-center gap-1 text-[11px] text-text-secondary mt-1">
+<span class="material-symbols-outlined text-[12px]">account_circle</span>
+<span>Priya M. (Verification Admin)</span>
+<span>·</span>
+<span class="text-success-green font-medium">Field badge issued</span>
+</div>
+</div>
+</div>
+<!-- Activity 3 -->
+<div class="flex items-start gap-space-md pb-space-md border-b border-border-subtle/60">
+<div class="w-8 h-8 rounded-full bg-surface-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Updated Dr. Amit Das schedule</span>
+<span class="font-code-tabular text-code-tabular text-text-secondary shrink-0 text-[11px]">2.5 hours ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+                  Entity: <span class="text-on-surface font-medium">Dr. Amit Das</span> (Dermatology)
+                </div>
+<div class="flex items-center gap-1 text-[11px] text-text-secondary mt-1">
+<span class="material-symbols-outlined text-[12px]">account_circle</span>
+<span>Rajesh S.</span>
+<span>·</span>
+<span class="font-code-tabular">Shift: Tue &amp; Sat 5-8 PM</span>
+</div>
+</div>
+</div>
+<!-- Activity 4 -->
+<div class="flex items-start gap-space-md pb-space-md border-b border-border-subtle/60">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-info-blue flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Resolved establishment report</span>
+<span class="font-code-tabular text-code-tabular text-text-secondary shrink-0 text-[11px]">4 hours ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+                  Entity: <span class="text-on-surface font-medium">Apollo Pharmacy Chamber</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-secondary mt-1">
+<span class="material-symbols-outlined text-[12px]">account_circle</span>
+<span>Priya M.</span>
+<span>·</span>
+<span class="text-text-secondary">Timing discrepancy clarified</span>
+</div>
+</div>
+</div>
+<!-- Activity 5 -->
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-surface-container text-text-secondary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">more_time</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Added schedule override</span>
+<span class="font-code-tabular text-code-tabular text-text-secondary shrink-0 text-[11px]">Yesterday</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+                  Entity: <span class="text-on-surface font-medium">Burdwan Medicare</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-secondary mt-1">
+<span class="material-symbols-outlined text-[12px]">account_circle</span>
+<span>Rajesh S.</span>
+<span>·</span>
+<span class="text-warning-amber font-medium">Chamber holiday logged</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Audit Trail Link -->
+<div class="pt-space-md mt-space-md border-t border-border-subtle">
+<a class="w-full inline-flex items-center justify-center gap-1 font-label-md text-label-md text-primary hover:text-secondary py-1 transition-colors" href="#">
+<span>View Complete Audit Trail</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 5 — FUTURE ACCOUNT WORKFLOW (RESERVED FUTURE CAPABILITY) -->
+<section class="mt-space-2xl pb-space-xl">
+<div class="rounded-xl border border-dashed border-outline-variant bg-surface p-space-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md border-b border-border-subtle">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Establishment accounts &amp; self-management</h3>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+                Future Integration
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Establishments can be invited to self-manage doctor rosters and chamber timings in subsequent rollout phases.</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-surface-container-low transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">manage_accounts</span>
+<span>Manage Accounts</span>
+</button>
+</div>
+</div>
+<!-- Detail Row with Operational Metric Points -->
+<div class="mt-space-md grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-app-bg">
+<span class="material-symbols-outlined text-success-green text-[18px]">verified_user</span>
+<div>
+<div class="font-label-md text-label-md text-on-surface">12 Active Accounts</div>
+<div class="font-body-sm text-[11px] text-text-secondary">Managed by verified compounder / clinic desk</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-app-bg">
+<span class="material-symbols-outlined text-warning-amber text-[18px]">mark_email_unread</span>
+<div>
+<div class="font-label-md text-label-md text-on-surface">3 Invitations Pending</div>
+<div class="font-body-sm text-[11px] text-text-secondary">Awaiting phone verification from clinic manager</div>
+</div>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-space-xs text-text-secondary">
+<span class="material-symbols-outlined text-[16px]">lock_clock</span>
+<span class="font-label-sm text-label-sm">Live Token &amp; Rostering</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-text-secondary font-label-sm text-[10px] uppercase font-semibold">
+            Coming Later
+          </span>
+</div>
+</div>
+</div>
+</section>
+</div></main></div></body></html>

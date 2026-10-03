@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "inverse-on-surface": "#eef0ff", "status-success-soft": "#DCFCE7", "surface-dim": "#d2d9f4", "surface-container": "#eaedff", "outline-variant": "#bdc9c6", "on-secondary": "#ffffff", "surface-container-low": "#f2f3ff", "error": "#ba1a1a", "status-error-soft": "#FEE2E2", "on-primary": "#ffffff", "on-secondary-container": "#266d68", "on-background": "#131b2e", "tertiary-container": "#467169", "surface-container-lowest": "#ffffff", "on-surface": "#131b2e", "border-subtle": "#E2E8F0", "surface-container-highest": "#dae2fd", "primary-fixed-dim": "#80d5cb", "status-info": "#2563EB", "outline": "#6e7977", "on-secondary-fixed-variant": "#00504b", "secondary-fixed": "#abefe8", "surface": "#FFFFFF", "on-surface-variant": "#3e4947", "status-success": "#16A34A", "tertiary-fixed": "#bdece2", "error-container": "#ffdad6", "inverse-primary": "#80d5cb", "primary-container": "#0f766e", "secondary-container": "#a8ece5", "app-bg": "#F8FAFC", "status-warning": "#D97706", "on-error": "#ffffff", "status-error": "#DC2626", "on-tertiary-fixed": "#00201c", "on-error-container": "#93000a", "secondary": "#216963", "on-tertiary-fixed-variant": "#224e47", "on-secondary-fixed": "#00201e", "primary": "#005c55", "on-tertiary": "#ffffff", "status-warning-soft": "#FEF3C7", "status-unknown": "#64748B", "surface-tint": "#006a63", "surface-variant": "#dae2fd", "surface-bright": "#faf8ff", "secondary-fixed-dim": "#8fd3cc", "on-primary-fixed": "#00201d", "on-primary-container": "#a3faef", "on-primary-fixed-variant": "#00504a", "tertiary-fixed-dim": "#a2d0c6", "primary-fixed": "#9cf2e8", "inverse-surface": "#283044", "on-tertiary-container": "#c5f3ea", "tertiary": "#2d5951", "text-muted": "#475569", "background": "#faf8ff", "surface-container-high": "#e2e7ff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter-desktop": "1.5rem", "margin-desktop": "2rem", "space-sm": "0.5rem", "space-xl": "2rem", "gutter": "1rem", "margin": "1rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-md": "1rem" }, fontFamily: { "body-sm": ["Noto Sans"], "label-sm": ["Noto Sans"], "headline-xl-mobile": ["Noto Sans"], "label-md": ["Noto Sans"], "body-lg": ["Noto Sans"], "label-lg": ["Noto Sans"], "body-md": ["Noto Sans"], "headline-lg": ["Noto Sans"], "headline-xl": ["Noto Sans"], "title-md": ["Noto Sans"], "headline-md": ["Noto Sans"], "headline-lg-mobile": ["Noto Sans"] }, fontSize: { "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "700" }], "title-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "600" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-app-bg text-on-surface font-body-md text-body-md flex flex-col min-h-screen selection:bg-secondary-container"><main class="flex-1 flex flex-col w-full bg-app-bg pb-20 pt-safe"><div class="flex flex-col w-full">
+<!-- Top App Navigation / Context Header -->
+<header class="bg-surface sticky top-0 z-30 shadow-sm">
+<div class="max-w-lg mx-auto px-margin py-3 flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-text-muted hover:text-on-surface transition-colors py-1 pr-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span class="font-label-md text-label-md">Doctors</span>
+</a>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-primary hover:bg-surface-container font-label-md text-label-md transition-colors" id="editProfileBtn">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Edit</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Body Content -->
+<div class="max-w-lg mx-auto w-full px-margin py-4 flex flex-col gap-5">
+<!-- 1. Compact Profile Card -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3.5">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="relative shrink-0 w-14 h-14 rounded-full overflow-hidden bg-primary-fixed-dim/40 flex items-center justify-center shadow-inner">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of Dr. Amit Das, a friendly South Asian male physician in his mid-30s wearing a crisp white consultation coat over a neat collar shirt, warm natural clinic lighting, soft focus hospital background in calm deep teal tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgjtTgBs6ahTFw0Q08Kz0eqDFTEUXvVCwk0VQawL6fTDbLyse-um0cONc9GPije8YCNdnaYcNm_x8mUr8JoUgOPz5VHZD6TvGz5BBfzsb_OyN946Of_1O1UDWPxE80Yugl2x9FyTf4zlF6b_UroRyfOReMVr7ricfOH70NPqQREiN7s9G3EdfAt8lSZu-JS2M7LjpoVdqjIdY7Pmt68BPVQGcrF98QR-RoUJaWkctEwB18yJsQCSnK9A"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-status-success rounded-full ring-2 ring-surface"></span>
+</div>
+<div class="min-w-0 flex flex-col">
+<div class="flex items-center gap-2 flex-wrap">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface truncate">Dr. Amit Das</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm shrink-0">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Active
+              </span>
+</div>
+<p class="font-label-md text-label-md text-primary font-medium">General Medicine</p>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">MBBS, MD · 8 yrs clinical exp.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-text-muted">translate</span>
+<span>Bengali, English, Hindi</span>
+</div>
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-status-warning-soft text-status-warning hover:opacity-90 transition-opacity font-label-sm text-label-sm" id="quickUnavailBtn">
+<span class="material-symbols-outlined text-[16px]">event_busy</span>
+          Mark Unavailable Today
+        </button>
+</div>
+</section>
+<!-- 2. Practice Location -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">apartment</span>
+<h2 class="font-title-md text-title-md text-on-surface">Practice Location</h2>
+</div>
+<a class="text-primary hover:underline font-label-md text-label-md flex items-center gap-0.5" href="#">
+          Manage locations
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<div class="bg-app-bg rounded-lg p-3.5 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface">Maa Medical Centre — Main Branch</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Gopiballavpur, Jhargram</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm shrink-0">
+            Primary Facility
+          </span>
+</div>
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm pt-1">
+<span class="material-symbols-outlined text-[16px] text-primary">meeting_room</span>
+<span>Chamber 1 · Ground Floor</span>
+<span class="text-slate-300">|</span>
+<span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span>
+<span>OPD Wing B</span>
+</div>
+</div>
+</section>
+<!-- 3. Today's Schedule (High Visual Prominence) -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">today</span>
+<h2 class="font-title-md text-title-md text-on-surface">Today's Schedule</h2>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-warning-soft text-status-warning font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-status-warning animate-pulse"></span>
+          Scheduled today
+        </span>
+</div>
+<div class="bg-secondary-container/30 rounded-xl p-3.5 flex flex-col gap-2.5">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface font-semibold">Thursday · 5:00 PM – 7:00 PM</p>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Chamber 1 (Ground Floor)</p>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px]">alarm</span>
+</div>
+</div>
+<!-- Temporary changed callout preview -->
+<div class="bg-status-warning-soft/70 rounded-lg p-2.5 flex items-start gap-2" id="todayChangeNotice">
+<span class="material-symbols-outlined text-status-warning text-[18px] shrink-0 mt-0.5">info</span>
+<div class="text-on-surface">
+<p class="font-label-sm text-label-sm font-semibold text-status-warning">Shift Advisory Alert</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Regular: 5:00 PM – 7:00 PM. Front desk notified for direct on-time slot inquiries.</p>
+</div>
+</div>
+<div class="bg-surface/80 rounded-lg p-2.5 flex items-start gap-2">
+<span class="material-symbols-outlined text-text-muted text-[16px] shrink-0 mt-0.5">verified_user</span>
+<p class="font-body-sm text-body-sm text-text-muted leading-tight">
+            Scheduled time indicates planned consultation hours. Scheduled time does not guarantee the doctor will be present.
+          </p>
+</div>
+<!-- Interactive Quick Controls -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 rounded-lg bg-surface text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 shadow-sm active:bg-app-bg transition-colors" id="btnMarkChanged">
+<span class="material-symbols-outlined text-[18px]">update</span>
+            Mark Changed
+          </button>
+<button class="h-11 rounded-lg bg-surface text-status-error font-label-md text-label-md flex items-center justify-center gap-1.5 shadow-sm active:bg-app-bg transition-colors" id="btnMarkUnavailable">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+            Mark Unavailable
+          </button>
+</div>
+</div>
+</section>
+<!-- 4. Regular Weekly Schedule -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">calendar_month</span>
+<h2 class="font-title-md text-title-md text-on-surface">Regular Schedule</h2>
+</div>
+<button class="text-primary hover:underline font-label-md text-label-md flex items-center gap-0.5">
+          Manage schedule
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Compact Weekly Breakdown -->
+<div class="flex flex-col gap-1.5">
+<!-- Monday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface w-24">Monday</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">5:00 PM – 7:00 PM</span>
+</div>
+<span class="px-2 py-0.5 rounded text-status-success font-label-sm text-label-sm bg-status-success-soft">Scheduled</span>
+</div>
+<!-- Tuesday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg/50 opacity-75">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-text-muted w-24">Tuesday</span>
+<span class="font-body-sm text-body-sm text-text-muted">Not scheduled</span>
+</div>
+<span class="text-text-muted font-body-sm text-body-sm">—</span>
+</div>
+<!-- Wednesday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg/50 opacity-75">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-text-muted w-24">Wednesday</span>
+<span class="font-body-sm text-body-sm text-text-muted">Not scheduled</span>
+</div>
+<span class="text-text-muted font-body-sm text-body-sm">—</span>
+</div>
+<!-- Thursday (Today Highlight) -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-secondary-container/40">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-primary font-bold w-24 flex items-center gap-1">
+              Thursday
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</span>
+<span class="font-body-md text-body-md text-on-surface font-semibold">5:00 PM – 7:00 PM</span>
+</div>
+<span class="px-2 py-0.5 rounded text-primary font-label-sm text-label-sm bg-primary-fixed-dim/30 font-semibold">Today</span>
+</div>
+<!-- Friday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg/50 opacity-75">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-text-muted w-24">Friday</span>
+<span class="font-body-sm text-body-sm text-text-muted">Not scheduled</span>
+</div>
+<span class="text-text-muted font-body-sm text-body-sm">—</span>
+</div>
+<!-- Saturday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface w-24">Saturday</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">10:00 AM – 12:00 PM</span>
+</div>
+<span class="px-2 py-0.5 rounded text-status-success font-label-sm text-label-sm bg-status-success-soft">Scheduled</span>
+</div>
+<!-- Sunday -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg/50 opacity-75">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-text-muted w-24">Sunday</span>
+<span class="font-body-sm text-body-sm text-text-muted">Not scheduled</span>
+</div>
+<span class="text-text-muted font-body-sm text-body-sm">—</span>
+</div>
+</div>
+</section>
+<!-- 5. Temporary Changes Section -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">pending_actions</span>
+<h2 class="font-title-md text-title-md text-on-surface">Temporary Changes</h2>
+</div>
+<button class="text-primary hover:underline font-label-md text-label-md flex items-center gap-0.5" id="addTempChangeBtn">
+<span class="material-symbols-outlined text-[18px]">add</span>
+          Add change
+        </button>
+</div>
+<div class="flex flex-col gap-2">
+<div class="p-3 bg-app-bg rounded-lg flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-status-error-soft text-status-error flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">28 Sep · Unavailable</p>
+<p class="font-body-sm text-body-sm text-text-muted">Clinic leave / Personal emergency</p>
+</div>
+</div>
+<button class="text-text-muted hover:text-on-surface p-1 rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="p-3 bg-app-bg rounded-lg flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-status-warning-soft text-status-warning flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">2 Oct · Timing Adjusted</p>
+<p class="font-body-sm text-body-sm text-text-muted">6:00 PM – 8:00 PM (Holiday evening timing)</p>
+</div>
+</div>
+<button class="text-text-muted hover:text-on-surface p-1 rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<a class="text-text-muted hover:text-primary text-center font-label-md text-label-md pt-1 flex items-center justify-center gap-1 transition-colors" href="#">
+<span>View all 4 historical adjustments</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</section>
+<!-- 6. Doctor Information (Operational Details) -->
+<section class="bg-surface rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">badge</span>
+<h2 class="font-title-md text-title-md text-on-surface">Doctor Information</h2>
+</div>
+<button class="text-primary hover:underline font-label-md text-label-md">Edit information</button>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- Contact Staff Row -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-app-bg">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-text-muted">Direct Staff Contact</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">+91 98765 43210</span>
+</div>
+<div class="flex items-center gap-1.5">
+<a class="w-9 h-9 rounded-lg bg-surface text-primary flex items-center justify-center shadow-sm hover:bg-surface-container-low transition-colors" href="tel:+919876543210" title="Call staff contact">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</a>
+<button class="w-9 h-9 rounded-lg bg-surface text-text-muted flex items-center justify-center shadow-sm hover:bg-surface-container-low transition-colors" id="copyPhoneBtn" title="Copy number">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Registration & Degrees -->
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2.5 rounded-lg bg-app-bg flex flex-col">
+<span class="font-body-sm text-body-sm text-text-muted">Registration No.</span>
+<span class="font-label-md text-label-md text-on-surface font-medium mt-0.5">WBMC 64821</span>
+<span class="inline-flex items-center gap-0.5 text-status-success font-label-sm text-label-sm mt-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified
+            </span>
+</div>
+<div class="p-2.5 rounded-lg bg-app-bg flex flex-col">
+<span class="font-body-sm text-body-sm text-text-muted">Qualifications</span>
+<span class="font-label-md text-label-md text-on-surface font-medium mt-0.5">MBBS, MD</span>
+<span class="font-body-sm text-body-sm text-text-muted">General Medicine</span>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-app-bg flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-text-muted">Total Practice Experience</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">8 Years</span>
+</div>
+</div>
+</section>
+<!-- 7. Remove Doctor (Subtle Low-Prominence Destructive Action) -->
+<section class="pt-2 pb-6 flex flex-col items-center">
+<button class="w-full h-12 rounded-xl bg-status-error-soft/60 hover:bg-status-error-soft text-status-error font-label-lg text-label-lg flex items-center justify-center gap-2 transition-colors" id="openRemoveModalBtn">
+<span class="material-symbols-outlined text-[20px]">person_remove</span>
+<span>Remove from establishment</span>
+</button>
+<p class="font-body-sm text-body-sm text-text-muted text-center mt-2 px-2">
+        Removes association with Maa Medical Centre only. Doctor’s personal listing remains preserved.
+      </p>
+</section>
+</div>
+<!-- Interactive Remove Confirmation Modal Drawer (Hidden by default) -->
+<div class="fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm hidden items-end justify-center transition-all p-0" id="removeConfirmModal">
+<div class="w-full max-w-lg bg-surface rounded-t-2xl p-6 shadow-xl flex flex-col gap-4">
+<div class="w-12 h-1 bg-surface-container rounded-full mx-auto -mt-2 mb-1"></div>
+<div class="flex items-start gap-3">
+<div class="w-11 h-11 rounded-full bg-status-error-soft text-status-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface">Remove Dr. Amit Das from your establishment?</h3>
+<p class="font-body-md text-body-md text-text-muted mt-2 leading-relaxed">
+            The doctor will no longer be associated with <strong class="text-on-surface">Maa Medical Centre</strong>. Their DocNear profile and listings at other clinics will not be deleted.
+          </p>
+</div>
+</div>
+<div class="flex flex-col gap-2.5 pt-2">
+<button class="w-full h-12 rounded-xl bg-status-error text-on-error font-label-lg text-label-lg font-semibold active:opacity-95 transition-opacity" id="confirmRemoveBtn">
+          Remove Doctor
+        </button>
+<button class="w-full h-12 rounded-xl bg-surface-container-low text-on-surface font-label-lg text-label-lg hover:bg-surface-container transition-colors" id="cancelRemoveBtn">
+          Cancel
+        </button>
+</div>
+</div>
+</div>
+<!-- Interactive Toast Feedback -->
+<div class="fixed bottom-20 inset-x-4 max-w-sm mx-auto bg-inverse-surface text-inverse-on-surface py-3 px-4 rounded-xl shadow-lg flex items-center justify-between transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 z-50" id="toastNotification">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">check_circle</span>
+<span class="font-label-md text-label-md" id="toastMsg">Status updated successfully</span>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Modal toggle
+    const removeModal = document.getElementById('removeConfirmModal');
+    const openRemoveBtn = document.getElementById('openRemoveModalBtn');
+    const cancelRemoveBtn = document.getElementById('cancelRemoveBtn');
+    const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMsg');
+
+    function showToast(message) {
+      if (!toast) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2500);
+    }
+
+    if (openRemoveBtn && removeModal) {
+      openRemoveBtn.addEventListener('click', () => {
+        removeModal.classList.remove('hidden');
+        removeModal.classList.add('flex');
+      });
+    }
+
+    if (cancelRemoveBtn && removeModal) {
+      cancelRemoveBtn.addEventListener('click', () => {
+        removeModal.classList.add('hidden');
+        removeModal.classList.remove('flex');
+      });
+    }
+
+    if (confirmRemoveBtn && removeModal) {
+      confirmRemoveBtn.addEventListener('click', () => {
+        removeModal.classList.add('hidden');
+        removeModal.classList.remove('flex');
+        showToast('Dr. Amit Das removed from establishment');
+      });
+    }
+
+    // Quick Action Triggers
+    const quickUnavailBtn = document.getElementById('quickUnavailBtn');
+    const btnMarkUnavailable = document.getElementById('btnMarkUnavailable');
+    const btnMarkChanged = document.getElementById('btnMarkChanged');
+    const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+
+    if (quickUnavailBtn) {
+      quickUnavailBtn.addEventListener('click', () => {
+        showToast('Marked Dr. Amit Das unavailable for today');
+      });
+    }
+
+    if (btnMarkUnavailable) {
+      btnMarkUnavailable.addEventListener('click', () => {
+        showToast('Today’s OPD marked as unavailable');
+      });
+    }
+
+    if (btnMarkChanged) {
+      btnMarkChanged.addEventListener('click', () => {
+        showToast('Schedule adjustment window opened');
+      });
+    }
+
+    if (copyPhoneBtn) {
+      copyPhoneBtn.addEventListener('click', () => {
+        navigator.clipboard?.writeText('+919876543210');
+        showToast('Phone number copied to clipboard');
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(15,23,42,0.06)]" data-active-classes="text-primary font-label-md"><div class="flex justify-around items-center h-16 px-space-xs max-w-lg mx-auto"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-text-muted hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-text-muted hover:text-on-surface transition-colors" data-path="doctors" href="#"><span class="material-symbols-outlined text-[24px]">stethoscope</span><span class="font-label-sm text-label-sm mt-0.5">Doctors</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-text-muted hover:text-on-surface transition-colors" data-path="establishment" href="#"><span class="material-symbols-outlined text-[24px]">apartment</span><span class="font-label-sm text-label-sm mt-0.5">Establishment</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-text-muted hover:text-on-surface transition-colors" data-path="more" href="#"><span class="material-symbols-outlined text-[24px]">grid_view</span><span class="font-label-sm text-label-sm mt-0.5">More</span></a></div></nav></body></html>

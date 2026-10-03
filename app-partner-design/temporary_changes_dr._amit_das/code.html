@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "border-subtle": "#E2E8F0", "app-bg": "#F8FAFC", "surface-container-high": "#e2e7ff", "inverse-surface": "#283044", "status-error": "#DC2626", "surface-variant": "#dae2fd", "on-tertiary-container": "#c5f3ea", "secondary": "#216963", "primary-fixed-dim": "#80d5cb", "background": "#faf8ff", "on-primary-container": "#a3faef", "status-success": "#16A34A", "inverse-on-surface": "#eef0ff", "status-unknown": "#64748B", "status-error-soft": "#FEE2E2", "on-primary": "#ffffff", "on-secondary-fixed-variant": "#00504b", "surface-container": "#eaedff", "primary-container": "#0f766e", "surface-container-highest": "#dae2fd", "tertiary-container": "#467169", "on-tertiary-fixed": "#00201c", "on-tertiary": "#ffffff", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#224e47", "status-info": "#2563EB", "on-primary-fixed-variant": "#00504a", "outline-variant": "#bdc9c6", "on-secondary-container": "#266d68", "error": "ba1a1a", "text-muted": "#475569", "secondary-container": "#a8ece5", "tertiary-fixed-dim": "#a2d0c6", "surface-tint": "#006a63", "surface": "#FFFFFF", "secondary-fixed": "#abefe8", "outline": "#6e7977", "surface-bright": "#faf8ff", "surface-container-low": "#f2f3ff", "status-warning-soft": "#FEF3C7", "on-primary-fixed": "#00201d", "inverse-primary": "#80d5cb", "on-surface": "#131b2e", "primary": "#005c55", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "on-surface-variant": "#3e4947", "on-error-container": "#93000a", "primary-fixed": "#9cf2e8", "on-secondary-fixed": "#00201e", "status-success-soft": "#DCFCE7", "tertiary-fixed": "#bdece2", "tertiary": "#2d5951", "secondary-fixed-dim": "#8fd3cc", "status-warning": "#D97706", "on-error": "#ffffff", "on-background": "#131b2e", "surface-dim": "#d2d9f4" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "gutter": "1rem", "space-lg": "1.5rem", "margin-desktop": "2rem", "space-sm": "0.5rem", "gutter-desktop": "1.5rem", "space-xl": "2rem", "space-md": "1rem", "margin": "1rem" }, "fontFamily": { "body-lg": ["Noto Sans"], "label-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "body-md": ["Noto Sans"], "headline-lg": ["Noto Sans"], "title-md": ["Noto Sans"], "headline-md": ["Noto Sans"], "headline-xl": ["Noto Sans"], "headline-lg-mobile": ["Noto Sans"], "body-sm": ["Noto Sans"], "headline-xl-mobile": ["Noto Sans"], "label-md": ["Noto Sans"] }, "fontSize": { "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "label-lg": ["15px", {"lineHeight": "20px", "fontWeight": "600"}], "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}], "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}], "title-md": ["18px", {"lineHeight": "26px", "fontWeight": "600"}], "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "headline-xl": ["36px", {"lineHeight": "44px", "fontWeight": "700"}], "headline-lg-mobile": ["22px", {"lineHeight": "30px", "fontWeight": "600"}], "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}], "headline-xl-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}], "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}] } } } }</script></head><body class="bg-app-bg text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center min-w-0 flex-1"><button aria-label="Back to Dr. Amit Das" class="min-h-[44px] min-w-[44px] -ml-2 px-space-xs flex items-center gap-space-xs text-primary hover:text-primary-container transition-colors rounded-lg" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span><span class="font-label-md text-label-md truncate max-w-[130px]">Dr. Amit Das</span></button><div class="min-w-0 pl-space-xs flex-1"><h1 class="font-title-md text-title-md text-on-surface truncate">Temporary Changes</h1></div></div><div class="flex items-center gap-space-xs shrink-0"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-safe bg-app-bg"><div class="flex flex-col w-full px-margin space-y-space-md pb-space-xl">
+<!-- Screen Context / Location Card -->
+<div class="flex flex-col space-y-space-xs pt-space-sm">
+<p class="font-body-md text-body-md text-text-muted">
+      Update the doctor's schedule for specific dates.
+    </p>
+<div class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[24px]">local_hospital</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Maa Medical Centre — Main Branch</h2>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+              Gopiballavpur, Jhargram
+            </p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs pt-space-xs">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm min-h-[32px]" type="button">
+<span>Main Branch</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">arrow_drop_down</span>
+</button>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-app-bg text-text-muted font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span>
+          Chamber 1 · Ground Floor
+        </span>
+</div>
+</div>
+</div>
+<!-- Logic Clarity / How it Works Card -->
+<div class="bg-secondary-container/30 rounded-xl p-space-md space-y-space-xs">
+<div class="flex items-center gap-2 text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>How temporary changes work</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+      A temporary change overrides the regular weekly schedule for a single specific date only. Regular weekly timings resume immediately after.
+    </p>
+<div class="pt-space-xs">
+<div class="inline-flex items-center gap-2 bg-surface px-3 py-1.5 rounded-lg shadow-sm font-label-sm text-label-sm text-on-surface">
+<span class="text-text-muted">Regular: Thu 5:00–7:00 PM</span>
+<span class="material-symbols-outlined text-[14px] text-primary">arrow_forward</span>
+<span class="text-status-error font-semibold">28 Sep: Unavailable</span>
+</div>
+</div>
+</div>
+<!-- Primary Trigger CTA -->
+<div class="w-full">
+<button class="w-full min-h-[48px] bg-primary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:bg-secondary active:scale-[0.99] transition-transform" id="add-change-toggle-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>+ Add Temporary Change</span>
+</button>
+</div>
+<!-- Section: Upcoming Changes (2) -->
+<div class="flex flex-col space-y-space-sm pt-space-xs">
+<div class="flex items-center justify-between">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+<span>Upcoming Changes</span>
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-surface-container font-label-sm text-label-sm text-text-muted">2</span>
+</h3>
+<span class="font-label-sm text-label-sm text-primary">Active Overrides</span>
+</div>
+<!-- Card 1: 28 Sep 2026 -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm" id="card-change-1">
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<span class="font-headline-md text-headline-md text-on-surface block">28 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-muted">Thursday · Regular slot affected</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-error-soft text-status-error font-label-sm text-label-sm shrink-0">
+<span class="w-1.5 h-1.5 rounded-full bg-status-error"></span>
+<span>Unavailable</span>
+</div>
+</div>
+<div class="bg-app-bg rounded-lg p-space-sm space-y-1">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Regular: 5:00 PM – 7:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-text-muted">event_busy</span>
+<span>Reason: Personal leave / Emergency</span>
+</div>
+</div>
+<div class="flex items-start gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low p-2.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">visibility</span>
+<span>Patients searching DocNear will see: <strong class="text-on-surface">"Not available on 28 Sep"</strong></span>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="min-h-[44px] px-4 rounded-lg bg-surface text-primary font-label-md text-label-md hover:bg-app-bg transition-colors" type="button">
+          Edit Change
+        </button>
+<button class="min-h-[44px] px-3 rounded-lg text-status-error font-label-md text-label-md hover:bg-status-error-soft/40 transition-colors flex items-center gap-1" onclick="openConfirmDialog()" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+</div>
+<!-- Card 2: 2 Oct 2026 -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm" id="card-change-2">
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<span class="font-headline-md text-headline-md text-on-surface block">2 Oct 2026</span>
+<span class="font-body-sm text-body-sm text-text-muted">Monday · Gandhi Jayanti</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-warning-soft text-status-warning font-label-sm text-label-sm shrink-0">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>Changed Hours</span>
+</div>
+</div>
+<div class="bg-app-bg rounded-lg p-space-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-text-muted line-through">Regular: 5:00 PM – 7:00 PM</span>
+<span class="font-label-md text-label-md text-primary font-semibold">New: 6:00 PM – 8:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-text-muted">celebration</span>
+<span>Reason: Holiday evening timing adjustment</span>
+</div>
+</div>
+<div class="flex items-start gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low p-2.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">update</span>
+<span>Doctor will arrive 1 hour later than normal. Session extended to 8:00 PM.</span>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="min-h-[44px] px-4 rounded-lg bg-surface text-primary font-label-md text-label-md hover:bg-app-bg transition-colors" type="button">
+          Edit Change
+        </button>
+<button class="min-h-[44px] px-3 rounded-lg text-status-error font-label-md text-label-md hover:bg-status-error-soft/40 transition-colors flex items-center gap-1" onclick="openConfirmDialog()" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Add New Change Form Container (Active Demonstration) -->
+<div class="bg-surface rounded-xl p-space-md shadow-md space-y-space-md" id="add-change-form-container">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container/40 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface">+ Add New Change</h3>
+</div>
+<button class="text-text-muted hover:text-on-surface min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg" onclick="toggleForm()" type="button">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- 1. Date Picker -->
+<div class="space-y-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+<span>Select Date</span>
+<span class="font-label-sm text-label-sm text-text-muted">Future dates only</span>
+</label>
+<div class="flex items-center justify-between bg-app-bg rounded-lg px-space-md py-3 min-h-[48px]">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Thursday, 8 Oct 2026</span>
+</div>
+<span class="material-symbols-outlined text-text-muted text-[18px]">edit_calendar</span>
+</div>
+</div>
+<!-- 2. Change Type (3 Pills/Cards) -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Change Type</label>
+<div class="grid grid-cols-1 gap-2" id="change-type-selector">
+<!-- Card A (Selected) -->
+<button class="change-type-opt w-full text-left p-space-sm rounded-lg bg-secondary-container text-on-surface-variant flex items-start gap-space-sm transition-all" data-type="unavailable" onclick="selectType(this, 'unavailable')" type="button">
+<div class="w-8 h-8 rounded-full bg-status-error-soft text-status-error flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-bold">Unavailable</span>
+<span class="material-symbols-outlined text-primary text-[18px] checkmark-icon">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Doctor will not be available on this date</p>
+</div>
+</button>
+<!-- Card B -->
+<button class="change-type-opt w-full text-left p-space-sm rounded-lg bg-app-bg text-on-surface-variant flex items-start gap-space-sm transition-all" data-type="changed" onclick="selectType(this, 'changed')" type="button">
+<div class="w-8 h-8 rounded-full bg-status-warning-soft text-status-warning flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Changed Hours</span>
+<span class="material-symbols-outlined text-transparent text-[18px] checkmark-icon">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Adjust start or end time for this date</p>
+</div>
+</button>
+<!-- Card C -->
+<button class="change-type-opt w-full text-left p-space-sm rounded-lg bg-app-bg text-on-surface-variant flex items-start gap-space-sm transition-all" data-type="additional" onclick="selectType(this, 'additional')" type="button">
+<div class="w-8 h-8 rounded-full bg-status-success-soft text-status-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">add_alarm</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Additional Hours</span>
+<span class="material-symbols-outlined text-transparent text-[18px] checkmark-icon">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Add an extra consultation session</p>
+</div>
+</button>
+</div>
+</div>
+<!-- 3. Dynamic Context Preview Banner -->
+<div class="bg-status-error-soft/50 rounded-lg p-space-sm flex items-start gap-2">
+<span class="material-symbols-outlined text-status-error text-[18px] shrink-0 mt-0.5">warning</span>
+<p class="font-body-sm text-body-sm text-status-error">
+        Doctor will not be available on this date. The regular session (5:00 PM – 7:00 PM) will be cancelled.
+      </p>
+</div>
+<!-- 4. Reason Selector -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Reason for change</label>
+<div class="flex flex-wrap gap-2">
+<button class="reason-pill px-3 py-1.5 rounded-full bg-secondary-container text-primary font-label-sm text-label-sm font-semibold" type="button">
+          Personal leave
+        </button>
+<button class="reason-pill px-3 py-1.5 rounded-full bg-app-bg text-text-muted font-label-sm text-label-sm" type="button">
+          Holiday
+        </button>
+<button class="reason-pill px-3 py-1.5 rounded-full bg-app-bg text-text-muted font-label-sm text-label-sm" type="button">
+          Emergency
+        </button>
+<button class="reason-pill px-3 py-1.5 rounded-full bg-app-bg text-text-muted font-label-sm text-label-sm" type="button">
+          Establishment closed
+        </button>
+<button class="reason-pill px-3 py-1.5 rounded-full bg-app-bg text-text-muted font-label-sm text-label-sm" type="button">
+          Other
+        </button>
+</div>
+</div>
+<!-- 5. Action Buttons -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 min-h-[48px] bg-primary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-secondary transition-colors" onclick="saveNewChange()" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Save Change</span>
+</button>
+<button class="min-h-[48px] px-5 bg-app-bg text-text-muted rounded-xl font-label-lg text-label-lg hover:bg-surface-container transition-colors" onclick="toggleForm()" type="button">
+        Cancel
+      </button>
+</div>
+</div>
+<!-- Past Changes History Trigger -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm">
+<button class="w-full flex items-center justify-between text-left min-h-[44px]" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted text-[20px]">history</span>
+<span class="font-label-md text-label-md text-on-surface">View past changes (12)</span>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">chevron_right</span>
+</button>
+</div>
+<!-- Schedule Accuracy Notice -->
+<div class="bg-app-bg rounded-xl p-space-md space-y-space-xs">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-text-muted text-[18px] shrink-0 mt-0.5">verified_user</span>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+        Schedules show planned consultation times. Actual availability may change. Temporary changes communicate expected departures from regular consultation hours to visiting patients.
+      </p>
+</div>
+</div>
+<!-- Confirmation Dialog (Overlay / Preview State) -->
+<div class="hidden fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-margin" id="confirm-modal">
+<div class="bg-surface w-full max-w-sm rounded-2xl p-space-lg shadow-xl space-y-space-md animate-in fade-in duration-200">
+<div class="w-12 h-12 rounded-full bg-status-error-soft text-status-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">delete_forever</span>
+</div>
+<div class="space-y-1.5">
+<h4 class="font-title-md text-title-md text-on-surface">Remove this schedule change?</h4>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+          The doctor's regular weekly schedule (5:00 PM – 7:00 PM) will apply on this date.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 min-h-[48px] bg-app-bg text-on-surface font-label-md text-label-md rounded-xl hover:bg-surface-container transition-colors" onclick="closeConfirmDialog()" type="button">
+          Cancel
+        </button>
+<button class="flex-1 min-h-[48px] bg-status-error text-on-primary font-label-md text-label-md rounded-xl hover:opacity-90 transition-opacity" onclick="confirmRemoval()" type="button">
+          Remove
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function toggleForm() {
+    const form = document.getElementById('add-change-form-container');
+    if (form) {
+      form.classList.toggle('hidden');
+      if (!form.classList.contains('hidden')) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
+  document.getElementById('add-change-toggle-btn')?.addEventListener('click', toggleForm);
+
+  function selectType(button, type) {
+    const buttons = document.querySelectorAll('.change-type-opt');
+    buttons.forEach(btn => {
+      btn.classList.remove('bg-secondary-container');
+      btn.classList.add('bg-app-bg');
+      const title = btn.querySelector('.font-label-md');
+      if (title) {
+        title.classList.remove('text-primary');
+        title.classList.add('text-on-surface');
+      }
+      const icon = btn.querySelector('.checkmark-icon');
+      if (icon) {
+        icon.classList.remove('text-primary');
+        icon.classList.add('text-transparent');
+      }
+    });
+
+    button.classList.remove('bg-app-bg');
+    button.classList.add('bg-secondary-container');
+    const title = button.querySelector('.font-label-md');
+    if (title) {
+      title.classList.remove('text-on-surface');
+      title.classList.add('text-primary');
+    }
+    const icon = button.querySelector('.checkmark-icon');
+    if (icon) {
+      icon.classList.remove('text-transparent');
+      icon.classList.add('text-primary');
+    }
+  }
+
+  // Reason pills selection
+  document.querySelectorAll('.reason-pill').forEach(pill => {
+    pill.addEventListener('click', function() {
+      document.querySelectorAll('.reason-pill').forEach(p => {
+        p.classList.remove('bg-secondary-container', 'text-primary', 'font-semibold');
+        p.classList.add('bg-app-bg', 'text-text-muted');
+      });
+      this.classList.remove('bg-app-bg', 'text-text-muted');
+      this.classList.add('bg-secondary-container', 'text-primary', 'font-semibold');
+    });
+  });
+
+  function openConfirmDialog() {
+    const modal = document.getElementById('confirm-modal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeConfirmDialog() {
+    const modal = document.getElementById('confirm-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function confirmRemoval() {
+    const card = document.getElementById('card-change-1');
+    if (card) {
+      card.style.opacity = '0.5';
+      setTimeout(() => {
+        card.remove();
+        closeConfirmDialog();
+      }, 200);
+    } else {
+      closeConfirmDialog();
+    }
+  }
+
+  function saveNewChange() {
+    const form = document.getElementById('add-change-form-container');
+    if (form) {
+      form.classList.add('hidden');
+    }
+  }
+</script></main></body></html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "outline": "#6e7977", "border-subtle": "#E2E8F0", "status-warning": "#D97706", "text-muted": "#475569", "surface-container-low": "#f2f3ff", "secondary-fixed": "#abefe8", "tertiary-fixed-dim": "#a2d0c6", "on-tertiary-fixed": "#00201c", "inverse-surface": "#283044", "on-primary-fixed-variant": "#00504a", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#224e47", "inverse-on-surface": "#eef0ff", "tertiary-fixed": "#bdece2", "status-error": "#DC2626", "on-tertiary-container": "#c5f3ea", "tertiary": "#2d5951", "on-background": "#131b2e", "tertiary-container": "#467169", "surface-tint": "#006a63", "on-secondary-fixed-variant": "#00504b", "app-bg": "#F8FAFC", "on-tertiary": "#ffffff", "on-primary-fixed": "#00201d", "secondary-container": "#a8ece5", "on-secondary": "#ffffff", "status-info": "#2563EB", "background": "#faf8ff", "surface-dim": "#d2d9f4", "status-unknown": "#64748B", "surface-container-highest": "#dae2fd", "error": "#ba1a1a", "secondary": "#216963", "surface-variant": "#dae2fd", "on-surface-variant": "#3e4947", "on-surface": "#131b2e", "primary-fixed-dim": "#80d5cb", "surface-container-lowest": "#ffffff", "inverse-primary": "#80d5cb", "primary-fixed": "#9cf2e8", "surface-container": "#eaedff", "on-secondary-container": "#266d68", "status-success": "#16A34A", "primary": "#005c55", "secondary-fixed-dim": "#8fd3cc", "surface-bright": "#faf8ff", "status-error-soft": "#FEE2E2", "surface": "#FFFFFF", "outline-variant": "#bdc9c6", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-error": "#ffffff", "surface-container-high": "#e2e7ff", "status-warning-soft": "#FEF3C7", "status-success-soft": "#DCFCE7", "primary-container": "#0f766e", "on-secondary-fixed": "#00201e", "on-primary-container": "#a3faef" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "margin-desktop": "2rem", "margin": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "gutter-desktop": "1.5rem" }, fontFamily: { "label-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "headline-xl-mobile": ["Noto Sans"], "body-lg": ["Noto Sans"], "headline-xl": ["Noto Sans"], "label-md": ["Noto Sans"], "body-md": ["Noto Sans"], "title-md": ["Noto Sans"], "body-sm": ["Noto Sans"], "headline-lg-mobile": ["Noto Sans"], "headline-lg": ["Noto Sans"], "headline-md": ["Noto Sans"] }, fontSize: { "label-lg": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "title-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;background-color:#F8FAFC;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-app-bg text-on-surface font-body-md flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(15,23,42,0.04)]"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs"><button class="min-w-[44px] min-h-[44px] flex items-center gap-space-xs text-primary hover:text-primary-container transition-colors pr-space-xs" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span><span class="font-label-md text-label-md font-medium">More</span></button><div class="flex items-center gap-space-xs ml-space-xs"><img alt="DocNear Brand Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UgPcGjX3jQgxFZ3AumZxCUiI9NkCRlXh1u94FZyxGsn_bJ19ZY5rL0BNFnJaTosKJwuyHZYJKtMiYZfExFf8fKbGgUlibJnTDCcL5kU9n2m686F_eqdXoCwaDBqYcrYRa1zZY8nh2NO2DApCOIVEWibnoUIS-k11Sddf9x7qULFEW_4WhqT5jZ8Xk6c_-bZBqd2OVmTs_18RYt_elpJH26tobklQOvhp_d44OiERdkAiKLfC4SuC2E9KbI"/><h1 class="font-title-md text-title-md text-on-surface font-semibold truncate">Team</h1></div></div><div class="flex items-center gap-space-sm"><button class="min-h-[44px] min-w-[44px] px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-space-xs hover:bg-primary transition-colors"><span class="material-symbols-outlined text-[18px]">add</span><span>Invite</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-app-bg min-h-screen"><div class="flex flex-col w-full px-gutter pb-space-xl space-y-space-md">
+<!-- Establishment Overview Card -->
+<section class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm mt-space-xs">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="space-y-space-xs">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">domain</span>
+<span class="font-label-sm text-label-sm font-semibold">Maa Medical Centre</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted">Gopiballavpur • 3 Team Members</p>
+</div>
+<button class="min-h-[44px] px-3.5 py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold flex items-center gap-1.5 active:scale-95 transition-all shadow-sm" id="open-invite-btn">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ Invite</span>
+</button>
+</div>
+<!-- Scoped Isolation Notice -->
+<div class="rounded-lg bg-surface-container-low p-space-sm flex items-start gap-2.5 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<p class="font-body-sm text-body-sm leading-relaxed text-text-muted">
+        Team access is strictly scoped to this establishment only. Staff members cannot view patient health records, clinical notes, or access other clinics.
+      </p>
+</div>
+</section>
+<!-- Team Member Roster -->
+<section class="space-y-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<h2 class="font-title-md text-title-md text-on-surface font-semibold flex items-center gap-2">
+<span>Team Roster</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">3</span>
+</h2>
+<span class="font-label-sm text-label-sm text-text-muted">Auto-synced</span>
+</div>
+<div class="space-y-space-sm">
+<!-- Member 1: Current Admin (You) -->
+<article class="bg-surface rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-primary/10 text-primary font-title-md text-title-md flex items-center justify-center font-bold shrink-0">
+              RD
+            </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Rakesh Das</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">You</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted truncate">rakesh@example.com</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+            Active
+          </span>
+</div>
+<div class="mt-3 pt-3 flex items-center justify-between text-text-muted font-body-sm text-body-sm bg-surface-container-low/70 rounded-lg px-space-sm py-1.5">
+<div class="flex items-center gap-1.5 text-primary font-medium">
+<span class="material-symbols-outlined text-[16px]">shield_person</span>
+<span class="font-label-md text-label-md">Establishment Admin</span>
+</div>
+<span class="text-text-muted font-label-sm text-label-sm">Primary Account Holder</span>
+</div>
+</article>
+<!-- Member 2: Active Staff Member (Priya Sen) -->
+<article class="bg-surface rounded-xl p-space-md shadow-sm transition-all hover:bg-surface-bright active:bg-surface-container-low">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-title-md flex items-center justify-center font-bold shrink-0">
+              PS
+            </div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Priya Sen</span>
+<p class="font-body-sm text-body-sm text-text-muted truncate">priya@example.com</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+            Active
+          </span>
+</div>
+<div class="mt-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-medium">Staff Role</span>
+<span class="font-body-sm text-body-sm text-text-muted">Added 14 Aug 2026</span>
+</div>
+<button class="min-h-[40px] px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md font-semibold flex items-center gap-1 hover:bg-secondary-container transition-colors" id="open-priya-detail-btn">
+<span>Manage</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+<!-- Member 3: Pending Invitation (Amit Roy) -->
+<article class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-surface-container-highest text-text-muted font-title-md text-title-md flex items-center justify-center font-bold shrink-0">
+              AR
+            </div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Amit Roy</span>
+<p class="font-body-sm text-body-sm text-text-muted truncate">amit@example.com</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-status-warning-soft text-status-warning font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+            Pending
+          </span>
+</div>
+<div class="flex items-center justify-between text-text-muted font-body-sm text-body-sm">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-medium">Staff Role</span>
+<span>Invite sent 2 days ago</span>
+</div>
+<div class="hidden py-1 px-2 rounded bg-status-success-soft text-status-success font-label-sm text-label-sm" id="invite-feedback">
+          ✓ Fresh invitation link sent to amit@example.com
+        </div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="min-h-[40px] px-3 py-1 text-status-error font-label-md text-label-md font-semibold hover:bg-status-error-soft rounded-lg transition-colors" id="cancel-invite-btn">
+            Revoke
+          </button>
+<button class="min-h-[40px] px-3.5 py-1.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md font-semibold flex items-center gap-1.5 hover:bg-secondary-container transition-colors" id="resend-invite-btn">
+<span class="material-symbols-outlined text-[16px]">forward_to_inbox</span>
+<span>Resend Link</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- Interactive Form Card: Invite New Staff Member -->
+<section class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-md" id="invite-form-card">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Invite New Staff</h3>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-low text-text-muted">Instant Access</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted">
+      Send a secure invitation link to grant operational roster and doctor management access for <strong class="font-semibold text-on-surface">Maa Medical Centre</strong>.
+    </p>
+<form class="space-y-space-md" id="invite-member-form" onsubmit="event.preventDefault(); handleInviteSubmit();">
+<!-- Full Name -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface font-medium block" for="staff-name">
+          Full Name
+        </label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-[18px] text-text-muted">person_outline</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder-text-muted focus:outline-none focus:bg-surface transition-colors shadow-inner" id="staff-name" placeholder="Enter staff member's name" required="" type="text"/>
+</div>
+</div>
+<!-- Email Address -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface font-medium block" for="staff-email">
+          Email Address <span class="text-status-error">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-[18px] text-text-muted">mail_outline</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder-text-muted focus:outline-none focus:bg-surface transition-colors shadow-inner" id="staff-email" placeholder="priya.sen@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Phone Number -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface font-medium block" for="staff-phone">
+          Phone Number <span class="text-text-muted font-normal text-body-sm">(Optional)</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-[18px] text-text-muted">smartphone</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder-text-muted focus:outline-none focus:bg-surface transition-colors shadow-inner" id="staff-phone" placeholder="+91 98000 00000" type="tel"/>
+</div>
+</div>
+<!-- Role Assignment -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface font-medium block">Assigned Role</label>
+<div class="grid grid-cols-1 gap-space-xs">
+<!-- Staff Pill Option -->
+<label class="flex items-center justify-between p-3 rounded-lg bg-secondary-container/40 text-on-secondary-container cursor-pointer">
+<div class="flex items-center gap-2.5">
+<input checked="" class="accent-primary w-4 h-4 cursor-pointer" name="assigned_role" type="radio" value="staff"/>
+<div>
+<span class="font-label-md text-label-md font-semibold block">Staff (Recommended)</span>
+<span class="font-body-sm text-body-sm text-text-muted">Manages doctor schedules &amp; temporary day-offs</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+</label>
+<!-- Admin Pill Option -->
+<label class="flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface cursor-pointer">
+<div class="flex items-center gap-2.5">
+<input class="accent-primary w-4 h-4 cursor-pointer" name="assigned_role" type="radio" value="admin"/>
+<div>
+<span class="font-label-md text-label-md font-semibold block">Establishment Admin</span>
+<span class="font-body-sm text-body-sm text-text-muted">Full control over team roster and clinic settings</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted text-[20px]">admin_panel_settings</span>
+</label>
+</div>
+</div>
+<!-- Helper Notice -->
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">info</span>
+<span>Invited staff can activate their account using their email link.</span>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="min-h-[48px] px-space-md py-space-xs rounded-lg bg-surface-container text-text-muted font-label-lg text-label-lg font-semibold hover:bg-surface-container-high transition-colors" onclick="document.getElementById('invite-member-form').reset()" type="button">
+          Reset
+        </button>
+<button class="flex-1 min-h-[48px] px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 active:bg-primary transition-colors shadow-sm" type="submit">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Send Invitation</span>
+</button>
+</div>
+</form>
+</section>
+<!-- Educational Section: Role Permissions Guide -->
+<section class="space-y-space-sm">
+<div class="px-space-xs">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Establishment Roles</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Clear privilege boundaries for local clinic administration.</p>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- Role Card A: Establishment Admin -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">shield_person</span>
+<h4 class="font-title-md text-title-md font-semibold text-on-surface">Establishment Admin</h4>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+            Full Control
+          </span>
+</div>
+<ul class="space-y-2 text-body-sm font-body-sm text-text-muted">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>Update clinic hours, contact info, and location details</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>Add, edit, or remove associated doctors</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>Manage visiting schedules, holidays &amp; quick day-offs</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>Invite, update roles, or suspend staff members</span>
+</li>
+</ul>
+</div>
+<!-- Role Card B: Staff -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted text-[22px]">assignment_ind</span>
+<h4 class="font-title-md text-title-md font-semibold text-on-surface">Staff Member</h4>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+            Roster Access
+          </span>
+</div>
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="space-y-1.5 text-text-muted">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>View establishment details and doctor roster</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-status-success text-[16px] shrink-0 mt-0.5">check</span>
+<span>Manage doctor visiting schedules &amp; temporary leaves</span>
+</div>
+</div>
+<div class="pt-2 space-y-1 text-on-surface-variant bg-surface-container-low rounded-lg p-2.5">
+<div class="flex items-start gap-2 text-status-error font-medium">
+<span class="material-symbols-outlined text-[16px] shrink-0 mt-0.5">block</span>
+<span class="font-label-sm text-label-sm">Restrictions: Cannot invite team, suspend access, or change ownership</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Slide-over / Modal: Priya Sen Access & Security Detail -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-end justify-center transition-opacity" id="priya-detail-modal">
+<div class="w-full max-w-lg bg-surface rounded-t-2xl p-space-md space-y-space-md shadow-2xl max-h-[85vh] overflow-y-auto">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">manage_accounts</span>
+<h3 class="font-title-md text-title-md font-semibold text-on-surface">Manage Staff Access</h3>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container text-text-muted flex items-center justify-center hover:bg-surface-container-high" id="close-priya-detail-btn">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Member Profile Block -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-title-md flex items-center justify-center font-bold shrink-0">
+          PS
+        </div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Priya Sen</span>
+<p class="font-body-sm text-body-sm text-text-muted">priya@example.com</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.2 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">Staff Member</span>
+<span class="font-body-sm text-body-sm text-text-muted">• Maa Medical Centre</span>
+</div>
+</div>
+</div>
+<!-- Scope Summary -->
+<div class="rounded-lg bg-surface-container p-3 space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted font-bold block">Access Scope</span>
+<p class="font-body-sm text-body-sm text-on-surface">Scoped strictly to: <strong class="font-semibold text-primary">Maa Medical Centre</strong></p>
+<p class="font-body-sm text-body-sm text-text-muted">Priya cannot switch to or administer other establishments.</p>
+</div>
+<!-- Security Controls -->
+<div class="space-y-space-sm pt-space-xs">
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">Access Actions</h4>
+<div class="rounded-xl p-3 bg-status-error-soft/40 space-y-2">
+<div class="flex items-start gap-2 text-status-error">
+<span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">pause_circle</span>
+<div class="space-y-0.5">
+<span class="font-label-md text-label-md font-semibold block">Suspend Establishment Access</span>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                Temporarily disables their login to Maa Medical Centre without deleting past activity or roster audit logs.
+              </p>
+</div>
+</div>
+<button class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-surface text-status-error font-label-md text-label-md font-semibold hover:bg-status-error-soft active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 shadow-sm" id="trigger-suspend-confirm-btn">
+<span class="material-symbols-outlined text-[18px]">lock_person</span>
+<span>Suspend Priya's Access</span>
+</button>
+</div>
+</div>
+<div class="pt-space-xs">
+<button class="w-full min-h-[48px] rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold hover:bg-surface-container-high transition-colors" id="dismiss-priya-detail-btn">
+          Done
+        </button>
+</div>
+</div>
+</div>
+<!-- Interactive Confirmation Dialog: Suspend Access -->
+<div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-gutter transition-opacity" id="suspend-dialog">
+<div class="w-full max-w-sm bg-surface rounded-2xl p-space-md space-y-space-md shadow-2xl">
+<div class="w-12 h-12 rounded-full bg-status-error-soft text-status-error flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-[26px]">warning</span>
+</div>
+<div class="text-center space-y-1.5">
+<h4 class="font-title-md text-title-md font-semibold text-on-surface">Suspend Priya's Access?</h4>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+          Priya Sen will immediately lose access to Maa Medical Centre through DocNear Partner until you reactivate her profile.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 min-h-[48px] rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold hover:bg-surface-container-high transition-colors" id="cancel-suspend-btn">
+          Cancel
+        </button>
+<button class="flex-1 min-h-[48px] rounded-lg bg-status-error text-on-primary font-label-lg text-label-lg font-semibold hover:opacity-90 active:scale-95 transition-all shadow-sm" id="confirm-suspend-btn">
+          Suspend
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // DOM Elements
+  const openInviteBtn = document.getElementById('open-invite-btn');
+  const inviteFormCard = document.getElementById('invite-form-card');
+  const resendBtn = document.getElementById('resend-invite-btn');
+  const inviteFeedback = document.getElementById('invite-feedback');
+  const cancelInviteBtn = document.getElementById('cancel-invite-btn');
+
+  const openPriyaDetailBtn = document.getElementById('open-priya-detail-btn');
+  const closePriyaDetailBtn = document.getElementById('close-priya-detail-btn');
+  const dismissPriyaDetailBtn = document.getElementById('dismiss-priya-detail-btn');
+  const priyaDetailModal = document.getElementById('priya-detail-modal');
+
+  const triggerSuspendBtn = document.getElementById('trigger-suspend-confirm-btn');
+  const suspendDialog = document.getElementById('suspend-dialog');
+  const cancelSuspendBtn = document.getElementById('cancel-suspend-btn');
+  const confirmSuspendBtn = document.getElementById('confirm-suspend-btn');
+
+  // Smooth scroll to invite form
+  openInviteBtn?.addEventListener('click', () => {
+    inviteFormCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const nameInput = document.getElementById('staff-name');
+    nameInput?.focus();
+  });
+
+  // Resend invitation simulation
+  resendBtn?.addEventListener('click', () => {
+    inviteFeedback.classList.remove('hidden');
+    resendBtn.disabled = true;
+    resendBtn.innerText = 'Sent!';
+    setTimeout(() => {
+      inviteFeedback.classList.add('hidden');
+      resendBtn.disabled = false;
+      resendBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">forward_to_inbox</span><span>Resend Link</span>';
+    }, 4000);
+  });
+
+  // Revoke invitation simulation
+  cancelInviteBtn?.addEventListener('click', () => {
+    if (confirm('Revoke pending invitation for Amit Roy?')) {
+      const inviteArticle = cancelInviteBtn.closest('article');
+      if (inviteArticle) {
+        inviteArticle.style.opacity = '0.5';
+        inviteArticle.innerHTML = '<div class="p-4 text-center font-body-sm text-text-muted">Invitation revoked.</div>';
+        setTimeout(() => inviteArticle.remove(), 1200);
+      }
+    }
+  });
+
+  // Open/Close Priya Detail Modal
+  const openModal = () => {
+    priyaDetailModal.classList.remove('hidden');
+    priyaDetailModal.classList.add('flex');
+  };
+  const closeModal = () => {
+    priyaDetailModal.classList.add('hidden');
+    priyaDetailModal.classList.remove('flex');
+  };
+
+  openPriyaDetailBtn?.addEventListener('click', openModal);
+  closePriyaDetailBtn?.addEventListener('click', closeModal);
+  dismissPriyaDetailBtn?.addEventListener('click', closeModal);
+
+  // Suspend Confirmation Dialog
+  triggerSuspendBtn?.addEventListener('click', () => {
+    suspendDialog.classList.remove('hidden');
+    suspendDialog.classList.add('flex');
+  });
+
+  cancelSuspendBtn?.addEventListener('click', () => {
+    suspendDialog.classList.add('hidden');
+    suspendDialog.classList.remove('flex');
+  });
+
+  confirmSuspendBtn?.addEventListener('click', () => {
+    suspendDialog.classList.add('hidden');
+    suspendDialog.classList.remove('flex');
+    closeModal();
+    alert('Access for Priya Sen has been suspended. You can reactivate anytime.');
+  });
+
+  // Form submission handler
+  function handleInviteSubmit() {
+    const name = document.getElementById('staff-name').value;
+    const email = document.getElementById('staff-email').value;
+    alert(`Invitation sent to ${name} (${email}) for Maa Medical Centre.`);
+    document.getElementById('invite-member-form').reset();
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/95 backdrop-blur-xl shadow-[0_-2px_8px_rgba(15,23,42,0.04)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-14 text-text-muted hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm">Home</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-14 text-text-muted hover:text-on-surface transition-colors" data-path="doctors" href="#"><span class="material-symbols-outlined text-[22px]">stethoscope</span><span class="font-label-sm text-label-sm">Doctors</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-14 text-text-muted hover:text-on-surface transition-colors" data-path="establishment" href="#"><span class="material-symbols-outlined text-[22px]">domain</span><span class="font-label-sm text-label-sm">Clinic</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-14 text-primary font-semibold transition-colors" data-path="more" href="#"><span class="material-symbols-outlined text-[22px]">more_horiz</span><span class="font-label-sm text-label-sm">More</span></a></div></nav></body></html>

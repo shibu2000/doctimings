@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-high": "#e2e7ff",
+          "tertiary": "#2d5951",
+          "outline-variant": "#bdc9c6",
+          "on-secondary-fixed": "#00201e",
+          "primary-container": "#0f766e",
+          "outline": "#6e7977",
+          "on-primary-fixed": "#00201d",
+          "background": "#faf8ff",
+          "tertiary-fixed-dim": "#a2d0c6",
+          "surface-variant": "#dae2fd",
+          "on-tertiary-fixed": "#00201c",
+          "on-secondary-container": "#266d68",
+          "on-tertiary": "#ffffff",
+          "surface-bright": "#faf8ff",
+          "on-primary": "#ffffff",
+          "status-unknown": "#64748B",
+          "surface-container-low": "#f2f3ff",
+          "tertiary-container": "#467169",
+          "bg-canvas": "#F8FAFC",
+          "secondary-container": "#a8ece5",
+          "warning-soft": "#FEF3C7",
+          "on-tertiary-fixed-variant": "#224e47",
+          "secondary-fixed-dim": "#8fd3cc",
+          "surface-container-highest": "#dae2fd",
+          "on-background": "#131b2e",
+          "on-error": "#ffffff",
+          "success": "#16A34A",
+          "on-surface": "#131b2e",
+          "info": "#2563EB",
+          "success-soft": "#DCFCE7",
+          "on-primary-container": "#a3faef",
+          "inverse-primary": "#80d5cb",
+          "surface-container": "#eaedff",
+          "warning": "#D97706",
+          "secondary": "#216963",
+          "surface": "#FFFFFF",
+          "on-secondary-fixed-variant": "#00504b",
+          "inverse-surface": "#283044",
+          "primary-fixed": "#9cf2e8",
+          "tertiary-fixed": "#bdece2",
+          "inverse-on-surface": "#eef0ff",
+          "secondary-fixed": "#abefe8",
+          "primary-fixed-dim": "#80d5cb",
+          "surface-tint": "#006a63",
+          "border-subtle": "#E2E8F0",
+          "error": "#DC2626",
+          "primary": "#005c55",
+          "error-container": "#ffdad6",
+          "on-secondary": "#ffffff",
+          "error-soft": "#FEE2E2",
+          "surface-dim": "#d2d9f4",
+          "on-surface-variant": "#3e4947",
+          "surface-container-lowest": "#ffffff",
+          "text-muted": "#475569",
+          "on-primary-fixed-variant": "#00504a",
+          "on-tertiary-container": "#c5f3ea",
+          "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "gutter": "1rem",
+          "space-lg": "1rem",
+          "gutter-sm": "0.75rem",
+          "margin-lg": "2rem",
+          "margin-sm": "0.75rem",
+          "space-xl": "1.5rem",
+          "space-xs": "0.25rem",
+          "gutter-lg": "1.5rem",
+          "margin": "1rem",
+          "space-sm": "0.5rem",
+          "space-2xl": "2rem"
+        },
+        "fontFamily": {
+          "body-lg": ["Noto Sans"],
+          "headline-xl": ["Noto Sans"],
+          "body-md": ["Noto Sans"],
+          "label-lg": ["Noto Sans"],
+          "headline-xl-mobile": ["Noto Sans"],
+          "headline-lg-mobile": ["Noto Sans"],
+          "headline-md": ["Noto Sans"],
+          "headline-lg": ["Noto Sans"],
+          "body-sm": ["Noto Sans"],
+          "label-sm": ["Noto Sans"],
+          "label-md": ["Noto Sans"]
+        },
+        "fontSize": {
+          "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "headline-xl": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+          "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+          "label-lg": ["16px", {"lineHeight": "22px", "fontWeight": "600"}],
+          "headline-xl-mobile": ["26px", {"lineHeight": "34px", "fontWeight": "700"}],
+          "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+          "headline-md": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+          "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+          "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+          "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+          "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}]
+        }
+      }
+    }
+  };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-bg-canvas font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="w-12 h-12 -ml-space-xs flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-low transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="Clean minimalist vector brand mark for Where Is My Doctor featuring a location map pin seamlessly combined with a doctor person silhouette or medical cross motif, rendered in primary teal #0F766E with clean soft teal accent #CCFBF1, flat geometric healthcare icon on transparent background.. Brand logo. - Primary color: #0f766e
+- Font: notoSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1WemOj6AF2NLymIuu91maM2l46xpiyRdix5Nsr9-qL8PpUfreHR3GPE4tLCe_4YT46kYAn3BSabrUoCyXPdr1aBhZ0mKL8Rt1IQCKcct357ODIMIo5wwEtGqUCCTDn85kMAHwt2bSX5x8jsqkZQuehv6ZES4n6RAjEs-f3nQ7NzRYwOf32IF1CTioJE1yW25Agy_zhRuSm9yH-u-KSKTMgma-E-Q2Xjqva4JksXdGSaX9d11NRdElX6nk8"/><h1 class="font-headline-md text-headline-md text-on-surface truncate">Choose Your Location</h1></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Help and support" class="w-12 h-12 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-[22px]">help_outline</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-bg-canvas min-h-screen"><div class="flex flex-col w-full">
+<div class="px-margin pt-space-md pb-space-2xl flex flex-col gap-space-lg max-w-md mx-auto w-full">
+<!-- Interactive Scenario Demo Bar (Tabbed Preview for System States) -->
+<div class="bg-surface-container rounded-xl p-space-xs shadow-sm">
+<div class="flex items-center justify-between px-space-xs pb-space-xs">
+<span class="font-label-sm text-label-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">science</span>
+          System State Preview
+        </span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Simulate Android State</span>
+</div>
+<div aria-label="System States" class="grid grid-cols-3 gap-1" role="tablist">
+<button aria-selected="true" class="h-10 px-2 rounded-lg font-label-sm text-label-sm flex items-center justify-center transition-all bg-surface text-on-surface shadow-sm font-semibold" id="tab-state-initial" onclick="switchState('initial')" role="tab">
+          1. Default
+        </button>
+<button aria-selected="false" class="h-10 px-2 rounded-lg font-label-sm text-label-sm flex items-center justify-center transition-all text-text-muted hover:text-on-surface hover:bg-surface/50" id="tab-state-denied" onclick="switchState('denied')" role="tab">
+          2. Denied
+        </button>
+<button aria-selected="false" class="h-10 px-2 rounded-lg font-label-sm text-label-sm flex items-center justify-center transition-all text-text-muted hover:text-on-surface hover:bg-surface/50" id="tab-state-gps-off" onclick="switchState('gps-off')" role="tab">
+          3. GPS Off
+        </button>
+</div>
+</div>
+<!-- Friendly Visual Framing Illustration -->
+<div class="flex flex-col items-center text-center pt-space-xs">
+<div class="relative w-24 h-24 flex items-center justify-center mb-space-sm">
+<!-- Ripple wave 2 -->
+<div class="absolute inset-0 rounded-full bg-secondary-container/40 animate-ping opacity-30"></div>
+<!-- Ripple wave 1 -->
+<div class="absolute inset-2 rounded-full bg-secondary-container/70"></div>
+<!-- Center badge icon -->
+<div class="relative w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-md">
+<div class="relative flex items-center justify-center">
+<span class="material-symbols-outlined text-[34px] text-on-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<!-- Medical Cross Accent overlay -->
+<span class="material-symbols-outlined text-[14px] text-on-primary absolute top-1.5 text-center font-bold">add</span>
+</div>
+</div>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Where are you looking for a doctor?</h2>
+<p class="font-body-md text-body-md text-text-muted mt-space-xs max-w-xs">We can use your location to find doctors nearby.</p>
+</div>
+<!-- STATE 1 CONTAINER: Initial Default Request View -->
+<div class="flex flex-col gap-space-md" id="state-container-initial">
+<!-- Automatic Device Location Card -->
+<div class="bg-surface rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<button class="w-full h-[52px] bg-primary hover:bg-tertiary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-space-sm shadow-sm active:scale-[0.99] transition-transform" onclick="triggerAndroidPrompt()" type="button">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">my_location</span>
+          Use my current location
+        </button>
+<div class="flex flex-col gap-1 text-center">
+<p class="font-label-md text-label-md text-on-surface">Allow location access to find doctors near you.</p>
+<p class="font-body-sm text-body-sm text-text-muted">Takes just a second to find doctors and clinics in your block.</p>
+</div>
+</div>
+</div>
+<!-- STATE 2 CONTAINER: Permission Denied Warning State -->
+<div class="hidden flex-col gap-space-md" id="state-container-denied">
+<div class="bg-warning-soft rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-warning text-[24px]">location_off</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">Location access is turned off</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">
+              You chose not to share your location. You can still search for your town manually, or turn on access anytime.
+            </p>
+</div>
+</div>
+<button class="w-full h-12 bg-surface hover:bg-surface-container-low text-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-space-sm shadow-sm transition-colors" onclick="openSystemSettingsMock()" type="button">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+          Open location settings
+        </button>
+</div>
+</div>
+<!-- STATE 3 CONTAINER: GPS Unavailable / Location Service Off -->
+<div class="hidden flex-col gap-space-md" id="state-container-gps-off">
+<div class="bg-surface-container-high rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[24px]">wrong_location</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">Couldn't find your location</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">
+              Check that location services are turned on, or choose a place manually below.
+            </p>
+</div>
+</div>
+<div class="flex gap-space-sm">
+<button class="flex-1 h-12 bg-primary hover:bg-tertiary text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm transition-transform active:scale-[0.98]" onclick="retryGps()" type="button">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+            Try again
+          </button>
+<button class="flex-1 h-12 bg-surface hover:bg-surface-container-low text-on-surface rounded-xl font-label-md text-label-md flex items-center justify-center gap-space-xs shadow-sm transition-colors" onclick="focusManualInput()" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_location_alt</span>
+            Search place
+          </button>
+</div>
+</div>
+</div>
+<!-- Tactile Divider with Pill Badge -->
+<div class="relative flex items-center justify-center my-space-xs">
+<div class="w-full h-[1px] bg-outline-variant/50"></div>
+<span class="absolute bg-surface text-text-muted font-label-sm text-label-sm px-space-md py-1 rounded-full shadow-sm tracking-wider uppercase">OR</span>
+</div>
+<!-- Manual Place Discovery Section (Always accessible, zero friction) -->
+<div class="flex flex-col gap-space-md" id="manual-search-section">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Search for a place</h3>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Any Block or Town</span>
+</div>
+<!-- Prominent Search Bar (52px height) -->
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-space-md text-text-muted text-[22px] pointer-events-none">search</span>
+<input class="w-full h-[52px] pl-12 pr-10 bg-surface rounded-xl font-body-md text-body-md text-on-surface placeholder:text-text-muted shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="location-search-input" placeholder="City, town, village or PIN (e.g. Gopiballavpur)" type="text"/>
+<button aria-label="Clear search" class="hidden absolute right-3 w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:text-on-surface" id="clear-search-btn" onclick="clearSearch()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Instant 1-Tap Nearby / Quick Suggestion Chips -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-text-muted">Quick nearby choices:</span>
+<div class="flex flex-wrap gap-space-sm pt-space-xs">
+<button class="h-10 px-space-md bg-surface hover:bg-secondary-container/50 active:bg-secondary-container rounded-full text-on-surface font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" onclick="selectTown('Gopiballavpur')" type="button">
+<span class="text-primary font-bold">📍</span> Gopiballavpur
+          </button>
+<button class="h-10 px-space-md bg-surface hover:bg-secondary-container/50 active:bg-secondary-container rounded-full text-on-surface font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" onclick="selectTown('Jhargram Town')" type="button">
+<span class="text-primary font-bold">📍</span> Jhargram Town
+          </button>
+<button class="h-10 px-space-md bg-surface hover:bg-secondary-container/50 active:bg-secondary-container rounded-full text-on-surface font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" onclick="selectTown('Beliaberah')" type="button">
+<span class="text-primary font-bold">📍</span> Beliaberah
+          </button>
+<button class="h-10 px-space-md bg-surface hover:bg-secondary-container/50 active:bg-secondary-container rounded-full text-on-surface font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" onclick="selectTown('Nayagram')" type="button">
+<span class="text-primary font-bold">📍</span> Nayagram
+          </button>
+</div>
+</div>
+<!-- Explanatory note -->
+<p class="font-body-sm text-body-sm text-text-muted flex items-start gap-1.5 pt-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0">info</span>
+<span>You can change or fine-tune this location anytime from the home screen.</span>
+</p>
+</div>
+<!-- Selected Notification Toast / Feedback (Hidden initially) -->
+<div class="hidden bg-success-soft text-on-surface rounded-xl p-space-md shadow-sm items-center justify-between" id="selection-banner">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-success text-[20px]">check_circle</span>
+<span class="font-label-md text-label-md font-semibold" id="selection-banner-text">Location chosen</span>
+</div>
+<button class="text-text-muted hover:text-on-surface font-label-sm text-label-sm underline" onclick="dismissSelection()">Change</button>
+</div>
+<!-- Privacy Assurance Shield (Zero Tracking Mandate) -->
+<div class="mt-space-sm bg-surface-container-low rounded-xl p-space-md flex items-start gap-space-sm shadow-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Privacy First</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">
+          We never track your movement or store location history. Location is solely used to sort nearby doctors when you browse.
+        </p>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function switchState(state) {
+    const states = ['initial', 'denied', 'gps-off'];
+    states.forEach(s => {
+      const container = document.getElementById('state-container-' + s);
+      const tab = document.getElementById('tab-state-' + s);
+      if (s === state) {
+        container.classList.remove('hidden');
+        container.classList.add('flex');
+        tab.classList.add('bg-surface', 'text-on-surface', 'shadow-sm', 'font-semibold');
+        tab.classList.remove('text-text-muted');
+        tab.setAttribute('aria-selected', 'true');
+      } else {
+        container.classList.add('hidden');
+        container.classList.remove('flex');
+        tab.classList.remove('bg-surface', 'text-on-surface', 'shadow-sm', 'font-semibold');
+        tab.classList.add('text-text-muted');
+        tab.setAttribute('aria-selected', 'false');
+      }
+    });
+  }
+
+  function triggerAndroidPrompt() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          showFeedback('Device location detected: Nearby doctors ready');
+        },
+        (err) => {
+          if (err.code === 1) {
+            switchState('denied');
+          } else {
+            switchState('gps-off');
+          }
+        },
+        { timeout: 4000 }
+      );
+    } else {
+      switchState('gps-off');
+    }
+  }
+
+  function retryGps() {
+    triggerAndroidPrompt();
+  }
+
+  function openSystemSettingsMock() {
+    showFeedback('Opening Android Application Location Settings...');
+  }
+
+  function focusManualInput() {
+    const input = document.getElementById('location-search-input');
+    input.focus();
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function selectTown(name) {
+    const input = document.getElementById('location-search-input');
+    input.value = name;
+    document.getElementById('clear-search-btn').classList.remove('hidden');
+    showFeedback('Selected: ' + name);
+  }
+
+  function clearSearch() {
+    const input = document.getElementById('location-search-input');
+    input.value = '';
+    document.getElementById('clear-search-btn').classList.add('hidden');
+    input.focus();
+  }
+
+  const searchInput = document.getElementById('location-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (e.target.value.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+    });
+  }
+
+  function showFeedback(msg) {
+    const banner = document.getElementById('selection-banner');
+    const text = document.getElementById('selection-banner-text');
+    text.textContent = msg;
+    banner.classList.remove('hidden');
+    banner.classList.add('flex');
+  }
+
+  function dismissSelection() {
+    const banner = document.getElementById('selection-banner');
+    banner.classList.add('hidden');
+    banner.classList.remove('flex');
+    focusManualInput();
+  }
+</script></main></body></html>

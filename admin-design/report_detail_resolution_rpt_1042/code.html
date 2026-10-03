@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary":"#2d5951","primary-container":"#0f766e","tertiary-fixed-dim":"#a2d0c6","secondary-fixed-dim":"#8fd3cc","secondary":"#216963","surface-bright":"#faf8ff","on-surface":"#131b2e","surface":"#FFFFFF","on-tertiary-container":"#c5f3ea","error-container":"#ffdad6","primary-fixed-dim":"#80d5cb","primary":"#005c55","on-surface-variant":"#3e4947","background":"#faf8ff","success-soft":"#DCFCE7","info-blue":"#2563EB","error":"#ba1a1a","surface-container-lowest":"#ffffff","secondary-fixed":"#abefe8","surface-container-low":"#f2f3ff","on-error":"#ffffff","surface-container-high":"#e2e7ff","error-red":"#DC2626","surface-tint":"#006a63","tertiary-fixed":"#bdece2","text-secondary":"#475569","on-tertiary-fixed-variant":"#224e47","on-primary-container":"#a3faef","inverse-on-surface":"#eef0ff","surface-container-highest":"#dae2fd","on-secondary-fixed-variant":"#00504b","surface-dim":"#d2d9f4","tertiary-container":"#467169","surface-container":"#eaedff","on-primary-fixed-variant":"#00504a","warning-amber":"#D97706","secondary-container":"#a8ece5","on-tertiary-fixed":"#00201c","status-unknown":"#64748B","warning-soft":"#FEF3C7","on-primary":"#ffffff","border-subtle":"#E2E8F0","primary-fixed":"#9cf2e8","on-secondary-container":"#266d68","app-bg":"#F8FAFC","on-secondary-fixed":"#00201e","inverse-primary":"#80d5cb","surface-variant":"#dae2fd","inverse-surface":"#283044","outline-variant":"#bdc9c6","on-error-container":"#93000a","on-tertiary":"#ffffff","outline":"#6e7977","on-background":"#131b2e","success-green":"#16A34A","on-primary-fixed":"#00201d","error-soft":"#FEE2E2","on-secondary":"#ffffff"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"0.25rem","margin-desktop":"2rem","margin":"1rem","space-lg":"1rem","space-md":"0.75rem","space-sm":"0.5rem","gutter":"1rem","space-2xl":"2rem","space-xl":"1.5rem","gutter-desktop":"1.5rem"},fontFamily:{"headline-md":["Noto Sans"],"body-md":["Noto Sans"],"headline-lg":["Noto Sans"],"headline-sm":["Noto Sans"],"label-md":["Noto Sans"],"headline-xl":["Noto Sans"],"label-lg":["Noto Sans"],"code-tabular":["Noto Sans"],"body-lg":["Noto Sans"],"body-sm":["Noto Sans"],"label-sm":["Noto Sans"]},fontSize:{"headline-md":["20px",{lineHeight:"28px",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["16px",{lineHeight:"24px",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-xl":["30px",{lineHeight:"38px",letterSpacing:"-0.02em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],"code-tabular":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"600"}]}}}};</script></head><body class="bg-app-bg text-on-surface font-body-md text-body-md antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-primary text-on-primary z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-primary border-b border-primary-container/40"><span class="material-symbols-outlined text-primary-fixed text-[24px]">local_hospital</span><div><div class="font-headline-sm text-headline-sm text-on-primary tracking-tight leading-tight">Where Is My Doctor?</div><div class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Internal Admin Portal</div></div></div><nav class="px-space-sm py-space-md flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary font-semibold"><div class="px-space-sm pt-space-xs pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">OVERVIEW</div><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span class="font-body-md text-body-md">Dashboard</span></a><div class="px-space-sm pt-space-sm pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">HEALTHCARE CATALOG</div><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="doctors" href="#"><span class="material-symbols-outlined text-[18px]">stethoscope</span><span class="font-body-md text-body-md">Doctors</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="establishments" href="#"><span class="material-symbols-outlined text-[18px]">domain</span><span class="font-body-md text-body-md">Establishments</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="practice-locations" href="#"><span class="material-symbols-outlined text-[18px]">pin_drop</span><span class="font-body-md text-body-md">Practice Locations</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="schedules" href="#"><span class="material-symbols-outlined text-[18px]">schedule</span><span class="font-body-md text-body-md">Schedules</span></a><div class="px-space-sm pt-space-sm pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">DISCOVERY</div><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="health-topics" href="#"><span class="material-symbols-outlined text-[18px]">topic</span><span class="font-body-md text-body-md">Health Topics</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="health-guide" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span class="font-body-md text-body-md">Health Guide</span></a><div class="px-space-sm pt-space-sm pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">VERIFICATION &amp; AUDIT</div><a class="flex items-center justify-between px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="verification-queue" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">verified</span><span class="font-body-md text-body-md">Verification Queue</span></div><span class="px-1.5 py-0.5 rounded font-code-tabular text-label-sm bg-warning-amber text-on-primary font-semibold">14</span></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-space-xs rounded transition-colors bg-primary-container text-on-primary font-semibold" data-path="community-reports" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">flag</span><span class="font-body-md text-body-md">Community Reports</span></div><span class="px-1.5 py-0.5 rounded font-code-tabular text-label-sm bg-error-red text-on-error font-semibold">9</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[18px]">history</span><span class="font-body-md text-body-md">Audit Log</span></a><div class="px-space-sm pt-space-sm pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">GEOGRAPHY &amp; ACCESS</div><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="territories-and-pin-codes" href="#"><span class="material-symbols-outlined text-[18px]">map</span><span class="font-body-md text-body-md">Territories &amp; PIN Codes</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="users-and-roles" href="#"><span class="material-symbols-outlined text-[18px]">admin_panel_settings</span><span class="font-body-md text-body-md">Users &amp; Roles</span></a><div class="px-space-sm pt-space-sm pb-1 font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">SYSTEM</div><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" data-path="system-settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span class="font-body-md text-body-md">System Settings</span></a></nav></div><div class="p-space-md border-t border-primary-container/40 flex items-center justify-between text-primary-fixed-dim"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-success-green">check_circle</span><span class="font-label-sm text-label-sm text-primary-fixed-dim">Build v2.4.12</span></div><span class="font-label-sm text-label-sm text-primary-fixed-dim">IND-NORTH-1</span></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface border-b border-border-subtle z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-lg flex-1"><div class="relative w-96 max-w-md"><span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[18px]">search</span><input class="w-full bg-surface-container-lowest border border-border-subtle rounded pl-9 pr-3 py-1.5 font-body-sm text-body-sm text-on-surface placeholder:text-text-secondary focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Search doctors, registrations, establishments, PIN codes..." type="search"/></div><div class="flex items-center gap-space-md bg-app-bg border border-border-subtle px-space-md py-1.5 rounded"><div class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-success-green"></span><span class="font-label-md text-label-md text-on-surface font-semibold">Operational Sync: Normal</span></div><span class="text-border-subtle">|</span><div class="flex items-center gap-1"><span class="font-label-md text-label-md text-text-secondary">Queue:</span><span class="font-code-tabular text-label-md font-semibold text-primary">28</span></div></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-1.5 rounded hover:bg-surface-container-low text-text-secondary hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error-red"></span></button><div class="h-6 w-px bg-border-subtle"></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="text-right"><div class="font-label-md text-label-md text-on-surface leading-tight">Rajesh Sharma</div><div class="font-label-sm text-label-sm text-text-secondary leading-tight">Operations Admin</div></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1VzIdbRl2Ok25zQ3P8tlme7rwURWxHMkwGSNnLLtmrcq4xn-XLQbB9Znuu_P9SkeHZGkkcpAxFXfMIdcsJs0z80aATFl6p7oMiiNK-5LNMbhSXcJ_pdMJfWnBwhN_b-kFIpPPvDTF9AAnPPOpCKdywbSI5AFQuLvYaOvQS6lo1SDtIvQWZNm_aOde9hv5JZzsi6nXqG9Wg8jIoyx6f0pAQT3tnCErfnUx3Y0y8Xv-yQmbHcGC3AgD9uGNjR"/></div></div></header><main class="w-full pt-16 px-space-lg py-space-xl bg-app-bg min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Incident Metadata Strip -->
+<div class="flex flex-col gap-space-xs mb-space-md">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-text-secondary font-label-md text-label-md">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Verification</span>
+</a>
+<span class="text-text-secondary/50 font-normal">/</span>
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+<span>Reports</span>
+</a>
+<span class="text-text-secondary/50 font-normal">/</span>
+<span class="text-on-surface font-code-tabular font-semibold">Report #RPT-1042</span>
+</nav>
+<!-- Header & Immediate Action Toolbar -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Report #RPT-1042</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning-soft text-warning-amber font-label-sm text-label-sm font-bold tracking-wide">
+<span class="w-2 h-2 rounded-full bg-warning-amber animate-pulse"></span>
+            Pending Review
+          </span>
+<span class="px-2 py-0.5 rounded font-code-tabular text-label-sm bg-surface-container-high text-on-surface-variant font-medium">
+            Signal Ref: SIG-202609-JH7
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">public</span>
+          Submitted by Community · Flagged for operational discrepancy verification · Received 25 Sep 2026, 5:42 PM
+        </p>
+</div>
+<!-- Action Group -->
+<div class="flex items-center gap-space-sm self-start lg:self-center shrink-0">
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface hover:bg-surface-container-low text-primary-container font-label-lg text-label-lg transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save &amp; Continue Review</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface hover:bg-error-soft text-error-red font-label-lg text-label-lg transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">block</span>
+<span>Reject Report</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-space-lg py-1.5 rounded bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-semibold transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+<span>Resolve Report</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Governance Axiom Banner -->
+<div class="mb-space-lg p-space-md rounded bg-surface-container-high/60 shadow-sm flex items-start gap-space-md">
+<div class="p-1 rounded bg-secondary-fixed/40 text-secondary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-md text-label-md text-on-surface font-bold tracking-wider uppercase">Operational Governance Axiom</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        OPERATIONAL NOTICE: Community reports are treated as unverified field signals, not confirmed facts. Platform records must never be modified automatically. Field telephonic check or establishment proprietor confirmation is mandatory prior to status changes.
+      </p>
+</div>
+</div>
+<!-- Main 2-Column Grid Layout (65% / 35%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Critical Investigation Workspace (65% -> 8 cols on 12-col grid) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- 1. Report Information Card -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-warning-amber text-[20px]">flag_circle</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Community Discrepancy Signal</h2>
+</div>
+<span class="font-code-tabular text-label-sm text-text-secondary">Incident UUID: <span class="text-on-surface font-semibold">f82a90-rpt</span></span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-1 p-space-sm bg-surface-container-lowest rounded">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Reported Issue</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Doctor was not available at the listed time.</span>
+</div>
+<div class="flex flex-col gap-1 p-space-sm bg-surface-container-lowest rounded">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Issue Classification</span>
+<div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-soft text-error-red font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">event_busy</span>
+                  Doctor unavailable
+                </span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-space-sm bg-surface-container-lowest rounded">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Observed Timestamp</span>
+<div class="flex items-center gap-1.5 text-on-surface font-code-tabular text-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">schedule</span>
+                25 September 2026 · 05:42 PM IST
+              </div>
+</div>
+<div class="flex flex-col gap-1 p-space-sm bg-surface-container-lowest rounded">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Reporter Metadata</span>
+<div class="flex items-center gap-1.5 text-on-surface font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">lock</span>
+<span>Community Report (Anonymous Patient Tele-Submission via Public Search)</span>
+</div>
+</div>
+</div>
+<!-- Submitted User Quotation -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Raw Community Submission</span>
+<div class="p-space-md rounded bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px] shrink-0 mt-0.5 opacity-80">format_quote</span>
+<div class="flex flex-col gap-1">
+<p class="font-body-md text-body-md text-on-surface italic font-medium">
+                  "I visited the clinic at 5 PM today, but the doctor was not there."
+                </p>
+<div class="flex items-center gap-3 text-text-secondary font-label-sm text-label-sm">
+<span>Input via: Hindi/English Mobile Web Portal</span>
+<span>·</span>
+<span>Origin IP Territory: Gopiballavpur Cluster</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Related Entity Context Card -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Affected Platform Entities</h2>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Cross-referenced platform records linked to this incident</p>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-semibold rounded">
+            4 Relational Links
+          </span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Doctors & Establishments Horizontal Split -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Doctor Card -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-headline-sm shrink-0">
+                    AD
+                  </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug">Dr. Amit Das</div>
+<div class="font-body-sm text-body-sm text-text-secondary">MBBS, MD · Dermatology / General Medicine</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-success-soft text-success-green font-semibold shrink-0">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                  Active · Verified
+                </span>
+</div>
+<div class="pt-space-xs flex items-center justify-between">
+<span class="font-code-tabular text-label-sm text-text-secondary">Reg: WB-MC-48192</span>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors" href="#">
+                  View Doctor Detail
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Establishment Card -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">local_pharmacy</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug">Maa Medical Centre</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Clinic &amp; Attached Chamber</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-success-soft text-success-green font-semibold shrink-0">
+<span class="material-symbols-outlined text-[14px]">domain_verification</span>
+                  Commercial
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1">
+                Station Road, Gopiballavpur, Jhargram, West Bengal — 721506
+              </p>
+<div class="pt-space-xs flex items-center justify-between">
+<span class="font-code-tabular text-label-sm text-text-secondary">Lic: WB-CL-7215-09</span>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors" href="#">
+                  View Establishment Profile
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Practice Location -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]">pin_drop</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Main Branch &amp; Attached Chamber (Chamber 1)</span>
+<span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant font-medium">Active Site</span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Station Road (Near Central Bus Stand), Gopiballavpur · Ground Floor Consultation Room</div>
+</div>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors shrink-0" href="#">
+              View Practice Location
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Relevant Schedule Slot (Highlighted card) -->
+<div class="p-space-md rounded-lg bg-secondary-fixed/20 shadow-sm flex flex-col gap-space-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="p-2 rounded bg-surface text-primary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[24px]">calendar_clock</span>
+</div>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Thursday · 5:00 PM – 7:00 PM</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-warning-soft text-warning-amber font-semibold">
+<span class="material-symbols-outlined text-[14px]">event</span>
+                      Scheduled
+                    </span>
+</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Recurring Weekly Consultation Slot · Max Tokens: 25</div>
+</div>
+</div>
+<!-- Contextual Bridge to Manage Doctor Schedule -->
+<a class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface hover:bg-surface-container-lowest text-primary font-label-lg text-label-lg font-semibold shadow-sm transition-colors shrink-0" href="#">
+<span>Update Doctor Schedule at Maa Medical Store</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+<!-- Mandatory Operational Disclaimer -->
+<div class="p-space-sm rounded bg-surface/80 flex items-start gap-space-xs text-text-secondary">
+<span class="material-symbols-outlined text-[18px] text-warning-amber shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm">
+<strong class="font-semibold text-on-surface">Crucial Explanatory Callout:</strong> A scheduled time reflects customary recurring hours and does not guarantee that the doctor is physically present. Doctor may have encountered emergency duty or transit delay.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Verification Section (Diff Box & Notes) -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">fact_check</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Verify Information</h2>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary font-medium uppercase tracking-wider">Ground Signal Reconciliation</span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-lg">
+<!-- Side-by-Side Visual Comparison Diff Box -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Left: Current Platform Record -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-primary uppercase tracking-wide flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+                  Current Platform Record
+                </span>
+<span class="font-code-tabular text-label-sm text-text-secondary">ID: SCHED-8821</span>
+</div>
+<div class="p-space-sm rounded bg-surface flex flex-col gap-1">
+<div class="font-body-md text-body-md text-on-surface font-semibold">Doctor is scheduled:</div>
+<div class="text-on-surface font-body-sm">Thursday, 5:00 PM – 7:00 PM</div>
+<div class="text-text-secondary font-body-sm">at Maa Medical Centre, Chamber 1</div>
+</div>
+<div class="flex items-center gap-1.5 text-success-green font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+                Verified by Ops Admin on 12 Aug 2026
+              </div>
+</div>
+<!-- Right: Reported Information -->
+<div class="p-space-md rounded-lg bg-error-soft/30 shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-error-red uppercase tracking-wide flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+                  Reported Information
+                </span>
+<span class="font-code-tabular text-label-sm text-error-red">Discrepancy</span>
+</div>
+<div class="p-space-sm rounded bg-surface flex flex-col gap-1">
+<div class="font-body-md text-body-md text-on-surface font-semibold">Reported unavailability:</div>
+<div class="text-on-surface font-body-sm">Doctor was not available during listed time</div>
+<div class="text-error-red font-body-sm font-medium">Incident date: Thursday, 25 Sep 2026</div>
+</div>
+<div class="flex items-center gap-1.5 text-text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">person</span>
+                Report source: Public Web Interface
+              </div>
+</div>
+</div>
+<!-- Verification Method Checklist -->
+<div class="flex flex-col gap-space-sm">
+<label class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wide">
+              Verification Channel Executed
+            </label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<input checked="" class="mt-1 text-primary-container focus:ring-primary-container h-4 w-4" name="verification_method" type="radio"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Telephonic Call to Proprietor</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Amit Kumar (Chemist / Store Owner · +91 94340 22109)</span>
+</div>
+</label>
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<input class="mt-1 text-primary-container focus:ring-primary-container h-4 w-4" name="verification_method" type="radio"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Direct Doctor Contact</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Dr. Amit Das (+91 98320 54119 · Direct Mobile)</span>
+</div>
+</label>
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<input class="mt-1 text-primary-container focus:ring-primary-container h-4 w-4" name="verification_method" type="radio"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Field Agent Geo-Check</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Assigned ground auditor verification (Cluster South)</span>
+</div>
+</label>
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<input class="mt-1 text-primary-container focus:ring-primary-container h-4 w-4" name="verification_method" type="radio"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Other Telephonic Inquiry</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Neighboring diagnostic partner or hospital registry</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Admin Verification Notes Field -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wide" for="admin-notes">
+                Admin Verification Notes
+              </label>
+<span class="font-label-sm text-label-sm text-text-secondary font-code-tabular">Char: 142/1000</span>
+</div>
+<textarea class="w-full bg-surface-container-lowest rounded p-space-md font-body-md text-body-md text-on-surface placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-primary-container transition-all shadow-sm" id="admin-notes" placeholder="Record what was checked and what was confirmed (e.g. Spoke with chemist Amit Kumar; Dr. Das had an emergency caesarean call at Jhargram Sub-Divisional Hospital and arrived 45 mins late)..." rows="4">Spoke directly with proprietor Amit Kumar (Chemist) at 10:15 AM on 26 Sep. Confirmed Dr. Das was delayed due to rural emergency surgery at Sub-Divisional Hospital. He arrived at 6:15 PM and attended all 18 waiting patients until 8:30 PM. The scheduled slot remains generally valid.</textarea>
+<div class="flex items-center gap-1 text-text-secondary font-label-sm text-label-sm pt-0.5">
+<span class="material-symbols-outlined text-[15px]">lock</span>
+<span>Internal audit record. Never visible to patients or search consumers.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Resolution Workflow Card -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">assignment_turned_in</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Report Resolution</h2>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-warning-soft text-warning-amber font-semibold rounded">
+            Stage 3 of 3
+          </span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-lg">
+<!-- Radio Selection for Resolution Options -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wide">
+              Select Final Resolution Outcome
+            </span>
+<div class="flex flex-col gap-space-xs">
+<!-- Option A -->
+<label class="flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer transition-colors shadow-sm">
+<input class="mt-1 text-primary focus:ring-primary h-4 w-4" name="resolution_outcome" type="radio" value="confirmed_updated"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Information confirmed and updated</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Platform record has been updated with a temporary cancellation, schedule adjustment, or modified consultation hours.</span>
+</div>
+</label>
+<!-- Option B (Selected by default for this scenario) -->
+<label class="flex items-start gap-space-sm p-space-md rounded-lg bg-secondary-fixed/20 hover:bg-secondary-fixed/30 cursor-pointer transition-colors shadow-sm">
+<input checked="" class="mt-1 text-primary focus:ring-primary h-4 w-4" name="resolution_outcome" type="radio" value="checked_no_change"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Information checked — no change required</span>
+<span class="font-label-sm text-label-sm px-2 py-0.2 rounded bg-surface text-primary font-semibold">Recommended</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary">Existing recurring roster is accurate; e.g. doctor was present, was delayed briefly due to hospital transit, or patients were served in modified order.</span>
+</div>
+</label>
+<!-- Option C -->
+<label class="flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer transition-colors shadow-sm">
+<input class="mt-1 text-primary focus:ring-primary h-4 w-4" name="resolution_outcome" type="radio" value="unverified"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Report could not be verified</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Insufficient ground evidence or unresponsive contacts after 3 standardized operational attempts.</span>
+</div>
+</label>
+<!-- Option D -->
+<label class="flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer transition-colors shadow-sm">
+<input class="mt-1 text-primary focus:ring-primary h-4 w-4" name="resolution_outcome" type="radio" value="incorrect"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Report is incorrect</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Submitted information determined to be invalid, erroneous, or contradictory to physical logs and on-site register.</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Mandatory Resolution Notes -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wide" for="resolution-summary">
+                Mandatory Resolution Summary <span class="text-error-red">*</span>
+</label>
+<span class="font-label-sm text-label-sm text-text-secondary font-code-tabular">Required for ticket audit log</span>
+</div>
+<textarea class="w-full bg-surface-container-lowest rounded p-space-md font-body-md text-body-md text-on-surface placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm" id="resolution-summary" placeholder="Explain what was verified and what action was taken before closing this ticket..." required="" rows="3">One-off transit delay due to emergency clinical call at Jhargram Sub-Divisional Hospital. Doctor completed chamber session from 6:15 PM to 8:30 PM. Weekly schedule slot remains valid and accurate. No recurring platform data change warranted.</textarea>
+</div>
+<!-- Bottom Action Bar -->
+<div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-2 text-text-secondary font-body-sm">
+<span class="material-symbols-outlined text-[18px] text-success-green">lock_clock</span>
+<span>Submitting will record signature: <strong>Rajesh Sharma (Admin #940)</strong></span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="w-full sm:w-auto px-space-md py-2 rounded bg-surface hover:bg-surface-container-low text-primary font-label-lg text-label-lg transition-colors shadow-sm" type="button">
+                Save &amp; Continue Review
+              </button>
+<button class="w-full sm:w-auto px-space-xl py-2 rounded bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-bold shadow-sm transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Resolve Report</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Contextual Tools & Verification Trail (35% -> 4 cols on 12-col grid) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- 1. Source Record Quick Actions Card -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">bolt</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Source Record Actions</h3>
+</div>
+<span class="material-symbols-outlined text-[16px] text-text-secondary">open_in_new</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-md">
+<p class="font-body-sm text-body-sm text-text-secondary leading-normal">
+            Need to update platform data? Edit the source entity directly. Changes reflect immediately across discovery and public search.
+          </p>
+<div class="flex flex-col gap-2">
+<a class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest hover:bg-surface-container transition-colors group shadow-sm" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-warning-amber text-[20px]">event_busy</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors">Add Temporary Absence</span>
+<span class="font-body-sm text-body-sm text-text-secondary">1-day override for Dr. Amit Das</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[16px] text-text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest hover:bg-surface-container transition-colors group shadow-sm" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">edit_calendar</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors">Edit Doctor Weekly Schedule</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Recurring slots at Maa Medical</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[16px] text-text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest hover:bg-surface-container transition-colors group shadow-sm" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">storefront</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors">Inspect Maa Medical Store Chamber</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Chamber 1 capacity &amp; facility specs</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[16px] text-text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest hover:bg-surface-container transition-colors group shadow-sm" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-text-secondary text-[20px]">badge</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors">View Dr. Amit Das Full Profile</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Credentials, degrees &amp; registrations</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[16px] text-text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 2. Verification & Integrity Checklist -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">checklist_rtl</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Integrity Checklist</h3>
+</div>
+<span class="font-code-tabular text-label-sm text-primary font-bold">3/4 Compliant</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm p-space-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-success-green text-[20px] shrink-0 mt-0.5">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Chamber schedule cross-referenced</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Confirmed recurring slot #SCHED-8821 on file</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-success-green text-[20px] shrink-0 mt-0.5">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Proprietor / chemist contacted</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Called Amit Kumar (+91 94340 22109) at 10:15 AM</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-text-secondary/50 text-[20px] shrink-0 mt-0.5">radio_button_unchecked</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Temporary cancellation notice logged</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 bg-surface-container-high text-text-secondary rounded">Optional</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary">Not required since doctor arrived &amp; saw patients</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-warning-amber text-[20px] shrink-0 mt-0.5">pending</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Resolution rationale documented</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 bg-error-soft text-error-red rounded font-bold">Required</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary">Ready for final sign-off below</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Report Activity Timeline -->
+<section class="bg-surface rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">history</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Report Audit Timeline</h3>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary font-code-tabular">UTC+5:30</span>
+</div>
+<div class="p-space-md">
+<ol class="relative flex flex-col gap-space-md pl-4">
+<!-- Timeline Item 1 -->
+<li class="relative flex items-start gap-space-sm">
+<div class="absolute -left-4 mt-1 w-2.5 h-2.5 rounded-full bg-primary-container ring-4 ring-surface"></div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-code-tabular text-text-secondary">25 Sep 2026, 5:42 PM</span>
+<span class="px-1.5 py-0.2 rounded font-label-sm text-label-sm bg-surface-container text-on-surface-variant font-medium">Inbound</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface font-bold">Report #RPT-1042 submitted by community</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Origin: Patient discovery web page (Anonymous telemetry)</div>
+</div>
+</li>
+<!-- Timeline Item 2 -->
+<li class="relative flex items-start gap-space-sm">
+<div class="absolute -left-4 mt-1 w-2.5 h-2.5 rounded-full bg-primary-container ring-4 ring-surface"></div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-code-tabular text-text-secondary">25 Sep 2026, 6:10 PM</span>
+<span class="px-1.5 py-0.2 rounded font-label-sm text-label-sm bg-surface-container text-on-surface-variant font-medium">Queue</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface font-bold">Admin review initiated</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Assigned to Rajesh Sharma (Operations Admin)</div>
+</div>
+</li>
+<!-- Timeline Item 3 -->
+<li class="relative flex items-start gap-space-sm">
+<div class="absolute -left-4 mt-1 w-2.5 h-2.5 rounded-full bg-secondary ring-4 ring-surface"></div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-code-tabular text-text-secondary">26 Sep 2026, 10:15 AM</span>
+<span class="px-1.5 py-0.2 rounded font-label-sm text-label-sm bg-success-soft text-success-green font-semibold">Tele-Check</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface font-bold">Telephonic verification completed</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Chemist confirmed doctor arrived at 6:15 PM due to emergency duty at Jhargram Sub-Divisional Hospital.</div>
+</div>
+</li>
+<!-- Pending Step -->
+<li class="relative flex items-start gap-space-sm">
+<div class="absolute -left-4 mt-1 w-2.5 h-2.5 rounded-full bg-warning-amber ring-4 ring-surface animate-pulse"></div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-code-tabular text-warning-amber font-semibold">Pending Final Step</span>
+</div>
+<div class="font-label-md text-label-md text-warning-amber font-bold">Awaiting final resolution sign-off</div>
+<div class="font-body-sm text-body-sm text-text-secondary">Ticket will transition to CLOSED state upon resolution commit.</div>
+</div>
+</li>
+</ol>
+</div>
+</section>
+<!-- 4. Reserved Future Space (Governance Guideline) -->
+<section class="p-space-md rounded-lg bg-surface-container-low shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface text-text-secondary font-bold uppercase tracking-wider">
+            Future Integration
+          </span>
+<span class="material-symbols-outlined text-[16px] text-text-secondary">terminal</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Automated Telephonic IVR Ground Pulse</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+          Integrated automated IVR inquiry directly to establishment landlines at the commencement of each consultation shift to pre-emptively log delayed arrival notices without waiting for community signals.
+        </p>
+</section>
+</div>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#6e7977", "on-primary": "#ffffff", "on-tertiary-fixed": "#00201c", "on-primary-fixed-variant": "#00504a", "surface-bright": "#faf8ff", "success-soft": "#DCFCE7", "on-secondary": "#ffffff", "on-secondary-container": "#266d68", "on-tertiary": "#ffffff", "warning-amber": "#D97706", "tertiary-fixed": "#bdece2", "success-green": "#16A34A", "primary-fixed": "#9cf2e8", "on-secondary-fixed-variant": "#00504b", "primary-fixed-dim": "#80d5cb", "on-background": "#131b2e", "secondary-fixed": "#abefe8", "secondary-fixed-dim": "#8fd3cc", "surface-container": "#eaedff", "primary": "#005c55", "on-tertiary-fixed-variant": "#224e47", "text-secondary": "#475569", "tertiary": "#2d5951", "border-subtle": "#E2E8F0", "primary-container": "#0f766e", "surface-container-low": "#f2f3ff", "on-surface-variant": "#3e4947", "inverse-surface": "#283044", "surface-variant": "#dae2fd", "inverse-primary": "#80d5cb", "error-soft": "#FEE2E2", "on-surface": "#131b2e", "on-error-container": "#93000a", "on-tertiary-container": "#c5f3ea", "outline-variant": "#bdc9c6", "error-red": "#DC2626", "inverse-on-surface": "#eef0ff", "surface-tint": "#006a63", "on-error": "#ffffff", "surface-container-high": "#e2e7ff", "app-bg": "#F8FAFC", "surface-container-highest": "#dae2fd", "secondary-container": "#a8ece5", "surface-dim": "#d2d9f4", "on-secondary-fixed": "#00201e", "status-unknown": "#64748B", "on-primary-fixed": "#00201d", "on-primary-container": "#a3faef", "warning-soft": "#FEF3C7", "info-blue": "#2563EB", "background": "#faf8ff", "tertiary-container": "#467169", "error-container": "#ffdad6", "tertiary-fixed-dim": "#a2d0c6", "surface-container-lowest": "#ffffff", "error": "#ba1a1a", "secondary": "#216963", "surface": "#FFFFFF" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-md": "0.75rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "1.5rem", "space-lg": "1rem", "space-2xl": "2rem", "gutter-desktop": "1.5rem", "margin": "1rem", "margin-desktop": "2rem" }, "fontFamily": { "headline-md": [ "Noto Sans" ], "headline-lg": [ "Noto Sans" ], "headline-sm": [ "Noto Sans" ], "label-lg": [ "Noto Sans" ], "label-sm": [ "Noto Sans" ], "body-sm": [ "Noto Sans" ], "code-tabular": [ "Noto Sans" ], "body-lg": [ "Noto Sans" ], "label-md": [ "Noto Sans" ], "body-md": [ "Noto Sans" ], "headline-xl": [ "Noto Sans" ] }, "fontSize": { "headline-md": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "headline-lg": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-sm": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "label-lg": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "code-tabular": [ "12px", { "lineHeight": "16px", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "headline-xl": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" } ] } } } };</script></head><body class="bg-app-bg font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-64 bg-primary-container z-50 flex flex-col border-r border-outline-variant/30 text-on-primary select-none"><div class="p-space-lg border-b border-outline-variant/20 flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed">local_hospital</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-primary leading-tight">Where Is My Doctor?</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider font-semibold">OPS Admin Portal V1.0</span></div></div><div class="flex items-center gap-space-xs mt-space-xs"><span class="w-2 h-2 rounded-full bg-success-green animate-pulse"></span><span class="font-label-sm text-label-sm text-on-primary-container font-medium">Live Data Sync Active</span></div></div><nav class="flex-1 overflow-y-auto p-space-md flex flex-col gap-space-md" data-active-classes="bg-secondary-container text-primary font-bold"><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">Overview</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-space-lg">grid_view</span><span>Dashboard</span></a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">Healthcare Catalog</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="doctors" href="#"><span class="material-symbols-outlined text-space-lg">person_pin</span><span>Doctors</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="establishments" href="#"><span class="material-symbols-outlined text-space-lg">domain</span><span>Establishments</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="practice-locations" href="#"><span class="material-symbols-outlined text-space-lg">location_city</span><span>Practice Locations</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="schedules" href="#"><span class="material-symbols-outlined text-space-lg">calendar_today</span><span>Schedules</span></a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">Content &amp; Discovery</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="health-topics" href="#"><span class="material-symbols-outlined text-space-lg">label</span><span>Health Topics</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded transition-colors bg-secondary-container text-primary font-bold" data-path="health-guide" href="#"><span class="material-symbols-outlined text-space-lg">menu_book</span><span>Health Guide</span></a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">Verification &amp; Audit</span><a class="flex items-center justify-between px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="verification-queue" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-space-lg">verified_user</span><span>Verification Queue</span></div><span class="px-space-xs py-0.5 rounded text-xs font-code-tabular font-bold bg-error-container text-on-error-container">28</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="community-reports" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-space-lg">report</span><span>Community Reports</span></div><span class="px-space-xs py-0.5 rounded text-xs font-code-tabular font-bold bg-warning-soft text-warning-amber">14</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-space-lg">manage_history</span><span>Audit Log</span></a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">Geography &amp; Access</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="territories-and-pin-codes" href="#"><span class="material-symbols-outlined text-space-lg">map</span><span>Territories &amp; PIN Codes</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="users-and-roles" href="#"><span class="material-symbols-outlined text-space-lg">group</span><span>Users &amp; Roles</span></a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim px-space-sm font-bold">System</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded text-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="system-settings" href="#"><span class="material-symbols-outlined text-space-lg">tune</span><span>System Settings</span></a></div></nav><div class="p-space-md border-t border-outline-variant/20 bg-primary/40"><div class="rounded border border-primary-fixed-dim/30 bg-primary/50 p-space-sm"><div class="flex items-center gap-space-xs mb-1"><span class="material-symbols-outlined text-space-sm text-primary-fixed">update</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider font-semibold">Roadmap Preview</span></div><p class="font-body-sm text-body-sm text-on-primary/80 leading-snug">Coming later: Appointments, Doctor Self-Claim, Real-time Availability, Telemedicine.</p></div></div></aside><div class="pl-64 flex flex-col min-h-screen"><header class="fixed top-0 left-64 right-0 h-16 bg-surface z-40 border-b border-border-subtle flex items-center justify-between px-gutter-desktop shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex-1 max-w-xl"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-text-secondary text-xl">search</span><input class="w-full pl-10 pr-4 py-2 bg-surface-bright border border-border-subtle rounded font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search doctors, articles, topics, PIN codes..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-md py-1 bg-success-soft rounded border border-success-green/20"><span class="material-symbols-outlined text-success-green text-sm">sync</span><span class="font-label-sm text-label-sm text-success-green font-semibold">Operational Sync: Normal</span></div><div class="hidden md:flex items-center gap-space-xs px-space-md py-1 bg-error-soft rounded border border-error-red/20"><span class="material-symbols-outlined text-error-red text-sm">hourglass_empty</span><span class="font-label-sm text-label-sm text-error-red font-semibold">Queue: 28</span></div><button aria-label="Notifications" class="relative p-2 text-text-secondary hover:text-on-surface hover:bg-surface-container rounded-full transition-colors" type="button"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error-red rounded-full"></span></button><div class="h-8 w-px bg-border-subtle"></div><div class="flex items-center gap-space-md"><div class="flex flex-col text-right hidden sm:flex"><span class="font-label-lg text-label-lg font-semibold text-on-surface leading-tight">Rajesh Sharma</span><span class="font-label-sm text-label-sm text-text-secondary">Operations Admin</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-border-subtle" src="https://lh3.googleusercontent.com/aida/AEtjO1VzIdbRl2Ok25zQ3P8tlme7rwURWxHMkwGSNnLLtmrcq4xn-XLQbB9Znuu_P9SkeHZGkkcpAxFXfMIdcsJs0z80aATFl6p7oMiiNK-5LNMbhSXcJ_pdMJfWnBwhN_b-kFIpPPvDTF9AAnPPOpCKdywbSI5AFQuLvYaOvQS6lo1SDtIvQWZNm_aOde9hv5JZzsi6nXqG9Wg8jIoyx6f0pAQT3tnCErfnUx3Y0y8Xv-yQmbHcGC3AgD9uGNjR"/></div></div></header><main class="relative pt-16 w-full flex-1 bg-app-bg"><div class="flex flex-col w-full">
+<!-- Interactive Article Drawer / Modal Backdrop -->
+<div class="fixed inset-0 bg-on-surface/40 z-50 hidden transition-opacity duration-200" id="article-modal-backdrop"></div>
+<!-- Interactive Slide-over for "+ Add Article" -->
+<aside class="fixed right-0 top-0 bottom-0 w-full max-w-xl bg-surface z-50 shadow-xl border-l border-border-subtle transform translate-x-full transition-transform duration-300 flex flex-col" id="add-article-drawer">
+<div class="px-space-xl py-space-lg border-b border-border-subtle flex items-center justify-between bg-surface">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-headline-sm">post_add</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Create Educational Article</h2>
+<span class="font-label-sm text-label-sm text-text-secondary">Health Guide Operational Catalog · Stage Draft</span>
+</div>
+</div>
+<button class="p-1 rounded text-text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" onclick="closeArticleDrawer()" type="button">
+<span class="material-symbols-outlined text-space-lg">close</span>
+</button>
+</div>
+<form class="flex-1 overflow-y-auto p-space-xl flex flex-col gap-space-lg" onsubmit="event.preventDefault(); saveDraftArticle();">
+<!-- Policy Reminder Card in Drawer -->
+<div class="p-space-md rounded bg-surface-container-low border border-border-subtle flex gap-space-sm items-start">
+<span class="material-symbols-outlined text-primary text-body-md mt-0.5">verified</span>
+<p class="font-body-sm text-body-sm text-text-secondary leading-snug">
+          Articles must remain strictly non-diagnostic. Every entry automatically appends the standard <strong class="text-on-surface font-semibold">“When to See a Doctor”</strong> threshold and specialty routing link.
+        </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary font-bold" for="article-title-input">Article Title (English or Bengali) *</label>
+<input class="w-full px-space-md py-space-sm bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="article-title-input" placeholder="e.g. Recognizing Heat Exhaustion vs. Dehydration" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary font-bold" for="article-topic-input">Health Topic *</label>
+<select class="w-full px-space-md py-space-sm bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary" id="article-topic-input">
+<option value="Skin Problems">Skin Problems (Dermatology)</option>
+<option value="Child Health / Fever">Child Health / Fever (Pediatrics)</option>
+<option value="Eye Problems">Eye Problems (Ophthalmology)</option>
+<option selected="" value="General Medicine">General Medicine</option>
+<option value="Joint &amp; Bone">Joint &amp; Bone (Orthopedics)</option>
+<option value="Dental Care">Dental Care (Dentistry)</option>
+</select>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary font-bold" for="article-lang-input">Primary Language *</label>
+<select class="w-full px-space-md py-space-sm bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary" id="article-lang-input">
+<option value="EN">English (EN)</option>
+<option value="BN">Bengali (বাংলা)</option>
+<option value="BOTH">Bilingual Parallel (EN + BN)</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary font-bold" for="article-excerpt-input">Summary Excerpt (Max 140 chars) *</label>
+<textarea class="w-full px-space-md py-space-sm bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary" id="article-excerpt-input" maxlength="140" placeholder="Brief summary displayed on cards and patient category results..." rows="2"></textarea>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-text-secondary font-bold" for="article-body-input">Educational Content *</label>
+<textarea class="w-full px-space-md py-space-sm bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary" id="article-body-input" placeholder="Detailed educational guidance, common signs, prevention, and lifestyle considerations..." rows="7"></textarea>
+</div>
+<div class="p-space-md rounded bg-surface-bright border border-border-subtle flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Mandatory Standard Footer Anchor</span>
+<div class="flex items-center gap-space-xs text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-success-green text-space-md">check_circle</span>
+<span>Linked CTA: “Find qualified specialists in your PIN code”</span>
+</div>
+</div>
+</form>
+<div class="px-space-xl py-space-md border-t border-border-subtle bg-surface flex items-center justify-end gap-space-md">
+<button class="px-space-md py-2 border border-border-subtle rounded font-label-md text-label-md text-text-secondary hover:bg-surface-bright" onclick="closeArticleDrawer()" type="button">Cancel</button>
+<button class="px-space-lg py-2 bg-primary-container text-on-primary rounded font-label-md text-label-md font-semibold hover:bg-primary transition-colors flex items-center gap-space-xs" onclick="saveDraftArticle()" type="button">
+<span class="material-symbols-outlined text-space-md">save</span>
+<span>Save as Draft</span>
+</button>
+</div>
+</aside>
+<!-- Main Workspace Canvas -->
+<div class="max-w-[1600px] w-full mx-auto px-gutter-desktop py-space-xl flex flex-col gap-space-xl">
+<!-- Breadcrumbs & Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-text-secondary font-label-sm text-label-sm">
+<span>Content</span>
+<span class="material-symbols-outlined text-space-xs text-status-unknown">chevron_right</span>
+<span class="text-on-surface font-semibold">Health Guide</span>
+</nav>
+<div class="flex flex-col">
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">Health Guide</h1>
+<p class="font-body-md text-body-md text-text-secondary max-w-3xl">
+            Manage educational health information for patients to understand common health problems and find the appropriate type of doctor.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="inline-flex items-center gap-space-xs px-space-lg py-2.5 bg-primary-container hover:bg-primary text-on-primary rounded font-label-md text-label-md font-semibold transition-colors shadow-sm" onclick="openArticleDrawer()" type="button">
+<span class="material-symbols-outlined text-space-lg">add</span>
+<span>Add Article</span>
+</button>
+</div>
+</div>
+<!-- Editorial Policy & Content Principles Banner -->
+<div class="p-space-lg rounded bg-surface border-l-4 border-l-primary border-y border-r border-border-subtle flex flex-col lg:flex-row lg:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-space-xl">policy</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">Health Guide Editorial Principle</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-semibold uppercase">Ops Standard v2.4</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+            Content must provide strictly general educational information and guide patients to the appropriate specialty. Articles must never diagnose, prescribe medications, or recommend specific dosages. Every article includes <strong class="text-on-surface font-medium">“When to see a doctor”</strong> and a linked <strong class="text-on-surface font-medium">“Find a Doctor”</strong> search prompt.
+          </p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-space-sm pl-12 lg:pl-0">
+<a class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded bg-surface hover:bg-surface-bright border border-border-subtle text-primary font-label-sm text-label-sm font-semibold transition-colors" href="#content-governance-footer">
+<span class="material-symbols-outlined text-space-md">rule</span>
+<span>Review Checklist</span>
+</a>
+</div>
+</div>
+<!-- Operational Volume Summary (4 Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Metric 1: Published -->
+<div class="p-space-lg bg-surface rounded border border-border-subtle flex items-start justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-text-secondary">Published</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl font-bold text-on-surface">24</span>
+<span class="font-label-sm text-label-sm text-success-green font-semibold">Active</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary leading-tight">Visible to patients in mobile discovery</span>
+</div>
+<div class="w-10 h-10 rounded bg-success-soft flex items-center justify-center text-success-green shrink-0">
+<span class="material-symbols-outlined text-space-xl">check_circle</span>
+</div>
+</div>
+<!-- Metric 2: Drafts -->
+<div class="p-space-lg bg-surface rounded border border-border-subtle flex items-start justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-text-secondary">Drafts</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl font-bold text-on-surface">7</span>
+<span class="font-label-sm text-label-sm text-warning-amber font-semibold">In Review</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary leading-tight">In editorial preparation or review</span>
+</div>
+<div class="w-10 h-10 rounded bg-warning-soft flex items-center justify-center text-warning-amber shrink-0">
+<span class="material-symbols-outlined text-space-xl">edit_note</span>
+</div>
+</div>
+<!-- Metric 3: Archived -->
+<div class="p-space-lg bg-surface rounded border border-border-subtle flex items-start justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-text-secondary">Archived</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl font-bold text-on-surface">5</span>
+<span class="font-label-sm text-label-sm text-status-unknown font-semibold">Inactive</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary leading-tight">De-listed historical content</span>
+</div>
+<div class="w-10 h-10 rounded bg-surface-container-low flex items-center justify-center text-status-unknown shrink-0">
+<span class="material-symbols-outlined text-space-xl">inventory_2</span>
+</div>
+</div>
+<!-- Metric 4: Bengali Localized -->
+<div class="p-space-lg bg-surface rounded border border-border-subtle flex items-start justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-text-secondary">Bengali Localized</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl font-bold text-primary-container">19</span>
+<span class="font-body-sm text-body-sm font-code-tabular text-text-secondary">of 24</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary leading-tight">Available in both EN &amp; BN (79.1%)</span>
+</div>
+<div class="w-10 h-10 rounded bg-secondary-container/40 flex items-center justify-center text-primary-container shrink-0">
+<span class="material-symbols-outlined text-space-xl">translate</span>
+</div>
+</div>
+</div>
+<!-- Search & Filter Bar with Quick Filter Pills -->
+<div class="bg-surface rounded border border-border-subtle p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Search Field -->
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-status-unknown text-space-lg pointer-events-none">search</span>
+<input class="w-full pl-10 pr-space-md py-2 bg-surface border border-border-subtle rounded font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="article-search" oninput="filterArticlesTable()" placeholder="Search articles by title, health topic, or specialty..." type="text"/>
+</div>
+<!-- Dropdown Controls -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Status Dropdown -->
+<div class="flex items-center gap-1.5">
+<label class="font-label-sm text-label-sm text-text-secondary font-medium" for="status-filter">Status:</label>
+<select class="px-space-sm py-2 bg-surface border border-border-subtle rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary" id="status-filter" onchange="filterArticlesTable()">
+<option value="ALL">All Statuses</option>
+<option value="Published">Published</option>
+<option value="Draft">Draft</option>
+<option value="Archived">Archived</option>
+</select>
+</div>
+<!-- Language Dropdown -->
+<div class="flex items-center gap-1.5">
+<label class="font-label-sm text-label-sm text-text-secondary font-medium" for="lang-filter">Language:</label>
+<select class="px-space-sm py-2 bg-surface border border-border-subtle rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary" id="lang-filter" onchange="filterArticlesTable()">
+<option value="ALL">All Languages</option>
+<option value="English">English</option>
+<option value="Bengali">Bengali</option>
+</select>
+</div>
+<!-- Health Topic Dropdown -->
+<div class="flex items-center gap-1.5">
+<label class="font-label-sm text-label-sm text-text-secondary font-medium" for="topic-filter">Topic:</label>
+<select class="px-space-sm py-2 bg-surface border border-border-subtle rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary" id="topic-filter" onchange="filterArticlesTable()">
+<option value="ALL">All Topics</option>
+<option value="Skin Problems">Skin Problems</option>
+<option value="Child Health / Fever">Child Health / Fever</option>
+<option value="Eye Problems">Eye Problems</option>
+<option value="Fever &amp; Infection">Fever &amp; Infection</option>
+<option value="Joint &amp; Bone">Joint &amp; Bone</option>
+<option value="Dental Care">Dental Care</option>
+<option value="Digestive Health">Digestive Health</option>
+</select>
+</div>
+<!-- Clear Filters Text Button -->
+<button class="text-primary hover:text-on-secondary-container font-label-sm text-label-sm font-semibold px-space-xs py-1 transition-colors underline decoration-dotted" onclick="clearArticleFilters()" type="button">
+            Clear Filters
+          </button>
+</div>
+</div>
+<!-- Quick Filter Pills / Tab Strip -->
+<div class="flex items-center justify-between border-t border-border-subtle pt-space-md">
+<div class="flex items-center gap-space-xs" id="quick-filter-container">
+<button class="quick-pill active px-space-md py-1 rounded text-label-sm font-label-sm font-bold bg-primary text-on-primary transition-colors flex items-center gap-1.5" data-filter="ALL" onclick="setQuickFilter('ALL')" type="button">
+<span>All Articles</span>
+<span class="px-1.5 py-0.2 bg-on-primary/20 rounded font-code-tabular text-[11px]">36</span>
+</button>
+<button class="quick-pill px-space-md py-1 rounded text-label-sm font-label-sm font-medium text-text-secondary hover:bg-surface-container transition-colors flex items-center gap-1.5" data-filter="Published" onclick="setQuickFilter('Published')" type="button">
+<span>Published</span>
+<span class="px-1.5 py-0.2 bg-success-soft text-success-green rounded font-code-tabular text-[11px] font-semibold">24</span>
+</button>
+<button class="quick-pill px-space-md py-1 rounded text-label-sm font-label-sm font-medium text-text-secondary hover:bg-surface-container transition-colors flex items-center gap-1.5" data-filter="Draft" onclick="setQuickFilter('Draft')" type="button">
+<span>Drafts</span>
+<span class="px-1.5 py-0.2 bg-warning-soft text-warning-amber rounded font-code-tabular text-[11px] font-semibold">7</span>
+</button>
+<button class="quick-pill px-space-md py-1 rounded text-label-sm font-label-sm font-medium text-text-secondary hover:bg-surface-container transition-colors flex items-center gap-1.5" data-filter="Archived" onclick="setQuickFilter('Archived')" type="button">
+<span>Archived</span>
+<span class="px-1.5 py-0.2 bg-surface-container text-status-unknown rounded font-code-tabular text-[11px] font-semibold">5</span>
+</button>
+</div>
+<div class="text-text-secondary font-label-sm text-label-sm hidden sm:block">
+          Displaying active educational repository
+        </div>
+</div>
+</div>
+<!-- Operational Data Table -->
+<div class="bg-surface rounded border border-border-subtle overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="articles-table">
+<thead>
+<tr class="bg-app-bg border-b border-border-subtle text-text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-lg font-bold min-w-[320px]" scope="col">Article &amp; Excerpt</th>
+<th class="py-2.5 px-space-md font-bold min-w-[190px]" scope="col">Health Topic &amp; Specialty</th>
+<th class="py-2.5 px-space-md font-bold min-w-[140px]" scope="col">Language</th>
+<th class="py-2.5 px-space-md font-bold min-w-[150px]" scope="col">Status</th>
+<th class="py-2.5 px-space-md font-bold min-w-[170px]" scope="col">Last Updated</th>
+<th class="py-2.5 px-space-lg font-bold text-right min-w-[140px]" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle" id="table-body">
+<!-- Row 1 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="English" data-status="Published" data-topic="Skin Problems">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      Common Causes of Skin Rashes and When to See a Dermatologist
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">4 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    Understanding common triggers like allergies, heat rash, eczema, and signs that need clinical evaluation.
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Skin Problems</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">Dermatology</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low border border-border-subtle text-on-surface font-label-sm text-label-sm">
+<span class="font-semibold text-text-secondary">EN</span>
+<span>English</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+<span>Published</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Public Searchable</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">25 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">View</button>
+<span class="text-border-subtle">|</span>
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-text-secondary hover:text-error-red font-label-md text-label-md font-medium" type="button">Unpublish</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="Bengali" data-status="Draft" data-topic="Child Health / Fever">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      শিশুর জ্বর হলে কী করবেন — প্রাথমিক সতর্কতা ও ডাক্তারের পরামর্শ
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">5 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    নবজাতক ও শিশুদের জ্বরে করণীয়, কখন অবিলম্বে শিশু বিশেষজ্ঞের কাছে যেতে হবে এবং কী করা অনুচিত।
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Child Health / Fever</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">Pediatrics</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary-fixed/20 border border-primary-fixed-dim/40 text-primary font-label-sm text-label-sm font-semibold">
+<span class="font-bold">BN</span>
+<span>বাংলা</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-warning-amber"></span>
+<span>Draft</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Editorial Review</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">24 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Dr. Ananya M.</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-success-green hover:underline font-label-md text-label-md font-semibold" type="button">Publish</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="English" data-status="Published" data-topic="Eye Problems">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      When Should You See an Eye Doctor? Warning Signs for Vision Care
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">3 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    Distinguishing between eye strain, sudden floaters, red eye infections, and glaucoma warning indicators.
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Eye Problems</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">Ophthalmology</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low border border-border-subtle text-on-surface font-label-sm text-label-sm">
+<span class="font-semibold text-text-secondary">EN</span>
+<span>English</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+<span>Published</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Public Searchable</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">22 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">View</button>
+<span class="text-border-subtle">|</span>
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-text-secondary hover:text-error-red font-label-md text-label-md font-medium" type="button">More</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="English" data-status="Published" data-topic="Fever &amp; Infection">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      Understanding Seasonal Viral Fever in Rural &amp; Semi-Urban Clusters
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">6 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    Hydration guidance, monitoring temperature patterns, and avoiding over-the-counter antibiotic self-medication.
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Fever &amp; Infection</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">General Medicine</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low border border-border-subtle text-on-surface font-label-sm text-label-sm">
+<span class="font-semibold text-text-secondary">EN</span>
+<span>English</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+<span>Published</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Public Searchable</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">20 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">View</button>
+<span class="text-border-subtle">|</span>
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-text-secondary hover:text-error-red font-label-md text-label-md font-medium" type="button">More</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="Bengali" data-status="Published" data-topic="Joint &amp; Bone">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      হাঁটু ও কোমরের ব্যথা: সাধারণ কারণ ও অর্থোপেডিক বিশেষজ্ঞের পরামর্শ
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">5 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    দৈনন্দিন কাজের ভঙ্গি, হাড়ের ক্ষয়জনিত সমস্যা এবং কখন জয়েন্ট এক্স-রে বা বিশেষ ডাক্তারের পরামর্শ প্রয়োজন।
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Joint &amp; Bone</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">Orthopedics</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary-fixed/20 border border-primary-fixed-dim/40 text-primary font-label-sm text-label-sm font-semibold">
+<span class="font-bold">BN</span>
+<span>বাংলা</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success-soft text-success-green font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+<span>Published</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Public Searchable</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">18 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">View</button>
+<span class="text-border-subtle">|</span>
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-text-secondary hover:text-error-red font-label-md text-label-md font-medium" type="button">More</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="English" data-status="Draft" data-topic="Dental Care">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface hover:text-primary cursor-pointer leading-snug">
+                      Managing Dental Toothaches and Gum Bleeding in Children
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">3 min read</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    Preventative dental hygiene and critical red flags requiring emergency pediatric dental care.
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">Dental Care</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-primary">arrow_forward</span>
+<span class="font-medium text-primary">Dentistry</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low border border-border-subtle text-on-surface font-label-sm text-label-sm">
+<span class="font-semibold text-text-secondary">EN</span>
+<span>English</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-warning-amber"></span>
+<span>Draft</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Needs Dental Specialist Signoff</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">16 Sep 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Edit</button>
+<span class="text-border-subtle">|</span>
+<button class="text-success-green hover:underline font-label-md text-label-md font-semibold" type="button">Publish</button>
+</div>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-app-bg/60 transition-colors" data-lang="English" data-status="Archived" data-topic="Digestive Health">
+<td class="py-3 px-space-lg align-top">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-md text-label-md font-semibold text-text-secondary line-through cursor-pointer leading-snug">
+                      Monsoon Waterborne Illnesses: ORS Preparation and Early Care
+                    </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-text-secondary font-code-tabular text-[10px] font-medium">Archived</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary line-clamp-1 leading-snug">
+                    Archive notice: Superseded by the comprehensive seasonal fever and diarrhea clinical guide.
+                  </p>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col items-start gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-text-secondary font-semibold">Digestive Health</span>
+<div class="flex items-center gap-1 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-space-sm text-text-secondary">arrow_forward</span>
+<span class="font-medium text-text-secondary">General Medicine</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low border border-border-subtle text-text-secondary font-label-sm text-label-sm">
+<span class="font-semibold text-text-secondary">EN</span>
+<span>English</span>
+</span>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col gap-0.5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-status-unknown font-label-sm text-label-sm font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-status-unknown"></span>
+<span>Archived</span>
+</span>
+<span class="font-code-tabular text-[11px] text-text-secondary">Superseded</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top">
+<div class="flex flex-col">
+<span class="font-code-tabular text-body-sm text-on-surface font-medium">10 Aug 2026</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-3 px-space-lg align-top text-right">
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary hover:text-on-secondary-container font-label-md text-label-md font-semibold hover:underline" type="button">Restore</button>
+<span class="text-border-subtle">|</span>
+<button class="text-text-secondary hover:text-on-surface font-label-md text-label-md font-medium" type="button">View</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Bar -->
+<div class="px-space-lg py-space-md bg-surface border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-body-sm text-body-sm text-text-secondary">
+            Showing <strong class="text-on-surface font-semibold font-code-tabular" id="showing-count">1 to 7</strong> of <strong class="text-on-surface font-semibold font-code-tabular">36</strong> articles
+          </span>
+<div class="h-4 w-px bg-border-subtle hidden sm:block"></div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-text-secondary">Per page:</span>
+<select class="px-2 py-1 bg-surface border border-border-subtle rounded font-code-tabular text-body-sm text-on-surface focus:outline-none focus:border-primary">
+<option selected="" value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+</select>
+</div>
+</div>
+<!-- Page Selectors -->
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded border border-border-subtle text-status-unknown opacity-50 cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-space-md">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-on-primary font-code-tabular font-bold text-body-sm flex items-center justify-center" type="button">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface-bright text-text-secondary font-code-tabular font-medium text-body-sm flex items-center justify-center" type="button">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface-bright text-text-secondary font-code-tabular font-medium text-body-sm flex items-center justify-center" type="button">3</button>
+<span class="text-text-secondary px-1">...</span>
+<button class="w-8 h-8 rounded hover:bg-surface-bright text-text-secondary font-code-tabular font-medium text-body-sm flex items-center justify-center" type="button">5</button>
+<button class="p-1.5 rounded border border-border-subtle text-text-secondary hover:bg-surface-bright" type="button">
+<span class="material-symbols-outlined text-space-md">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Content Structure Guidelines Card (Footer Governance) -->
+<div class="bg-surface rounded border border-border-subtle p-space-xl flex flex-col gap-space-lg shadow-sm" id="content-governance-footer">
+<div class="flex items-center justify-between border-b border-border-subtle pb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-headline-sm">fact_check</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Health Content Quality &amp; Governance Standard</h3>
+<span class="font-label-sm text-label-sm text-text-secondary">Mandatory checklist for every live article prior to publication</span>
+</div>
+</div>
+<span class="px-space-sm py-1 rounded bg-success-soft text-success-green font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">gavel</span>
+<span>Verified Safe for Community Guidance</span>
+</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-desktop">
+<!-- Checklist: What Articles Must Include -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-surface-bright border border-border-subtle">
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-space-lg text-primary">task_alt</span>
+<span>Mandatory Article Components</span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-text-secondary">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-success-green text-sm mt-0.5">check</span>
+<span><strong>Common Symptoms:</strong> Objective, layperson descriptions of conditions.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-success-green text-sm mt-0.5">check</span>
+<span><strong>Possible Causes:</strong> Clear educational non-definitive explanations without diagnosing.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-success-green text-sm mt-0.5">check</span>
+<span><strong>When to See a Doctor:</strong> Explicit red flags, worsening criteria, and timeline warnings.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-success-green text-sm mt-0.5">check</span>
+<span><strong>Specialty Match:</strong> Linked prompt guiding user to local specialty search (e.g. ENT, Cardiology).</span>
+</li>
+</ul>
+</div>
+<!-- Checklist: Strict Prohibitions -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-error-soft/30 border border-error-red/20">
+<div class="flex items-center gap-space-xs text-error-red font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-space-lg text-error-red">block</span>
+<span>Strict Editorial Prohibitions</span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-text-secondary">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error-red text-sm mt-0.5">close</span>
+<span><strong>No Diagnosis:</strong> Must not claim to diagnose any specific patient condition.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error-red text-sm mt-0.5">close</span>
+<span><strong>No Prescriptions:</strong> Absolute prohibition of pharmaceutical dosages or medicines.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error-red text-sm mt-0.5">close</span>
+<span><strong>No Doctor Endorsements:</strong> Never claim any individual practitioner is superior.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error-red text-sm mt-0.5">close</span>
+<span><strong>Zero Commercial Bias:</strong> Strict ban on sponsored clinic promotions or paid endorsements.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Drawer open/close micro-interactions
+    function openArticleDrawer() {
+      const drawer = document.getElementById('add-article-drawer');
+      const backdrop = document.getElementById('article-modal-backdrop');
+      if (drawer && backdrop) {
+        backdrop.classList.remove('hidden');
+        drawer.classList.remove('translate-x-full');
+      }
+    }
+
+    function closeArticleDrawer() {
+      const drawer = document.getElementById('add-article-drawer');
+      const backdrop = document.getElementById('article-modal-backdrop');
+      if (drawer && backdrop) {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function saveDraftArticle() {
+      const title = document.getElementById('article-title-input').value;
+      if (!title) {
+        alert('Please provide an article title.');
+        return;
+      }
+      closeArticleDrawer();
+      // Visual feedback toast
+      showSimpleToast('Draft article saved successfully');
+    }
+
+    function showSimpleToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded shadow-lg flex items-center gap-2 font-body-sm text-body-sm z-50 transition-all';
+      toast.innerHTML = '<span class="material-symbols-outlined text-success-green text-sm">check_circle</span><span>' + msg + '</span>';
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Interactive Filtering Logic
+    let currentQuickFilter = 'ALL';
+
+    function setQuickFilter(filter) {
+      currentQuickFilter = filter;
+      document.querySelectorAll('.quick-pill').forEach(btn => {
+        if (btn.getAttribute('data-filter') === filter) {
+          btn.classList.add('bg-primary', 'text-on-primary', 'font-bold');
+          btn.classList.remove('text-text-secondary', 'font-medium');
+        } else {
+          btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold');
+          btn.classList.add('text-text-secondary', 'font-medium');
+        }
+      });
+
+      // Synchronize dropdown
+      const statusSelect = document.getElementById('status-filter');
+      if (statusSelect) {
+        statusSelect.value = filter;
+      }
+
+      filterArticlesTable();
+    }
+
+    function filterArticlesTable() {
+      const searchQuery = (document.getElementById('article-search')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('status-filter')?.value || 'ALL';
+      const langFilter = document.getElementById('lang-filter')?.value || 'ALL';
+      const topicFilter = document.getElementById('topic-filter')?.value || 'ALL';
+
+      const rows = document.querySelectorAll('#table-body tr');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        const rowStatus = row.getAttribute('data-status');
+        const rowLang = row.getAttribute('data-lang');
+        const rowTopic = row.getAttribute('data-topic');
+
+        const matchesSearch = !searchQuery || rowText.includes(searchQuery);
+        const matchesStatus = (statusFilter === 'ALL') || (rowStatus === statusFilter);
+        const matchesLang = (langFilter === 'ALL') || (rowLang === langFilter);
+        const matchesTopic = (topicFilter === 'ALL') || (rowTopic === topicFilter);
+
+        if (matchesSearch && matchesStatus && matchesLang && matchesTopic) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      const countEl = document.getElementById('showing-count');
+      if (countEl) {
+        countEl.textContent = visibleCount === 0 ? '0' : `1 to ${visibleCount}`;
+      }
+    }
+
+    function clearArticleFilters() {
+      const search = document.getElementById('article-search');
+      const status = document.getElementById('status-filter');
+      const lang = document.getElementById('lang-filter');
+      const topic = document.getElementById('topic-filter');
+
+      if (search) search.value = '';
+      if (status) status.value = 'ALL';
+      if (lang) lang.value = 'ALL';
+      if (topic) topic.value = 'ALL';
+
+      setQuickFilter('ALL');
+    }
+
+    // Attach backdrop dismissal
+    document.getElementById('article-modal-backdrop')?.addEventListener('click', closeArticleDrawer);
+  </script>
+</div></main></div></body></html>

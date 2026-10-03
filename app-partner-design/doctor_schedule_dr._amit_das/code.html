@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "inverse-surface": "#283044", "secondary": "#216963", "on-primary-fixed-variant": "#00504a", "primary-fixed-dim": "#80d5cb", "on-primary": "#ffffff", "surface-container-low": "#f2f3ff", "surface-variant": "#dae2fd", "error-container": "#ffdad6", "background": "#faf8ff", "border-subtle": "#E2E8F0", "on-secondary": "#ffffff", "status-warning": "#D97706", "status-unknown": "#64748B", "on-secondary-container": "#266d68", "status-success": "#16A34A", "secondary-container": "#a8ece5", "tertiary": "#2d5951", "status-success-soft": "#DCFCE7", "primary": "#005c55", "surface-container": "#eaedff", "error": "#ba1a1a", "surface-container-lowest": "#ffffff", "on-surface-variant": "#3e4947", "secondary-fixed-dim": "#8fd3cc", "secondary-fixed": "#abefe8", "on-surface": "#131b2e", "text-muted": "#475569", "inverse-on-surface": "#eef0ff", "on-secondary-fixed": "#00201e", "on-error-container": "#93000a", "surface": "#FFFFFF", "tertiary-fixed": "#bdece2", "tertiary-fixed-dim": "#a2d0c6", "status-info": "#2563EB", "status-warning-soft": "#FEF3C7", "app-bg": "#F8FAFC", "on-primary-container": "#a3faef", "tertiary-container": "#467169", "status-error": "#DC2626", "surface-tint": "#006a63", "status-error-soft": "#FEE2E2", "on-error": "#ffffff", "on-tertiary": "#ffffff", "primary-container": "#0f766e", "on-tertiary-fixed": "#00201c", "surface-dim": "#d2d9f4", "outline": "#6e7977", "inverse-primary": "#80d5cb", "on-background": "#131b2e", "primary-fixed": "#9cf2e8", "on-tertiary-container": "#c5f3ea", "surface-container-high": "#e2e7ff", "on-primary-fixed": "#00201d", "outline-variant": "#bdc9c6", "surface-bright": "#faf8ff", "on-secondary-fixed-variant": "#00504b", "surface-container-highest": "#dae2fd", "on-tertiary-fixed-variant": "#224e47" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "space-xl": "2rem", "margin": "1rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter": "1rem", "gutter-desktop": "1.5rem" }, fontFamily: { "label-md": ["Noto Sans"], "title-md": ["Noto Sans"], "body-lg": ["Noto Sans"], "headline-md": ["Noto Sans"], "headline-lg-mobile": ["Noto Sans"], "body-md": ["Noto Sans"], "label-sm": ["Noto Sans"], "headline-xl-mobile": ["Noto Sans"], "label-lg": ["Noto Sans"], "headline-lg": ["Noto Sans"], "headline-xl": ["Noto Sans"], "body-sm": ["Noto Sans"] }, fontSize: { "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "title-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }], "label-lg": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-app-bg text-on-surface font-body-md flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-28 px-space-md flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between h-12"><div class="flex items-center gap-space-sm"><button aria-label="Go back" class="h-11 px-space-xs -ml-space-xs flex items-center gap-1 text-primary active:opacity-70" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span><span class="font-label-lg text-label-lg">Dr. Amit Das</span></button></div><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-full bg-surface-container text-text-muted font-label-sm text-label-sm hidden sm:inline-block">Maa Medical Centre</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">calendar_clock</span></div></div></div><div class="flex flex-col justify-end pb-space-xs"><h1 class="font-headline-md text-headline-md text-on-surface tracking-tight leading-tight">Doctor Schedule</h1><p class="font-body-sm text-body-sm text-text-muted">Manage regular consultation days, visiting hours &amp; shifts at Maa Medical Centre.</p></div></div></header><main class="flex-1 flex flex-col relative w-full pt-28 pb-32 bg-app-bg px-space-md"><div class="flex flex-col w-full space-y-4">
+<form class="flex flex-col space-y-4" id="doctor-schedule-form" onsubmit="event.preventDefault(); window.showNotification &amp;&amp; window.showNotification('Schedule updated successfully');">
+<!-- Top Context & Profile Banner -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="relative w-12 h-12 rounded-full overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up warm professional portrait of an Indian male doctor in his 40s wearing a crisp white consultation coat with a stethoscope around his neck in a bright clinic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjy-VyM4gle0JoFXr5UAnnevxkgVCwifJxKaT7q0aUxylBcnp9oFsksVOxMcwYphgLAsNf46KYM9Z_bzLR9YQtteqlkmrXM0aEAuoFs839pxjgYbSB7aaUwvi0-x5kyjRVB5xXwdDoF53F-d9JIifg8CL0fu3ss2YzLqhPMwN4QerPemqPZxoOaCeyRdfa34nPziD0fiFdD--tWGdjj5xF2WkHoEhE0T2TI6GkE1HByYZYXACVL5g_5g"/>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-title-md text-title-md text-on-surface truncate">Dr. Amit Das</span>
+<span class="px-2 py-0.5 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Verified Active
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted">General Medicine · MBBS, MD</p>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-3 bg-app-bg rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+<p class="font-label-md text-label-md text-on-surface truncate">Regular Recurring Schedule</p>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted">3 days configured</span>
+</div>
+</div>
+<!-- Practice Location Selector Card -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted">Practice Location</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">Primary Facility</span>
+</div>
+<div class="relative mt-1">
+<button class="w-full h-12 bg-app-bg rounded-lg px-3 flex items-center justify-between text-left active:bg-surface-container transition-colors" onclick="document.getElementById('location-dropdown').classList.toggle('hidden')" type="button">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px]">local_hospital</span>
+<div class="min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface truncate">Maa Medical Centre — Main Branch</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted text-[20px]">arrow_drop_down</span>
+</button>
+<!-- Dropdown Menu -->
+<div class="hidden absolute top-14 inset-x-0 bg-surface rounded-xl shadow-xl z-30 p-1.5 space-y-1" id="location-dropdown">
+<button class="w-full text-left p-2.5 rounded-lg bg-surface-container text-on-surface flex items-center justify-between" onclick="document.getElementById('location-dropdown').classList.add('hidden')" type="button">
+<div>
+<p class="font-label-md text-label-md font-semibold text-primary">Maa Medical Centre — Main Branch</p>
+<p class="font-body-sm text-body-sm text-text-muted">Gopiballavpur (Current)</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</button>
+<button class="w-full text-left p-2.5 rounded-lg hover:bg-app-bg text-on-surface flex items-center justify-between" onclick="document.getElementById('location-dropdown').classList.add('hidden')" type="button">
+<div>
+<p class="font-label-md text-label-md text-on-surface">Maa Pharmacy &amp; Diagnostic Unit</p>
+<p class="font-body-sm text-body-sm text-text-muted">Nayagram Junction · 8.4 km away</p>
+</div>
+</button>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-2 flex items-start gap-1.5">
+<span class="material-symbols-outlined text-text-muted text-[16px] mt-0.5">info</span>
+<span>Schedules are tied strictly to this facility. To manage chamber times at other branches, switch facility above.</span>
+</p>
+</div>
+<!-- Temporary Changes Navigation Card -->
+<div class="bg-surface-container rounded-xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-status-warning-soft flex items-center justify-center flex-shrink-0 text-status-warning mt-0.5">
+<span class="material-symbols-outlined text-[22px]">event_busy</span>
+</div>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="font-title-md text-title-md text-on-surface">Temporary Changes</h2>
+<span class="px-2 py-0.5 rounded-full bg-status-warning-soft text-status-warning font-label-sm text-label-sm font-semibold">2 upcoming</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">
+              Specific leaves, holidays or custom dates: <span class="font-semibold text-on-surface">28 Sep</span> (Leave), <span class="font-semibold text-on-surface">02 Oct</span> (Gandhi Jayanti).
+            </p>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2 flex justify-end">
+<button class="h-10 px-3 rounded-lg bg-surface text-primary font-label-md text-label-md flex items-center gap-1.5 active:bg-app-bg transition-colors shadow-sm" type="button">
+<span>Manage temporary changes</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Weekly Schedule Section Header -->
+<div class="flex items-center justify-between px-1 pt-1">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Weekly Roster</h2>
+<p class="font-body-sm text-body-sm text-text-muted">Planned recurring weekly consultation sessions</p>
+</div>
+<button class="h-9 px-2.5 rounded-lg bg-surface text-primary font-label-sm text-label-sm flex items-center gap-1 active:bg-surface-container transition-colors shadow-sm" onclick="openCopyModal('Thursday', '5:00 PM – 7:00 PM')" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Quick Copy</span>
+</button>
+</div>
+<!-- 7-DAY ROSTER CARDS -->
+<div class="space-y-3">
+<!-- 1. MONDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface">Monday</span>
+<span class="px-2 py-0.5 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm font-medium">Scheduled</span>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Copy Monday schedule" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-muted hover:text-primary active:bg-app-bg" onclick="openCopyModal('Monday', '5:00 PM – 7:00 PM')" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="h-8 px-2.5 rounded-md bg-app-bg text-primary font-label-sm text-label-sm flex items-center gap-1 active:bg-surface-container" onclick="openSlotSheet('Monday', '5:00 PM', '7:00 PM', 'Evening Consultation')" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span> Edit
+            </button>
+</div>
+</div>
+<!-- Slot Detail Box -->
+<div class="mt-2.5 p-3 rounded-lg bg-app-bg flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">5:00 PM – 7:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm pl-6.5">
+<span>Evening Consultation</span>
+<span>•</span>
+<span>Chamber 1</span>
+</div>
+</div>
+</div>
+<div class="mt-2 flex justify-start">
+<button class="text-primary font-label-sm text-label-sm py-1 flex items-center gap-1 active:opacity-75" onclick="openSlotSheet('Monday', '09:00 AM', '11:00 AM', 'Morning Session')" type="button">
+<span class="material-symbols-outlined text-[16px]">add_circle</span> Add another slot
+          </button>
+</div>
+</div>
+<!-- 2. TUESDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm opacity-90">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface">Tuesday</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Not scheduled</p>
+</div>
+<button class="h-10 px-3.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center gap-1.5 active:bg-primary active:text-on-primary transition-colors" onclick="openSlotSheet('Tuesday', '05:00 PM', '07:00 PM', 'Evening Consultation')" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span> Add time
+          </button>
+</div>
+</div>
+<!-- 3. WEDNESDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm opacity-90">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface">Wednesday</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Not scheduled</p>
+</div>
+<button class="h-10 px-3.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center gap-1.5 active:bg-primary active:text-on-primary transition-colors" onclick="openSlotSheet('Wednesday', '05:00 PM', '07:00 PM', 'Evening Consultation')" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span> Add time
+          </button>
+</div>
+</div>
+<!-- 4. THURSDAY (TODAY HIGHLIGHT) -->
+<div class="bg-surface rounded-xl p-space-md shadow-md ring-2 ring-primary/20 relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-20 h-20 bg-secondary-container/40 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between relative z-10">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface">Thursday</span>
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary animate-pulse"></span> Today
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm">Active Now</span>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Copy Thursday schedule" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-muted hover:text-primary active:bg-app-bg" onclick="openCopyModal('Thursday', '5:00 PM – 7:00 PM')" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="h-8 px-2.5 rounded-md bg-secondary-container text-on-secondary-container font-label-sm text-label-sm flex items-center gap-1 active:opacity-75" onclick="openSlotSheet('Thursday', '5:00 PM', '7:00 PM', 'Regular OPD')" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span> Edit
+            </button>
+</div>
+</div>
+<!-- Highlight Slot -->
+<div class="mt-3 p-3.5 rounded-lg bg-surface-container flex items-start justify-between relative z-10">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">access_time_filled</span>
+<span class="font-title-md text-title-md font-semibold text-primary">5:00 PM – 7:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-body-sm text-body-sm pl-7">
+<span class="font-medium">Regular OPD</span>
+<span>•</span>
+<span class="text-text-muted">Chamber 1 · Ground Floor</span>
+</div>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between relative z-10">
+<button class="text-primary font-label-sm text-label-sm py-1 flex items-center gap-1 active:opacity-75" onclick="openSlotSheet('Thursday', '08:00 PM', '09:30 PM', 'Follow-up Clinic')" type="button">
+<span class="material-symbols-outlined text-[16px]">add_circle</span> Add another slot
+          </button>
+<span class="text-text-muted font-body-sm text-body-sm">Matches discovery listing</span>
+</div>
+</div>
+<!-- 5. FRIDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm opacity-90">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface">Friday</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Not scheduled</p>
+</div>
+<button class="h-10 px-3.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center gap-1.5 active:bg-primary active:text-on-primary transition-colors" onclick="openSlotSheet('Friday', '05:00 PM', '07:00 PM', 'Evening Consultation')" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span> Add time
+          </button>
+</div>
+</div>
+<!-- 6. SATURDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface">Saturday</span>
+<span class="px-2 py-0.5 rounded-full bg-status-success-soft text-status-success font-label-sm text-label-sm font-medium">Scheduled</span>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Copy Saturday schedule" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-muted hover:text-primary active:bg-app-bg" onclick="openCopyModal('Saturday', '10:00 AM – 12:00 PM')" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="h-8 px-2.5 rounded-md bg-app-bg text-primary font-label-sm text-label-sm flex items-center gap-1 active:bg-surface-container" onclick="openSlotSheet('Saturday', '10:00 AM', '12:00 PM', 'Morning Clinic')" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span> Edit
+            </button>
+</div>
+</div>
+<!-- Slot Detail Box -->
+<div class="mt-2.5 p-3 rounded-lg bg-app-bg flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">wb_sunny</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">10:00 AM – 12:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm pl-6.5">
+<span>Morning Clinic</span>
+<span>•</span>
+<span>Chamber 1</span>
+</div>
+</div>
+</div>
+<div class="mt-2 flex justify-start">
+<button class="text-primary font-label-sm text-label-sm py-1 flex items-center gap-1 active:opacity-75" onclick="openSlotSheet('Saturday', '04:00 PM', '06:00 PM', 'Evening Session')" type="button">
+<span class="material-symbols-outlined text-[16px]">add_circle</span> Add another slot
+          </button>
+</div>
+</div>
+<!-- 7. SUNDAY -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm opacity-90">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface">Sunday</span>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Not scheduled · Chamber closed</p>
+</div>
+<button class="h-10 px-3.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center gap-1.5 active:bg-primary active:text-on-primary transition-colors" onclick="openSlotSheet('Sunday', '10:00 AM', '01:00 PM', 'Special Weekend OPD')" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span> Add time
+          </button>
+</div>
+</div>
+</div>
+<!-- Facility Guidelines Callout -->
+<div class="bg-surface rounded-xl p-space-md shadow-sm flex items-start gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+</div>
+<div class="space-y-1">
+<h3 class="font-label-lg text-label-lg text-on-surface">About Recurring Schedules</h3>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+          These weekly slots reflect Dr. Das's standard commitment. Real-time patient discovery in Gopiballavpur maps directly to these slots unless altered via <span class="font-semibold text-primary">Temporary Changes</span>.
+        </p>
+</div>
+</div>
+<!-- Sub-bar Indicator text above sticky footer -->
+<div class="pt-2 text-center">
+<p class="font-body-sm text-body-sm text-text-muted flex items-center justify-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-success"></span>
+        All unsaved changes apply to Maa Medical Centre — Main Branch
+      </p>
+</div>
+</form>
+<!-- MODAL 1: ADD / EDIT TIME SLOT BOTTOM SHEET (INTERACTIVE) -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex flex-col justify-end" id="slot-modal" onclick="closeIfBackdrop(event, 'slot-modal')">
+<div class="bg-surface w-full rounded-t-2xl p-space-md shadow-2xl max-w-lg mx-auto flex flex-col max-h-[85vh] animate-in slide-in-from-bottom duration-200">
+<div class="w-12 h-1.5 bg-border-subtle rounded-full mx-auto mb-3"></div>
+<div class="flex items-center justify-between pb-2 border-b border-border-subtle">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface" id="modal-day-title">Thursday Schedule</h2>
+<p class="font-body-sm text-body-sm text-text-muted">Configure chamber consultation slot</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-app-bg text-text-muted flex items-center justify-center active:bg-surface-container" onclick="closeModal('slot-modal')" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="py-4 space-y-4 overflow-y-auto">
+<!-- Time Inputs Grid -->
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-text-muted uppercase tracking-wider mb-1.5" for="start-time">Start Time</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg bg-app-bg px-3 font-label-lg text-label-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20" id="start-time" type="text" value="5:00 PM"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-text-muted text-[18px] pointer-events-none">schedule</span>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-text-muted uppercase tracking-wider mb-1.5" for="end-time">End Time</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg bg-app-bg px-3 font-label-lg text-label-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20" id="end-time" type="text" value="7:00 PM"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-text-muted text-[18px] pointer-events-none">schedule</span>
+</div>
+</div>
+</div>
+<!-- Session Title / OPD Label -->
+<div>
+<label class="block font-label-sm text-label-sm text-text-muted uppercase tracking-wider mb-1.5" for="session-label">Session Name (Optional)</label>
+<input class="w-full h-12 rounded-lg bg-app-bg px-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20" id="session-label" placeholder="e.g. Morning OPD, General Clinic" type="text" value="Evening consultation"/>
+</div>
+<!-- Chamber Selector -->
+<div>
+<label class="block font-label-sm text-label-sm text-text-muted uppercase tracking-wider mb-1.5" for="chamber-no">Chamber Room</label>
+<div class="relative">
+<select class="w-full h-12 rounded-lg bg-app-bg px-3 font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20" id="chamber-no">
+<option selected="" value="1">Chamber 1 (Ground Floor)</option>
+<option value="2">Chamber 2 (Speciality Wing)</option>
+<option value="3">Emergency OPD Chamber</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-text-muted text-[20px] pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+<!-- Validation Helper Banner -->
+<div class="p-2.5 rounded-lg bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<p class="font-body-sm text-body-sm text-on-surface">Valid slot duration: 2 hours (5:00 PM – 7:00 PM).</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-3 flex items-center gap-2 border-t border-border-subtle">
+<button class="flex-1 h-12 rounded-lg bg-app-bg text-text-muted font-label-lg text-label-lg active:bg-surface-container" onclick="closeModal('slot-modal')" type="button">
+          Cancel
+        </button>
+<button class="flex-1 h-12 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg active:bg-primary" onclick="closeModal('slot-modal'); showFeedbackToast('Time slot updated');" type="button">
+          Save Slot
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL 2: QUICK COPY TO OTHER DAYS MODAL (INTERACTIVE) -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex flex-col justify-end sm:justify-center p-0 sm:p-4" id="copy-modal" onclick="closeIfBackdrop(event, 'copy-modal')">
+<div class="bg-surface w-full rounded-t-2xl sm:rounded-2xl p-space-md shadow-2xl max-w-lg mx-auto flex flex-col animate-in slide-in-from-bottom duration-200">
+<div class="w-12 h-1.5 bg-border-subtle rounded-full mx-auto mb-3 sm:hidden"></div>
+<div class="flex items-center justify-between pb-3 border-b border-border-subtle">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Copy Schedule</h2>
+<p class="font-body-sm text-body-sm text-text-muted" id="copy-source-label">Copy Thursday (5:00 PM – 7:00 PM) to:</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-app-bg text-text-muted flex items-center justify-center active:bg-surface-container" onclick="closeModal('copy-modal')" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="py-4 space-y-2">
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted mb-2">Select target days</p>
+<!-- Checkbox items -->
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<div class="flex items-center gap-3">
+<span class="font-label-lg text-label-lg text-on-surface">Monday</span>
+<span class="font-body-sm text-body-sm text-text-muted">(Currently has slot)</span>
+</div>
+<input class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Mon"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<span class="font-label-lg text-label-lg text-on-surface">Tuesday</span>
+<input checked="" class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Tue"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<span class="font-label-lg text-label-lg text-on-surface">Wednesday</span>
+<input checked="" class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Wed"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<span class="font-label-lg text-label-lg text-on-surface">Friday</span>
+<input checked="" class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Fri"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<div class="flex items-center gap-3">
+<span class="font-label-lg text-label-lg text-on-surface">Saturday</span>
+<span class="font-body-sm text-body-sm text-text-muted">(Morning Slot)</span>
+</div>
+<input class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Sat"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg bg-app-bg active:bg-surface-container cursor-pointer select-none">
+<span class="font-label-lg text-label-lg text-on-surface">Sunday</span>
+<input class="w-5 h-5 accent-primary rounded" name="copy_day" type="checkbox" value="Sun"/>
+</label>
+</div>
+<!-- Action CTA -->
+<div class="pt-3 flex items-center gap-2 border-t border-border-subtle">
+<button class="flex-1 h-12 rounded-lg bg-app-bg text-text-muted font-label-lg text-label-lg active:bg-surface-container" onclick="closeModal('copy-modal')" type="button">
+          Cancel
+        </button>
+<button class="flex-1 h-12 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg active:bg-primary" onclick="closeModal('copy-modal'); showFeedbackToast('Schedule replicated to selected days');" type="button">
+          Apply Schedule
+        </button>
+</div>
+</div>
+</div>
+<!-- Notification Toast Container -->
+<div class="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-lg shadow-lg text-sm font-label-md flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300" id="toast-msg">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed">check_circle</span>
+<span id="toast-text">Schedule updated successfully</span>
+</div>
+<!-- Interactive script for pure modal controls & feedback -->
+<script>
+    function openSlotSheet(day, start, end, label) {
+      const modal = document.getElementById('slot-modal');
+      const title = document.getElementById('modal-day-title');
+      const startInput = document.getElementById('start-time');
+      const endInput = document.getElementById('end-time');
+      const labelInput = document.getElementById('session-label');
+      
+      if (title) title.innerText = day + ' Schedule';
+      if (startInput) startInput.value = start || '5:00 PM';
+      if (endInput) endInput.value = end || '7:00 PM';
+      if (labelInput) labelInput.value = label || 'Consultation Session';
+      
+      modal.classList.remove('hidden');
+    }
+
+    function openCopyModal(day, slotText) {
+      const modal = document.getElementById('copy-modal');
+      const label = document.getElementById('copy-source-label');
+      if (label) {
+        label.innerText = 'Copy ' + day + ' (' + slotText + ') to:';
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+      const el = document.getElementById(modalId);
+      if (el) el.classList.add('hidden');
+    }
+
+    function closeIfBackdrop(e, modalId) {
+      if (e.target.id === modalId) {
+        closeModal(modalId);
+      }
+    }
+
+    function showFeedbackToast(msg) {
+      const toast = document.getElementById('toast-msg');
+      const toastText = document.getElementById('toast-text');
+      if (toast && toastText) {
+        toastText.innerText = msg;
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0', 'pointer-events-none');
+        }, 2500);
+      }
+    }
+
+    window.showNotification = showFeedbackToast;
+  </script>
+</div></main><div class="fixed bottom-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_-2px_8px_rgba(15,23,42,0.04)] pb-safe"><div class="flex items-center gap-space-md p-space-md max-w-lg mx-auto w-full"><button class="flex-1 h-12 min-h-[48px] px-space-md rounded-lg bg-surface text-primary-container font-label-lg text-label-lg flex items-center justify-center active:bg-app-bg transition-colors border border-border-subtle" onclick="history.back()" type="button">Discard</button><button class="flex-[2] h-12 min-h-[48px] px-space-md rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center active:bg-primary transition-colors" form="doctor-schedule-form" type="submit">Save Schedule</button></div></div></body></html>

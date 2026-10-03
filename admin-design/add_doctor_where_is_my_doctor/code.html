@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "status-unknown": "#64748B", "primary-fixed-dim": "#80d5cb", "surface-tint": "#006a63", "surface-container-high": "#e2e7ff", "on-surface-variant": "#3e4947", "info-blue": "#2563EB", "outline-variant": "#bdc9c6", "background": "#faf8ff", "text-secondary": "#475569", "inverse-on-surface": "#eef0ff", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#00504b", "on-surface": "#131b2e", "primary": "#005c55", "on-primary-fixed": "#00201d", "on-primary-fixed-variant": "#00504a", "on-tertiary-container": "#c5f3ea", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#224e47", "surface-variant": "#dae2fd", "success-soft": "#DCFCE7", "primary-fixed": "#9cf2e8", "surface-container-low": "#f2f3ff", "secondary-fixed": "#abefe8", "surface": "#FFFFFF", "secondary-container": "#a8ece5", "error-container": "#ffdad6", "error": "#ba1a1a", "on-error": "#ffffff", "warning-soft": "#FEF3C7", "secondary": "#216963", "tertiary": "#2d5951", "on-tertiary-fixed": "#00201c", "on-error-container": "#93000a", "on-primary-container": "#a3faef", "secondary-fixed-dim": "#8fd3cc", "error-red": "#DC2626", "border-subtle": "#E2E8F0", "on-secondary-fixed": "#00201e", "tertiary-fixed": "#bdece2", "app-bg": "#F8FAFC", "tertiary-fixed-dim": "#a2d0c6", "on-background": "#131b2e", "tertiary-container": "#467169", "on-secondary-container": "#266d68", "error-soft": "#FEE2E2", "on-primary": "#ffffff", "inverse-surface": "#283044", "surface-container": "#eaedff", "primary-container": "#0f766e", "inverse-primary": "#80d5cb", "warning-amber": "#D97706", "surface-dim": "#d2d9f4", "surface-container-highest": "#dae2fd", "outline": "#6e7977", "surface-bright": "#faf8ff", "success-green": "#16A34A" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1rem", "space-xl": "1.5rem", "margin-desktop": "2rem", "space-md": "0.75rem", "space-sm": "0.5rem", "gutter": "1rem", "space-2xl": "2rem", "gutter-desktop": "1.5rem", "space-xs": "0.25rem", "space-lg": "1rem" }, "fontFamily": { "body-sm": ["Noto Sans"], "headline-sm": ["Noto Sans"], "label-md": ["Noto Sans"], "headline-lg": ["Noto Sans"], "body-lg": ["Noto Sans"], "code-tabular": ["Noto Sans"], "label-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "body-md": ["Noto Sans"], "headline-xl": ["Noto Sans"], "headline-md": ["Noto Sans"] }, "fontSize": { "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "code-tabular": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }] } } } };</script></head><body class="bg-app-bg font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-64 bg-primary-container text-on-primary z-50 flex flex-col justify-between overflow-y-auto border-r border-tertiary-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-lg border-b border-tertiary-container"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded bg-on-primary flex items-center justify-center text-primary-container"><span class="material-symbols-outlined text-[20px]">local_hospital</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-primary leading-tight">Where Is My Doctor?</span><div class="flex items-center gap-space-xs"><span class="font-label-sm text-label-sm text-primary-fixed-dim">Portal Admin</span><span class="bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm px-1.5 py-0.5 rounded">V1.0 OPS</span></div></div></div><p class="font-body-sm text-body-sm text-primary-fixed-dim mt-space-xs">Internal Operations &amp; Data Verification</p></div><nav class="p-space-md flex flex-col gap-space-lg" data-active-classes="bg-primary text-on-primary font-label-md rounded"><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">Overview</span><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a></div><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">Healthcare</span><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="doctors" href="#"><span class="material-symbols-outlined text-[18px]">medical_services</span><span>Doctors</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="establishments" href="#"><span class="material-symbols-outlined text-[18px]">domain</span><span>Establishments</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="practice-locations" href="#"><span class="material-symbols-outlined text-[18px]">add_location_alt</span><span>Practice Locations</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="schedules" href="#"><span class="material-symbols-outlined text-[18px]">calendar_clock</span><span>Schedules</span></a></div><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">Discovery</span><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="health-topics" href="#"><span class="material-symbols-outlined text-[18px]">topic</span><span>Health Topics</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="health-guide" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span>Health Guide</span></a></div><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">Verification &amp; Audit</span><a class="flex items-center justify-between px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="verification-queue" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">verified</span><span>Verification Queue</span></div><span class="bg-warning-soft text-warning-amber font-label-sm text-label-sm px-1.5 py-0.5 rounded font-bold">64</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="community-reports" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">report_problem</span><span>Community Reports</span></div><span class="bg-error-soft text-error-red font-label-sm text-label-sm px-1.5 py-0.5 rounded font-bold">27</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[18px]">history_toggle_off</span><span>Audit Log</span></a></div><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">Geography &amp; Access</span><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="locations" href="#"><span class="material-symbols-outlined text-[18px]">map</span><span>Locations</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="users-and-roles" href="#"><span class="material-symbols-outlined text-[18px]">badge</span><span>Users &amp; Roles</span></a></div><div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider px-space-sm mb-1">System</span><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-primary-fixed-dim hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md" data-path="system-settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>System Settings</span></a></div></nav></div><div class="p-space-md border-t border-tertiary-container"><div class="p-space-sm bg-tertiary rounded border border-tertiary-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim">Future Extensions</span><span class="font-label-sm text-label-sm bg-tertiary-container text-on-tertiary-container px-1 rounded">Coming later</span></div><ul class="space-y-1 font-body-sm text-body-sm text-primary-fixed-dim opacity-70"><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">event_available</span>Appointments</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">how_to_reg</span>Doctor Self-Claim</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">timelapse</span>Real-time Availability</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">videocam</span>Telemedicine</li></ul></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface z-40 border-b border-border-subtle flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-status-unknown text-[18px]">search</span><input class="w-full pl-9 pr-4 py-2 border border-border-subtle rounded bg-surface font-body-md text-body-md text-on-surface placeholder:text-status-unknown focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Search doctors, establishments, PIN codes, report IDs..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-md border-r border-border-subtle pr-space-lg"><div class="flex items-center gap-1.5 font-code-tabular text-code-tabular text-text-secondary"><span class="material-symbols-outlined text-success-green text-[16px]">sync</span><span>Synced 2m ago</span></div><a class="flex items-center gap-1.5 px-2 py-1 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm font-semibold" data-path="verification-queue" href="#"><span class="material-symbols-outlined text-[15px]">priority_high</span><span>64 Queue Items</span></a></div><div class="flex items-center gap-space-md"><button class="relative p-1.5 rounded hover:bg-surface-container-low text-text-secondary transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error-red"></span></button><div class="flex items-center gap-space-sm pl-space-sm border-l border-border-subtle"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Rajesh Sharma</span><span class="font-label-sm text-label-sm text-text-secondary leading-tight">Operations Admin</span></div><span class="material-symbols-outlined text-status-unknown text-[18px]">expand_more</span></div></div></div></header><main class="w-full pt-16 bg-app-bg px-margin-desktop py-space-xl"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Action Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-xl">
+<div class="flex flex-col gap-1">
+<nav class="flex items-center gap-2 text-text-secondary font-label-sm text-label-sm">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">medical_services</span>
+<span>Doctors</span>
+</a>
+<span>/</span>
+<span class="text-on-surface font-semibold">Add Doctor</span>
+</nav>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Add Doctor</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning-soft text-warning-amber font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">pending</span>
+<span>Draft Record</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary">
+        Add basic practitioner identity first. You can attach multiple chambers, pharmacies, and weekly rosters later.
+      </p>
+</div>
+<!-- Top Action Buttons -->
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="px-3.5 py-2 rounded bg-surface text-text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors font-label-md text-label-md shadow-sm" type="button">
+        Cancel
+      </button>
+<button class="px-3.5 py-2 rounded bg-surface text-primary hover:bg-primary-fixed-dim/20 transition-colors font-label-md text-label-md shadow-sm" type="button">
+        Save as Draft
+      </button>
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-primary-container hover:bg-primary text-on-primary transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+<span>Save Doctor</span>
+</button>
+</div>
+</div>
+<!-- Operational Two-Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl pb-24">
+<!-- Left Primary Intake Column (~68%) -->
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- Context Ribbon: Phone Intake Guidance -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-start gap-space-md shadow-sm">
+<div class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">phone_in_talk</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider">Fast Intake Mode</span>
+<span class="text-text-secondary text-body-sm">• Field &amp; Chemist Desk Sourced</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Only <strong class="text-on-surface font-semibold">Doctor Full Name</strong> and <strong class="text-on-surface font-semibold">Primary Specialty</strong> are mandatory to create the master entity. All registry numbers and weekly chamber timings can be enriched asynchronously.
+          </p>
+</div>
+</div>
+<!-- Section 1: Doctor Information -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">badge</span>
+<span>1. Doctor Information</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Primary practitioner identity, credentials, and desk contact.</p>
+</div>
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Basic Identity</span>
+</div>
+<!-- Full Name (Required) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center gap-1">
+            Doctor Full Name <span class="text-error-red">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-status-unknown text-[18px]">person</span>
+<input class="w-full pl-9 pr-3 py-2 bg-surface text-on-surface font-body-md text-body-md rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="e.g. Dr. Amit Das" type="text" value="Dr. Amit Das"/>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">As displayed on official state medical council registration or chamber prescription pad.</p>
+</div>
+<!-- Photo / Portrait Section -->
+<div class="flex flex-col sm:flex-row items-start gap-space-lg p-space-md bg-app-bg rounded-lg">
+<div class="relative w-24 h-24 rounded-lg overflow-hidden bg-surface-container shrink-0 shadow-sm flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of Dr. Amit Das, an experienced Indian doctor in his early forties wearing a clean white lab coat and blue formal shirt with a stethoscope around his neck, looking warmly and calmly toward the camera in a modern clinical room setting with soft neutral daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv_jvP6Ug2U3uJKapow_swGBvJYCWPKzNLTqP8LpGExsrtTjD-QHEw0IFFs8Q6ohPJCqYzAJwjNt3Hvn0lUVdhbJwJdiZQsslFIu_cLymnJFhtsyE2tjRnDiwORYZ-sfOaFGBCaLKFUqhATgO4IRonurMoQcxApS3h7Pw_nu6btRZ7QbtLDg6eutbMOHo1gT4-dw6dmZkhP97_7ACaFEX2G4JfVIXPMeoNcFet6jOJycdE6f8cS26gLg"/>
+<button class="absolute bottom-1 right-1 w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center hover:bg-secondary transition-colors" title="Change photo" type="button">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col justify-center gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface">Practitioner Portrait</span>
+<span class="font-label-sm text-label-sm text-text-secondary bg-surface px-1.5 py-0.5 rounded">Optional</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+              Upload formal passport photo or clean chamber headshot (JPG, PNG up to 5MB). Used on public search cards to assist patient visual recognition.
+            </p>
+<div class="flex items-center gap-3 mt-2">
+<label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface hover:bg-surface-container-low text-primary font-label-sm text-label-sm shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">upload</span>
+<span>Upload Photo</span>
+<input accept="image/*" class="hidden" type="file"/>
+</label>
+<button class="text-text-secondary hover:text-error-red font-label-sm text-label-sm transition-colors" type="button">
+                Remove / Use Initials Badge
+              </button>
+</div>
+</div>
+</div>
+<!-- Grid: Phone & Academic Qualifications -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Primary Phone -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+<span>Primary Phone Number</span>
+<span class="font-label-sm text-label-sm text-text-secondary font-normal">Chamber / Desk</span>
+</label>
+<div class="flex">
+<span class="inline-flex items-center px-3 rounded-l bg-surface-container text-on-surface font-code-tabular text-code-tabular">
+                +91
+              </span>
+<input class="w-full px-3 py-2 bg-surface text-on-surface font-body-md text-body-md rounded-r shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="e.g. 98320 54119" type="tel" value="98320 54119"/>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Direct line for telephonic roster verification. Kept internal by default.</p>
+</div>
+<!-- Academic Qualifications -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+<span>Academic Qualifications</span>
+<span class="font-label-sm text-label-sm text-text-secondary font-normal">Degrees</span>
+</label>
+<input class="w-full px-3 py-2 bg-surface text-on-surface font-body-md text-body-md rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="e.g. MBBS, MD, MS, DNB" type="text" value="MBBS, MD (Dermatology)"/>
+<p class="font-body-sm text-body-sm text-text-secondary">Printed as credentials under practitioner header.</p>
+</div>
+</div>
+<!-- Grid: Experience & Languages -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg items-start">
+<div class="flex flex-col gap-1.5 md:col-span-1">
+<label class="font-label-md text-label-md text-on-surface">Clinical Experience</label>
+<div class="relative">
+<input class="w-full pl-3 pr-14 py-2 bg-surface text-on-surface font-body-md text-body-md rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="12" type="number" value="12"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-text-secondary">Years</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Post-internship practice.</p>
+</div>
+<div class="flex flex-col gap-1.5 md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface">Languages Spoken</label>
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span>Bengali (Native)</span>
+<button class="hover:text-error-red" type="button"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span>Hindi</span>
+<button class="hover:text-error-red" type="button"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span>English</span>
+<button class="hover:text-error-red" type="button"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-primary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">add</span>
+<span>Odia / Santali</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-1">Key for rural and regional patient discovery.</p>
+</div>
+</div>
+</section>
+<!-- Section 2: Specialty -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">stethoscope</span>
+<span>2. Clinical Specialty</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Primary practice domain visible to patients during search.</p>
+</div>
+<span class="font-label-sm text-label-sm text-error-red uppercase font-bold tracking-wider">Required *</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+<span>Primary Specialty <span class="text-error-red">*</span></span>
+<span class="font-body-sm text-body-sm text-text-secondary">Clinical discipline</span>
+</label>
+<!-- Selected Specialty Tag Box -->
+<div class="flex items-center justify-between p-space-sm bg-primary-fixed/20 rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">medical_information</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary font-bold">Dermatology (Skin &amp; Venereal)</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Mapped to Search Keywords: Skin, Rash, Hair fall, Psoriasis, Eczema</span>
+</div>
+</div>
+<button class="text-text-secondary hover:text-error-red p-1 rounded hover:bg-surface transition-colors" title="Change primary specialty" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Quick Suggestion Chips -->
+<div class="flex flex-col gap-1.5 mt-2">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Quick Suggestions / Popular Domains:</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                General Medicine
+              </button>
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Pediatrics &amp; Child Health
+              </button>
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Orthopedics
+              </button>
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Gynecology &amp; Obstetrics
+              </button>
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Cardiology
+              </button>
+<button class="px-2.5 py-1 rounded bg-surface hover:bg-surface-container-low text-text-secondary font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Pulmonology
+              </button>
+</div>
+</div>
+<!-- Secondary Specialty Add Action -->
+<div class="pt-2">
+<button class="inline-flex items-center gap-1.5 text-primary hover:text-secondary font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>+ Add Secondary Specialty / Sub-specialization (Optional)</span>
+</button>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-body-sm text-body-sm text-text-secondary">
+            Note: Specialties reflect pragmatic clinical domains understood by semi-urban patients and chemist desks. Formal ICD-11 taxonomies are not forced on data intake.
+          </div>
+</div>
+</section>
+<!-- Section 3: Professional Registration -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+<span>3. Professional Registration</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">State Medical Council details. Optional at initial creation.</p>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary uppercase font-bold tracking-wider">Audit Trail</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Reg Number -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Registration Number</label>
+<div class="relative">
+<input class="w-full px-3 py-2 bg-surface text-on-surface font-code-tabular text-code-tabular rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="e.g. WBMC-49201 or MCI-12948" type="text" value="WBMC-49201"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-status-unknown text-[18px]">pin</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Medical Council registration number.</p>
+</div>
+<!-- Medical Council Dropdown -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Medical Registration Council</label>
+<select class="w-full px-3 py-2 bg-surface text-on-surface font-body-md text-body-md rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container">
+<option selected="">West Bengal Medical Council (WBMC)</option>
+<option>National Medical Commission (NMC / Former MCI)</option>
+<option>Bihar Medical Council</option>
+<option>Jharkhand Medical Council</option>
+<option>Odisha Medical Council</option>
+<option>Other State Council</option>
+</select>
+<p class="font-body-sm text-body-sm text-text-secondary">Issuing regulatory council jurisdiction.</p>
+</div>
+</div>
+<!-- Verification Helper Callout -->
+<div class="p-space-sm bg-surface-container-low rounded flex items-start gap-2 text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0 mt-0.5">policy</span>
+<span>
+            Optional for initial phone onboarding. Central verification agents verify this against official state gazette databases prior to issuing public green checkmark badges.
+          </span>
+</div>
+</section>
+<!-- Section 4: Consultation Fee -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+<span>4. Consultation Fee</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Standard chamber desk fee guidance.</p>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary bg-surface-container-low px-2 py-0.5 rounded">Guidance Only</span>
+</div>
+<div class="max-w-xs flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Consultation Fee</label>
+<div class="flex">
+<span class="inline-flex items-center px-3 rounded-l bg-surface-container text-on-surface font-bold text-[14px]">
+              ₹
+            </span>
+<input class="w-full px-3 py-2 bg-surface text-on-surface font-code-tabular text-code-tabular rounded-r shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="e.g. 500" type="number" value="500"/>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Direct cash fee paid directly at chamber reception desk. No platform commission or online transaction charges.</p>
+</div>
+</section>
+<!-- Section 5: Practice Locations -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">add_location_alt</span>
+<span>5. Practice Locations</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Link the physical pharmacies, clinics, or hospital chambers where this doctor sits.</p>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">1 Location Pre-Selected</span>
+</div>
+<!-- Mode Toggle Tabs -->
+<div class="flex items-center gap-2 p-1 bg-surface-container-low rounded w-fit">
+<button class="px-3 py-1.5 rounded bg-surface font-label-sm text-label-sm text-on-surface shadow-sm font-semibold" type="button">
+            Context: Onboarding with Maa Medical Store
+          </button>
+<button class="px-3 py-1.5 rounded hover:bg-surface/50 font-label-sm text-label-sm text-text-secondary transition-colors" type="button">
+            Standalone Doctor Entry
+          </button>
+</div>
+<!-- Pre-Linked Location Card -->
+<div class="p-space-lg bg-surface-container-low rounded-lg flex flex-col md:flex-row items-start justify-between gap-space-md shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">domain</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Maa Medical Store</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-success-soft text-success-green font-bold">Primary Chamber</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+                Pharmacy &amp; Attached Chamber, Station Road, Gopiballavpur, Jhargram - 721506
+              </p>
+<!-- Shift Preview -->
+<div class="flex items-center gap-2 mt-2">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface text-on-surface font-code-tabular text-code-tabular shadow-sm">
+<span class="material-symbols-outlined text-primary text-[15px]">schedule</span>
+<span>Mon, Wed, Fri • Evening Shift 5:00 PM – 8:00 PM (Room 1)</span>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary">Fee: ₹500</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-auto">
+<button class="px-2.5 py-1 rounded bg-surface text-primary hover:bg-surface-container font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+              Configure Shift
+            </button>
+<button class="p-1 text-text-secondary hover:text-error-red transition-colors" title="Unlink location" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Add Additional Location Button -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface text-primary hover:bg-surface-container-low font-label-md text-label-md shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>+ Attach Another Pharmacy or Clinic</span>
+</button>
+<span class="font-body-sm text-body-sm text-text-secondary">Doctors frequently practice across 2 to 4 separate chambers.</span>
+</div>
+<div class="p-space-sm bg-app-bg rounded font-body-sm text-body-sm text-text-secondary">
+          💡 <strong class="text-on-surface">Roster Flexibility:</strong> Detailed consultation hours, serial booking token distribution rules, and holiday closures can be fine-tuned at any time from the Schedules tab.
+        </div>
+</section>
+<!-- Section 6: Internal Notes -->
+<section class="bg-surface rounded-lg p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-border-subtle">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">lock</span>
+<span>6. Internal Operations Notes</span>
+</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Administrative coordination notes. Never visible to patients.</p>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-status-unknown bg-surface-container-low px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px]">shield</span>
+<span>Admin-Only</span>
+</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Notes for Operations &amp; Verification Team</label>
+<textarea class="w-full p-3 bg-surface text-on-surface font-body-md text-body-md rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="Add notes for the admin team... (e.g. Spoke with chemist owner Mr. Ghosh; Dr. Das available on Mon/Wed/Fri evenings. Contact assistant Dulan Sen on 98320-xxxxx for emergency schedule cancellations)." rows="3"></textarea>
+<p class="font-body-sm text-body-sm text-text-secondary">
+            🔒 Internal notes are strictly private to platform administrators, customer care, and field verification agents.
+          </p>
+</div>
+</section>
+</div>
+<!-- Right Governance & Checklist Sidebar (~32%) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Card 1: Verification & Audit State Card -->
+<div class="bg-surface rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-border-subtle">
+<span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary font-bold">Verification State</span>
+<span class="material-symbols-outlined text-warning-amber text-[20px]">verified</span>
+</div>
+<div class="p-space-sm bg-warning-soft rounded flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-warning-amber text-[20px]">warning</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-warning-amber font-bold leading-tight">Pending Verification</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Awaiting council register cross-check</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-1 font-body-sm text-body-sm text-text-secondary">
+<div class="flex justify-between items-center py-1 border-b border-border-subtle">
+<span>Last Verified:</span>
+<span class="font-code-tabular text-code-tabular text-on-surface font-medium">— (Not yet verified)</span>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-border-subtle">
+<span>Verified By:</span>
+<span class="font-code-tabular text-code-tabular text-on-surface font-medium">— (Unassigned)</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span>Initial Intake Agent:</span>
+<span class="font-label-md text-label-md text-on-surface">Rajesh Sharma (Admin)</span>
+</div>
+</div>
+<!-- Immediate Verification Checkbox Option -->
+<div class="p-space-sm bg-surface-container-low rounded mt-1">
+<label class="flex items-start gap-2 cursor-pointer">
+<input class="mt-0.5 rounded text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">
+<strong class="font-semibold">Mark as Verified immediately</strong>
+<span class="block text-text-secondary text-[11px] leading-tight mt-0.5">
+                Check only if WBMC registration and physical chamber attendance have been confirmed by phone or ground agent.
+              </span>
+</span>
+</label>
+</div>
+</div>
+<!-- Card 2: Account Governance Model -->
+<div class="bg-surface rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-border-subtle">
+<span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary font-bold">Ownership &amp; Governance</span>
+<span class="material-symbols-outlined text-primary text-[20px]">manage_accounts</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+<span>Platform Managed</span>
+</span>
+<span class="font-label-sm text-label-sm text-text-secondary">Default Mode</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          The operations administration team curates and verifies this doctor's master profile, chamber associations, and weekly schedules.
+        </p>
+<!-- Reserved Future Feature Notice (Conforming to Guidelines) -->
+<div class="p-space-md bg-app-bg rounded-lg flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Future Extension</span>
+<span class="font-label-sm text-label-sm bg-surface-container text-text-secondary px-1.5 py-0.5 rounded">Phase 2</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Doctor Self-Claim Portal</span>
+<p class="font-body-sm text-body-sm text-text-secondary">
+            Authenticated mobile login for practitioners to update their personal leaves and serial token counts directly from their smartphone.
+          </p>
+</div>
+</div>
+<!-- Card 3: Minimum Viable Record Readiness Checklist -->
+<div class="bg-surface rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-border-subtle">
+<span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary font-bold">Readiness Checklist</span>
+<span class="font-code-tabular text-code-tabular text-primary font-bold">3 / 5 Ready</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+          Required elements to publish this practitioner in search results:
+        </p>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm">
+<li class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-success-green text-[18px]">check_circle</span>
+<span class="font-medium">Doctor Full Name</span>
+<span class="ml-auto font-label-sm text-label-sm text-success-green font-semibold">Complete</span>
+</li>
+<li class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-success-green text-[18px]">check_circle</span>
+<span class="font-medium">Primary Clinical Specialty</span>
+<span class="ml-auto font-label-sm text-label-sm text-success-green font-semibold">Complete</span>
+</li>
+<li class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-success-green text-[18px]">check_circle</span>
+<span class="font-medium">Practice Location Attached</span>
+<span class="ml-auto font-label-sm text-label-sm text-success-green font-semibold">Maa Medical</span>
+</li>
+<li class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-status-unknown text-[18px]">radio_button_unchecked</span>
+<span>Weekly Schedule Slots</span>
+<span class="ml-auto font-label-sm text-label-sm text-text-secondary">Configurable</span>
+</li>
+<li class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-status-unknown text-[18px]">radio_button_unchecked</span>
+<span>State Council Registration</span>
+<span class="ml-auto font-label-sm text-label-sm text-warning-amber">Pending Audit</span>
+</li>
+</ul>
+<div class="w-full bg-surface-container-low rounded-full h-1.5 mt-1 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[60%]"></div>
+</div>
+</div>
+<!-- Card 4: Quick Contact Guidelines Sidecard -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-2 shadow-sm">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+<span class="font-label-md text-label-md font-bold">Field Intake Protocol</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+          When taking doctor schedules from pharmacy counters, always verify whether token booking is in-person at morning 8:00 AM or over the chemist counter phone.
+        </p>
+</div>
+</div>
+</div>
+<!-- Persistent Bottom Action Dock -->
+<div class="fixed bottom-0 left-64 right-0 bg-surface/95 backdrop-blur z-30 py-3 px-space-xl shadow-md flex items-center justify-between border-t border-border-subtle">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-success-green animate-pulse"></span>
+<span class="font-code-tabular text-code-tabular text-text-secondary">Auto-saved draft: just now</span>
+</div>
+<span class="hidden sm:inline text-text-secondary">•</span>
+<span class="hidden sm:inline font-body-sm text-body-sm text-text-secondary">Record ID: DOC-2024-TMP089</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded bg-surface hover:bg-surface-container text-text-secondary font-label-md text-label-md transition-colors shadow-sm" type="button">
+        Cancel
+      </button>
+<button class="px-4 py-2 rounded bg-surface hover:bg-surface-container text-primary font-label-md text-label-md transition-colors shadow-sm" type="button">
+        Save as Draft
+      </button>
+<button class="inline-flex items-center gap-2 px-5 py-2 rounded bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save Doctor &amp; View Profile</span>
+</button>
+</div>
+</div>
+</div></main></div></body></html>

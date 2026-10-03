@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-primary": "#80d5cb", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "surface-bright": "#faf8ff", "outline-variant": "#bdc9c6", "on-primary-container": "#a3faef", "primary-container": "#0f766e", "on-surface": "#131b2e", "success-soft": "#DCFCE7", "surface-container": "#eaedff", "tertiary-fixed": "#bdece2", "on-error-container": "#93000a", "tertiary-fixed-dim": "#a2d0c6", "warning-soft": "#FEF3C7", "error-soft": "#FEE2E2", "on-secondary-fixed": "#00201e", "background": "#faf8ff", "on-error": "#ffffff", "secondary-container": "#a8ece5", "on-secondary-fixed-variant": "#00504b", "success-green": "#16A34A", "error": "#ba1a1a", "on-tertiary": "#ffffff", "app-bg": "#F8FAFC", "inverse-surface": "#283044", "outline": "#6e7977", "surface-dim": "#d2d9f4", "on-primary-fixed-variant": "#00504a", "on-primary-fixed": "#00201d", "surface-container-high": "#e2e7ff", "tertiary-container": "#467169", "secondary": "#216963", "secondary-fixed-dim": "#8fd3cc", "on-tertiary-fixed": "#00201c", "status-unknown": "#64748B", "surface-tint": "#006a63", "on-secondary-container": "#266d68", "warning-amber": "#D97706", "error-container": "#ffdad6", "on-tertiary-container": "#c5f3ea", "surface-container-lowest": "#ffffff", "info-blue": "#2563EB", "tertiary": "#2d5951", "primary-fixed-dim": "#80d5cb", "surface-variant": "#dae2fd", "primary-fixed": "#9cf2e8", "surface-container-low": "#f2f3ff", "inverse-on-surface": "#eef0ff", "on-background": "#131b2e", "secondary-fixed": "#abefe8", "text-secondary": "#475569", "on-secondary": "#ffffff", "border-subtle": "#E2E8F0", "surface": "#FFFFFF", "error-red": "#DC2626", "primary": "#005c55", "on-surface-variant": "#3e4947", "on-tertiary-fixed-variant": "#224e47" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin-desktop": "2rem", "margin": "1rem", "space-lg": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-md": "0.75rem", "space-2xl": "2rem", "space-xs": "0.25rem", "space-xl": "1.5rem", "gutter-desktop": "1.5rem" }, "fontFamily": { "body-md": ["Noto Sans"], "code-tabular": ["Noto Sans"], "label-lg": ["Noto Sans"], "label-sm": ["Noto Sans"], "label-md": ["Noto Sans"], "body-sm": ["Noto Sans"], "headline-md": ["Noto Sans"], "body-lg": ["Noto Sans"], "headline-sm": ["Noto Sans"], "headline-xl": ["Noto Sans"], "headline-lg": ["Noto Sans"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "code-tabular": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } }</script></head><body class="bg-app-bg text-on-surface font-body-md text-body-md antialiased"><aside class="fixed left-0 top-0 h-screen w-64 bg-primary text-on-primary z-50 flex flex-col justify-between overflow-y-auto border-r border-tertiary-container"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md border-b border-tertiary-container"><div class="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">add_location_alt</span></div><div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg tracking-tight truncate text-on-primary">Where Is My Doctor?</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider truncate">Admin Operations</span></div></div><nav class="flex flex-col gap-space-xs px-space-md py-space-lg" data-active-classes="bg-secondary-container text-on-secondary-container font-label-md"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Establishments</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="establishments" href="#"><span class="material-symbols-outlined text-[18px]">domain</span><span>Establishments</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Doctors</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="doctors" href="#"><span class="material-symbols-outlined text-[18px]">stethoscope</span><span>Doctors</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="schedules" href="#"><span class="material-symbols-outlined text-[18px]">calendar_month</span><span>Schedules</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Content</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="health-guide" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span>Health Guide</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Verification</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="reports" href="#"><span class="material-symbols-outlined text-[18px]">verified</span><span>Reports</span></a><div class="px-space-md pt-space-md pb-space-xs font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Administration</div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="users-and-access" href="#"><span class="material-symbols-outlined text-[18px]">manage_accounts</span><span>Users &amp; Access</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-fixed-variant hover:bg-tertiary-container hover:text-on-primary transition-colors font-label-md text-label-md" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>Settings</span></a></nav></div><div class="p-space-md mx-space-md mb-space-lg rounded-lg border border-dashed border-outline-variant bg-tertiary/40"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Roadmap Modules</span><span class="px-1.5 py-0.5 rounded-sm bg-tertiary text-on-primary font-label-sm text-[9px] uppercase tracking-wide">Queued</span></div><div class="flex flex-col gap-1 text-[11px] text-primary-fixed-dim"><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Appointments</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Real-time Availability</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Payments &amp; Billing</span></div><div class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-status-unknown"></span><span>Telemedicine Gateway</span></div></div></div></aside><div class="pl-64 flex flex-col min-h-screen"><header class="fixed top-0 left-64 right-0 h-16 bg-surface border-b border-border-subtle z-40 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-text-secondary font-label-md text-label-md"><span>Registry Ops</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-on-surface font-label-lg text-label-lg">Portal Control</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-soft text-success-green border border-success-green/20 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[13px]">check_circle</span><span>Sync Active</span></div></div><div class="flex items-center gap-space-lg"><button class="flex items-center gap-1.5 text-text-secondary hover:text-on-surface transition-colors font-label-md text-label-md px-space-sm py-1 rounded-lg border border-border-subtle hover:bg-surface-container-low" type="button"><span class="material-symbols-outlined text-[16px] text-primary">sync</span><span class="hidden sm:inline">Live Feed</span></button><button class="relative p-space-xs text-text-secondary hover:text-on-surface transition-colors rounded-lg hover:bg-surface-container-low" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error-red"></span></button><div class="h-6 w-px bg-border-subtle"></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden sm:flex flex-col"><span class="font-label-md text-label-md text-on-surface leading-tight">Admin User</span><span class="font-label-sm text-label-sm text-text-secondary leading-tight">Super Admin</span></div><span class="material-symbols-outlined text-[16px] text-text-secondary">expand_more</span></div></div></header><main class="w-full pt-16 bg-app-bg px-space-xl py-space-xl max-w-[1600px]"><div class="flex flex-col w-full">
+<!-- BREADCRUMB & HEADER -->
+<div class="flex flex-col gap-space-md mb-space-xl">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-text-secondary">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">domain</span>
+<span>Establishments</span>
+</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Maa Medical Store</span>
+<span class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-text-secondary font-code-tabular ml-2">ID: EST-WB-JHG-0084</span>
+</div>
+<!-- MAIN PAGE HEADER BLOCK -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg bg-surface p-space-xl rounded-xl border border-border-subtle shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Maa Medical Store</h1>
+<span class="px-space-sm py-0.5 rounded text-label-sm font-label-sm bg-secondary-container text-on-secondary-container">Pharmacy &amp; Chamber</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-success-soft text-success-green border border-success-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+            Active Operational
+          </span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary flex items-center gap-2">
+<span>Station Road, Opposite Bus Stand, Gopiballavpur Market, Jhargram</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-tabular text-body-sm text-text-secondary">Reg. #DL-WB-JHG-2019-4821</span>
+</p>
+</div>
+<!-- HEADER PRIMARY / SECONDARY ACTIONS -->
+<div class="flex items-center gap-space-sm flex-wrap shrink-0">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors text-label-md font-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span>Edit Details</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface text-primary border border-border-subtle hover:bg-surface-container-low transition-colors text-label-md font-label-md" type="button">
+<span class="material-symbols-outlined text-[16px] text-success-green">verified</span>
+<span>Verify Information</span>
+</button>
+<div class="relative">
+<button class="inline-flex items-center gap-1 px-space-sm py-2 rounded-lg bg-surface text-text-secondary border border-border-subtle hover:text-on-surface transition-colors text-label-md font-label-md" onclick="document.getElementById('header-more-menu').classList.toggle('hidden')" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden absolute right-0 mt-1 w-52 bg-surface rounded-lg border border-border-subtle shadow-md py-1 z-20" id="header-more-menu">
+<a class="flex items-center gap-2 px-space-md py-2 text-label-sm font-label-sm text-on-surface hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary">forward_to_inbox</span>
+<span>Invite Establishment</span>
+</a>
+<a class="flex items-center gap-2 px-space-md py-2 text-label-sm font-label-sm text-on-surface hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">print</span>
+<span>Export Record (PDF)</span>
+</a>
+<div class="h-px bg-border-subtle my-1"></div>
+<a class="flex items-center gap-2 px-space-md py-2 text-label-sm font-label-sm text-error-red hover:bg-error-soft/50" href="#">
+<span class="material-symbols-outlined text-[16px]">block</span>
+<span>Deactivate Registry</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- ACCOUNT STATE / GOVERNANCE NOTIFICATION BANNER -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md px-space-lg py-space-md bg-surface border-l-4 border-l-primary border-y border-r border-border-subtle rounded-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface">Platform Managed Establishment</span>
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-surface-container-high text-text-secondary">Internal Ops Mode</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+            This establishment is verified and curated by the ground operations team. Self-management portal access is currently unlinked.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-end sm:self-center">
+<button class="inline-flex items-center gap-1.5 px-space-sm py-1.5 rounded text-label-sm font-label-sm text-primary hover:bg-surface-container-low border border-border-subtle transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">send</span>
+<span>Invite Store Compounder</span>
+</button>
+</div>
+</div>
+</div>
+<!-- TWO-COLUMN WORKSPACE GRID (8 cols main, 4 cols sidebar) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- LEFT / MAIN OPERATIONAL COLUMN (Col 8) -->
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- SECTION 1: DOCTORS AVAILABLE HERE -->
+<section class="bg-surface rounded-xl border border-border-subtle overflow-hidden">
+<div class="p-space-lg border-b border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-space-md bg-surface">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Doctors Available Here</h2>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-primary font-code-tabular">3 Practicing</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">
+              Active doctor chamber associations verified for this location.
+            </p>
+</div>
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors text-label-md font-label-md self-start sm:self-auto shrink-0 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">person_add</span>
+<span>+ Add Doctor</span>
+</button>
+</div>
+<!-- Table of Doctors -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/60 border-b border-border-subtle text-text-secondary text-[11px] font-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-lg font-semibold">Doctor Details</th>
+<th class="py-2.5 px-space-md font-semibold">Specialty</th>
+<th class="py-2.5 px-space-md font-semibold">Weekly Schedule</th>
+<th class="py-2.5 px-space-md font-semibold">Audit Status</th>
+<th class="py-2.5 px-space-lg text-right font-semibold">Row Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle font-body-sm text-body-sm">
+<!-- Doctor Row 1 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3 px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary font-semibold text-label-md shrink-0">
+                      AD
+                    </div>
+<div class="flex flex-col min-w-0">
+<a class="font-label-md text-label-md text-on-surface hover:text-primary transition-colors truncate" href="#">Dr. Amit Das</a>
+<span class="text-xs text-text-secondary font-code-tabular">Reg #WBMC-49201</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface">
+                    Dermatologist
+                  </span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm text-on-surface">Mon, Wed, Fri</span>
+<span class="text-xs text-text-secondary font-code-tabular">5:00 PM – 8:00 PM</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-success-green bg-success-soft px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>Verified</span>
+</span>
+<div class="text-[10px] text-text-secondary mt-0.5">22 Sep 2026</div>
+</td>
+<td class="py-3 px-space-lg text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-2">
+<button class="text-xs font-label-md text-primary hover:underline px-1 py-0.5" type="button">View Profile</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-text-secondary hover:text-on-surface px-1 py-0.5" type="button">Edit Shift</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-error-red hover:underline px-1 py-0.5" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- Doctor Row 2 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3 px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary font-semibold text-label-md shrink-0">
+                      SR
+                    </div>
+<div class="flex flex-col min-w-0">
+<a class="font-label-md text-label-md text-on-surface hover:text-primary transition-colors truncate" href="#">Dr. S. Roy</a>
+<span class="text-xs text-text-secondary font-code-tabular">Reg #WBMC-38112</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface">
+                    General Medicine
+                  </span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm text-on-surface">Tue, Thu</span>
+<span class="text-xs text-text-secondary font-code-tabular">6:00 PM – 9:00 PM</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-success-green bg-success-soft px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>Verified</span>
+</span>
+<div class="text-[10px] text-text-secondary mt-0.5">20 Sep 2026</div>
+</td>
+<td class="py-3 px-space-lg text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-2">
+<button class="text-xs font-label-md text-primary hover:underline px-1 py-0.5" type="button">View Profile</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-text-secondary hover:text-on-surface px-1 py-0.5" type="button">Edit Shift</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-error-red hover:underline px-1 py-0.5" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- Doctor Row 3 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3 px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary font-semibold text-label-md shrink-0">
+                      AM
+                    </div>
+<div class="flex flex-col min-w-0">
+<a class="font-label-md text-label-md text-on-surface hover:text-primary transition-colors truncate" href="#">Dr. Ananya Mukherjee</a>
+<span class="text-xs text-text-secondary font-code-tabular">Reg #WBMC-60144</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface">
+                    Pediatrician
+                  </span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm text-on-surface">Sat, Sun</span>
+<span class="text-xs text-text-secondary font-code-tabular">10:00 AM – 1:00 PM</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-success-green bg-success-soft px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>Verified</span>
+</span>
+<div class="text-[10px] text-text-secondary mt-0.5">18 Sep 2026</div>
+</td>
+<td class="py-3 px-space-lg text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-2">
+<button class="text-xs font-label-md text-primary hover:underline px-1 py-0.5" type="button">View Profile</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-text-secondary hover:text-on-surface px-1 py-0.5" type="button">Edit Shift</button>
+<span class="text-border-subtle">•</span>
+<button class="text-xs font-label-md text-error-red hover:underline px-1 py-0.5" type="button">Remove</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Note footer -->
+<div class="p-space-md bg-surface-container-low/40 border-t border-border-subtle flex items-start gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px] text-text-secondary mt-0.5 shrink-0">info</span>
+<p class="text-body-sm font-body-sm leading-relaxed">
+            Doctors practice across multiple establishments. Managing here updates chamber associations and local lookup for patients in Gopiballavpur cluster.
+          </p>
+</div>
+</section>
+<!-- SECTION 2: REGULAR & UPCOMING SCHEDULES -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-border-subtle pb-space-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Chamber Schedules Overview</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">
+              Recurring consultation shifts and upcoming doctor rotations.
+            </p>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:underline self-start sm:self-auto" href="#">
+<span>Manage Full Schedules</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Timeline Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Today Card -->
+<div class="p-space-md rounded-lg border-2 border-primary/20 bg-surface-container-low/30 flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-bold">Today • Wednesday</span>
+<span class="w-2 h-2 rounded-full bg-success-green animate-pulse" title="Shift Upcoming Today"></span>
+</div>
+<div class="font-label-lg text-label-lg text-on-surface">Dr. Amit Das</div>
+<div class="text-body-sm text-text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span class="font-code-tabular">5:00 PM – 8:00 PM</span>
+</div>
+<div class="text-xs text-text-secondary mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span>
+<span>Chamber Room 1</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-subtle flex items-center justify-between text-xs">
+<span class="text-success-green font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">verified</span> Verified Active
+              </span>
+<span class="text-text-secondary font-code-tabular">Room Confirmed</span>
+</div>
+</div>
+<!-- Tomorrow Card -->
+<div class="p-space-md rounded-lg border border-border-subtle bg-surface flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Tomorrow • Thursday</span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+<div class="font-label-lg text-label-lg text-on-surface">Dr. S. Roy</div>
+<div class="text-body-sm text-text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span class="font-code-tabular">6:00 PM – 9:00 PM</span>
+</div>
+<div class="text-xs text-text-secondary mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span>
+<span>Chamber Room 1</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-subtle flex items-center justify-between text-xs">
+<span class="text-success-green font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">verified</span> Verified Active
+              </span>
+<span class="text-text-secondary font-code-tabular">Room Confirmed</span>
+</div>
+</div>
+<!-- Weekend Card -->
+<div class="p-space-md rounded-lg border border-border-subtle bg-surface flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-text-secondary">Saturday Shift</span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+<div class="font-label-lg text-label-lg text-on-surface">Dr. Ananya Mukherjee</div>
+<div class="text-body-sm text-text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span class="font-code-tabular">10:00 AM – 1:00 PM</span>
+</div>
+<div class="text-xs text-text-secondary mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span>
+<span>Chamber Room 2</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-subtle flex items-center justify-between text-xs">
+<span class="text-success-green font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">verified</span> Verified Active
+              </span>
+<span class="text-text-secondary font-code-tabular">Chamber Confirmed</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: REPORTS (COMMUNITY FEEDBACK & AUDIT FLAGS) -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Reports &amp; Discrepancies</h2>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-warning-soft text-warning-amber border border-warning-amber/20 font-semibold">1 Action Needed</span>
+</div>
+<span class="text-xs text-text-secondary font-code-tabular">Audit Feed ID: REP-2026-09</span>
+</div>
+<!-- Alert Notice Banner -->
+<div class="flex items-center gap-3 p-space-md rounded-lg bg-warning-soft/40 border border-warning-amber/30 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-[20px] text-warning-amber shrink-0">warning</span>
+<div class="flex-1 min-w-0">
+<span class="font-semibold text-warning-amber">1 pending community report requires review:</span>
+<span>Timing dispute logged by local dispensary visitor regarding Dr. Amit Das's Wednesday slot.</span>
+</div>
+</div>
+<!-- Individual Report Item Card -->
+<div class="border border-border-subtle rounded-lg p-space-md bg-surface flex flex-col gap-space-sm hover:bg-surface-container-low/20 transition-colors">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-warning-soft text-warning-amber font-semibold">
+                Pending Review
+              </span>
+<span class="text-label-md font-label-md text-on-surface">Timing Modification Claim</span>
+</div>
+<div class="text-xs text-text-secondary font-code-tabular">
+              Submitted: 22 Sep 2026 • via Public Reporting Portal
+            </div>
+</div>
+<div class="p-space-sm rounded bg-surface-container-low/50 text-body-sm text-on-surface border border-border-subtle/60">
+<div class="font-medium text-xs text-text-secondary uppercase tracking-wider mb-1">Reported Detail</div>
+<p>"Reported: Doctor timing changed from 5:00 PM to 6:00 PM on Wednesdays. Compounder informed that Dr. Amit Das arrives one hour late due to OPD shift in Gopiballavpur Rural Hospital."</p>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-2">
+<div class="flex items-center gap-2 text-xs text-text-secondary">
+<span class="material-symbols-outlined text-[14px]">person</span>
+<span>Reporter: Community Patient (Mobile Verified)</span>
+<span>•</span>
+<span class="text-success-green">0 unresolved facility closure reports</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="px-space-md py-1 rounded bg-primary-container text-on-primary hover:bg-primary text-label-sm font-label-sm transition-colors" type="button">
+                Resolve &amp; Adjust Schedule
+              </button>
+<button class="px-space-md py-1 rounded border border-border-subtle bg-surface text-text-secondary hover:text-on-surface text-label-sm font-label-sm transition-colors" type="button">
+                Dismiss Flag
+              </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT / SIDEBAR COLUMN (Col 4) -->
+<div class="lg:col-span-4 flex flex-col gap-space-xl">
+<!-- SECTION 4: ESTABLISHMENT INFORMATION -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between border-b border-border-subtle pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">storefront</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Establishment Overview</h2>
+</div>
+<button class="text-primary hover:underline text-label-sm font-label-sm" type="button">Edit</button>
+</div>
+<div class="flex flex-col gap-space-md text-body-sm font-body-sm">
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Full Legal Name</div>
+<div class="font-medium text-on-surface mt-0.5">Maa Medical Store &amp; Doctor Chamber</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Category / Facility Type</div>
+<div class="font-medium text-on-surface mt-0.5">Pharmacy &amp; Attached Consultation Chamber</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Primary Phone</div>
+<div class="flex items-center justify-between mt-0.5">
+<span class="font-code-tabular text-on-surface">+91 94340 11223</span>
+<span class="text-[11px] text-text-secondary">(Front Desk / Compounder)</span>
+</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Secondary Contact</div>
+<div class="font-code-tabular text-on-surface mt-0.5">+91 98320 54119</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Official Email</div>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-code-tabular text-on-surface">contact@maamedical.in</span>
+<span class="material-symbols-outlined text-[14px] text-success-green" title="Email Domain Verified">check_circle</span>
+</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Store Operating Hours</div>
+<div class="mt-0.5 space-y-0.5 font-code-tabular text-on-surface text-xs">
+<div>Mon – Sat: 8:00 AM – 9:30 PM</div>
+<div>Sunday: 8:00 AM – 2:00 PM</div>
+</div>
+</div>
+<div class="pt-2 border-t border-border-subtle">
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">State License Number</div>
+<div class="font-code-tabular font-medium text-on-surface mt-0.5">DL-WB-JHG-2019-4821</div>
+<div class="text-[11px] text-text-secondary mt-0.5">Issued by Drug Control Dept, West Bengal</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: LOCATION & PHYSICAL ACCESS -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between border-b border-border-subtle pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">pin_drop</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Location &amp; Geolocation</h2>
+</div>
+<button class="text-primary hover:underline text-label-sm font-label-sm" type="button">Edit</button>
+</div>
+<!-- Schematic / Preview Map Container -->
+<div class="w-full h-36 bg-cover bg-center rounded-lg relative overflow-hidden flex flex-col justify-end p-2" data-location="Station Road, Gopiballavpur, West Bengal 721506" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOOxT2l5u6ekGYRbzU3XsMacDhsaxdbQ_Rij8l5Fo8qBsSzO2nv6RATUIki6I73XPR7aIPySelK4olkWZ5gWYpQVUN8rARAKxVSanG0EFNh2_K17W9OAx04hBtH8or_ynzRyV9ZTKMc5wmH1ux5UUgxtP1CPnWt-ZLAE67YtlnGjwz5TBmT_jEIqIInKIXHF6yhTjZVxI6hi8bKQAGVl_YHxd2-rxmHjMugUZVazT0oqzEn2bgCElIhQ')">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+<div class="relative z-10 flex items-center justify-between text-white text-xs">
+<div class="flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-[16px] text-on-primary-container">location_on</span>
+<span>Opposite Bus Stand</span>
+</div>
+<span class="font-code-tabular text-[10px] bg-black/40 px-1.5 py-0.5 rounded backdrop-blur">22.2134° N, 86.9142° E</span>
+</div>
+</div>
+<div class="space-y-2 text-body-sm font-body-sm">
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary uppercase tracking-wider">Postal Address</div>
+<p class="text-on-surface mt-0.5 leading-snug">
+              Station Road, Opposite Gopiballavpur Bus Stand,<br/>
+              Gopiballavpur Market, P.O. Gopiballavpur,<br/>
+              Jhargram District, West Bengal — <span class="font-code-tabular font-medium">721506</span>
+</p>
+</div>
+<div class="pt-2 border-t border-border-subtle flex flex-col gap-1 text-xs">
+<div class="flex items-center justify-between">
+<span class="text-text-secondary">GPS Fix Precision:</span>
+<span class="font-code-tabular text-success-green font-medium">&lt; 3m (Field Audit DGPS)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-text-secondary">Immediate Landmark:</span>
+<span class="text-on-surface">Gopiballavpur Bus Terminal (80m)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-text-secondary">Cluster Hub:</span>
+<span class="text-on-surface">Sub-divisional Area #4</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6: VERIFICATION & GOVERNANCE -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between border-b border-border-subtle pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-success-green">verified_user</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Verification Status</h2>
+</div>
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-success-green bg-success-soft px-2 py-0.5 rounded-full font-medium">
+<span class="material-symbols-outlined text-[13px]">check</span> Verified
+          </span>
+</div>
+<div class="flex flex-col gap-space-sm text-body-sm font-body-sm">
+<div class="flex items-center justify-between">
+<span class="text-text-secondary text-xs">Last Verified Date:</span>
+<span class="font-code-tabular text-on-surface font-medium">20 Sep 2026</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-text-secondary text-xs">Verified By:</span>
+<span class="text-on-surface font-medium">Rajesh Sharma (Ops Admin)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-text-secondary text-xs">Verification Method:</span>
+<span class="text-on-surface text-right text-xs">On-site compounder visit &amp; Reg cross-check</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-text-secondary text-xs">Last Record Update:</span>
+<span class="font-code-tabular text-on-surface">22 Sep 2026, 11:30 AM</span>
+</div>
+<div class="mt-2 p-space-sm rounded bg-surface-container-low/60 border border-border-subtle text-[11px] text-text-secondary leading-relaxed">
+<span class="font-semibold text-on-surface">Governance Note:</span> Verification confirms operational accuracy and chamber timings. It does not rank or medically endorse providers.
+          </div>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 py-1.5 px-space-sm rounded bg-primary-container text-on-primary hover:bg-primary transition-colors text-label-sm font-label-sm text-center" type="button">
+              Re-verify Record
+            </button>
+<button class="py-1.5 px-space-sm rounded border border-border-subtle text-text-secondary hover:text-on-surface transition-colors text-label-sm font-label-sm" type="button">
+              Mark for Review
+            </button>
+</div>
+</div>
+</section>
+<!-- SECTION 7: RECENT ACTIVITY LOG -->
+<section class="bg-surface rounded-xl border border-border-subtle p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between border-b border-border-subtle pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-text-secondary">history</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Activity</h2>
+</div>
+<span class="text-[11px] text-text-secondary font-code-tabular">Audit Trail</span>
+</div>
+<ol class="relative border-l border-border-subtle ml-2 space-y-4 text-xs font-body-sm">
+<!-- Activity Item 1 -->
+<li class="ml-3">
+<div class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full border-2 border-surface bg-primary"></div>
+<time class="font-code-tabular text-text-secondary block">22 Sep 2026, 11:30 AM</time>
+<p class="text-on-surface font-medium mt-0.5">Schedule confirmed for Dr. Amit Das</p>
+<span class="text-text-secondary text-[11px]">Audit agent: Priya M.</span>
+</li>
+<!-- Activity Item 2 -->
+<li class="ml-3">
+<div class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full border-2 border-surface bg-success-green"></div>
+<time class="font-code-tabular text-text-secondary block">20 Sep 2026, 04:15 PM</time>
+<p class="text-on-surface font-medium mt-0.5">Establishment physical audit completed</p>
+<span class="text-text-secondary text-[11px]">Field verifier: Rajesh S. (ID: WB-FD-04)</span>
+</li>
+<!-- Activity Item 3 -->
+<li class="ml-3">
+<div class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full border-2 border-surface bg-outline-variant"></div>
+<time class="font-code-tabular text-text-secondary block">18 Sep 2026, 09:20 AM</time>
+<p class="text-on-surface font-medium mt-0.5">Dr. Ananya Mukherjee linked to chamber</p>
+<span class="text-text-secondary text-[11px]">Mapped by: Rajesh S.</span>
+</li>
+<!-- Activity Item 4 -->
+<li class="ml-3">
+<div class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full border-2 border-surface bg-outline-variant"></div>
+<time class="font-code-tabular text-text-secondary block">14 Sep 2026, 02:00 PM</time>
+<p class="text-on-surface font-medium mt-0.5">Facility record initialized</p>
+<span class="text-text-secondary text-[11px]">Sync source: WB Pharmacy Registry batch import</span>
+</li>
+</ol>
+</section>
+</div>
+</div>
+</div></main></div></body></html>

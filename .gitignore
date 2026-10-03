@@ -1,0 +1,10 @@
+node_modules
+.next
+dist
+build
+.expo
+.wrangler
+.vercel
+.env
+*.log
+.DS_Store
