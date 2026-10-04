@@ -249,21 +249,21 @@ export default function HomePage() {
           )}
 
           {loading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col gap-4 animate-pulse"
+                  className="bg-white rounded-xl border border-slate-200/80 p-4 sm:p-4.5 flex flex-col gap-3 animate-pulse"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-xl bg-slate-200 shrink-0" />
-                    <div className="flex-1 flex flex-col gap-2">
+                    <div className="w-13 h-13 rounded-xl bg-slate-200 shrink-0" />
+                    <div className="flex-1 flex flex-col gap-1.5">
                       <div className="h-4 bg-slate-200 rounded-md w-3/4" />
                       <div className="h-3 bg-slate-100 rounded-md w-1/2" />
                     </div>
                   </div>
-                  <div className="h-16 bg-slate-100 rounded-xl" />
-                  <div className="h-9 bg-slate-200 rounded-xl" />
+                  <div className="h-9 bg-slate-100 rounded-lg" />
+                  <div className="h-8 bg-slate-200 rounded-lg" />
                 </div>
               ))}
             </div>
@@ -294,7 +294,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
               {doctors.map((doctor) => (
                 <DoctorCard
                   key={doctor.id}
