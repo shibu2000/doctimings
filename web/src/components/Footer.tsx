@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { PhoneCall, ShieldAlert, Heart } from "lucide-react";
 import type { Town } from "@/types";
 
@@ -107,7 +108,11 @@ export const Footer: React.FC<FooterProps> = ({ towns, onSelectTown }) => {
 
         <div className="pt-6 border-t border-slate-800 text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <span>&copy; {new Date().getFullYear()} DocTimings. All verified medical data sourced directly from local partner clinics.</span>
-          <span>Information portal for public medical availability.</span>
+          <div className="flex items-center gap-4 text-slate-400">
+            <Link href="/privacy" className="hover:text-teal-400 transition-colors">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
