@@ -1,426 +1,297 @@
 import type { Context } from 'hono';
-import { db, memoryStore } from '../db/index.js';
+import { and, eq, inArray } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
 import * as schema from '../db/schema.js';
-import { eq } from 'drizzle-orm';
 import { CreateScheduleInput, UpdateScheduleInput, CreateOverrideInput } from '../validators/scheduleValidator.js';
-import {
-  ScheduleRecord,
-  ScheduleOverrideRecord,
-  DoctorRecord,
-  EstablishmentRecord,
-  PracticeLocationRecord,
-  JWTPayload
-} from '../types/index.js';
+import { recordAudit } from '../lib/audit.js';
+import { badRequest, currentUser, fail, newId, notFound, validBody } from '../lib/http.js';
+import { canManageEstablishment, canManageSitting, getAccess } from '../lib/access.js';
+import { ensureAffiliation, resolveRoom } from '../lib/sittings.js';
+import { dayOfDate, formatTo12Hour, shiftNameFor } from '../lib/time.js';
+
+const nameMaps = async () => {
+  const db = getDb();
+  const [doctors, establishments, locations] = await Promise.all([
+    db.select({ id: schema.doctors.id, name: schema.doctors.fullName, specialty: schema.doctors.specialty }).from(schema.doctors),
+    db.select({ id: schema.establishments.id, name: schema.establishments.name }).from(schema.establishments),
+    db.select({ id: schema.practiceLocations.id, name: schema.practiceLocations.name }).from(schema.practiceLocations)
+  ]);
+  return {
+    doctors: new Map(doctors.map(d => [d.id, d])),
+    establishments: new Map(establishments.map(e => [e.id, e.name])),
+    locations: new Map(locations.map(l => [l.id, l.name]))
+  };
+};
+
+const findSchedule = async (id: string) => {
+  const [schedule] = await getDb().select().from(schema.schedules).where(eq(schema.schedules.id, id));
+  return schedule;
+};
 
 export const scheduleController = {
   getSchedules: async (c: Context) => {
-    const doctorId = c.req.query('doctorId');
-    const establishmentId = c.req.query('establishmentId');
-    const dayOfWeek = c.req.query('dayOfWeek');
+    const { doctorId, establishmentId, dayOfWeek } = c.req.query();
+    const [list, names] = await Promise.all([getDb().select().from(schema.schedules), nameMaps()]);
 
-    let list: ScheduleRecord[];
-    let doctorsList = memoryStore.doctors;
-    let establishmentsList = memoryStore.establishments;
-    let locationsList = memoryStore.practiceLocations;
-
-    if (db) {
-      try {
-        const [schs, docs, ests, locs] = await Promise.all([
-          db.select().from(schema.schedules),
-          db.select().from(schema.doctors),
-          db.select().from(schema.establishments),
-          db.select().from(schema.practiceLocations)
-        ]);
-        list = schs as ScheduleRecord[];
-        doctorsList = docs as DoctorRecord[];
-        establishmentsList = ests as EstablishmentRecord[];
-        locationsList = locs as PracticeLocationRecord[];
-      } catch {
-        list = [...memoryStore.schedules];
-      }
-    } else {
-      list = [...memoryStore.schedules];
-    }
-
-    if (doctorId) {
-      list = list.filter(s => s.doctorId === doctorId);
-    }
-
-    if (establishmentId) {
-      list = list.filter(s => s.establishmentId === establishmentId);
-    }
-
-    if (dayOfWeek) {
-      list = list.filter(s => s.dayOfWeek.toLowerCase() === dayOfWeek.toLowerCase());
-    }
-
-    const enhanced = list.map(s => {
-      const doc = doctorsList.find(d => d.id === s.doctorId);
-      const est = establishmentsList.find(e => e.id === s.establishmentId);
-      const loc = locationsList.find(l => l.id === s.practiceLocationId);
-
-      return {
+    const data = list
+      .filter(
+        s =>
+          (!doctorId || s.doctorId === doctorId) &&
+          (!establishmentId || s.establishmentId === establishmentId) &&
+          (!dayOfWeek || s.dayOfWeek.toLowerCase() === dayOfWeek.toLowerCase())
+      )
+      .map(s => ({
         ...s,
-        doctorName: doc ? doc.fullName : '',
-        doctorSpecialty: doc ? doc.specialty : '',
-        establishmentName: est ? est.name : '',
-        locationName: loc ? loc.name : ''
-      };
-    });
+        doctorName: names.doctors.get(s.doctorId)?.name ?? '',
+        doctorSpecialty: names.doctors.get(s.doctorId)?.specialty ?? '',
+        establishmentName: names.establishments.get(s.establishmentId) ?? '',
+        locationName: names.locations.get(s.practiceLocationId) ?? ''
+      }));
 
-    return c.json({
-      success: true,
-      data: enhanced,
-      total: enhanced.length
-    });
+    return c.json({ success: true, data, total: data.length });
   },
 
   getScheduleById: async (c: Context) => {
-    const id = c.req.param('id') as string;
-    if (!id) {
-      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Schedule ID is required' } }, 404);
-    }
-    let schedule: ScheduleRecord | undefined;
-    let doc: DoctorRecord | null = null;
-    let est: EstablishmentRecord | null = null;
-    let loc: PracticeLocationRecord | null = null;
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const schedule = await findSchedule(id);
+    if (!schedule) return notFound(c, `Schedule ${id} was not found`);
 
-    if (db) {
-      try {
-        const rows = await db.select().from(schema.schedules).where(eq(schema.schedules.id, id));
-        schedule = rows[0] as ScheduleRecord | undefined;
-        if (schedule) {
-          const [docs, ests, locs] = await Promise.all([
-            db.select().from(schema.doctors).where(eq(schema.doctors.id, schedule.doctorId)),
-            db.select().from(schema.establishments).where(eq(schema.establishments.id, schedule.establishmentId)),
-            db.select().from(schema.practiceLocations).where(eq(schema.practiceLocations.id, schedule.practiceLocationId))
-          ]);
-          doc = (docs[0] as DoctorRecord) || null;
-          est = (ests[0] as EstablishmentRecord) || null;
-          loc = (locs[0] as PracticeLocationRecord) || null;
-        }
-      } catch {
-        schedule = memoryStore.schedules.find(s => s.id === id);
-      }
-    } else {
-      schedule = memoryStore.schedules.find(s => s.id === id);
-    }
-
-    if (!schedule) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Schedule slot with ID ${id} was not found`
-          }
-        },
-        404
-      );
-    }
-
-    if (!doc) doc = memoryStore.doctors.find(d => d.id === schedule!.doctorId) || null;
-    if (!est) est = memoryStore.establishments.find(e => e.id === schedule!.establishmentId) || null;
-    if (!loc) loc = memoryStore.practiceLocations.find(l => l.id === schedule!.practiceLocationId) || null;
+    const [[doctor], [establishment], [location]] = await Promise.all([
+      db.select().from(schema.doctors).where(eq(schema.doctors.id, schedule.doctorId)),
+      db.select().from(schema.establishments).where(eq(schema.establishments.id, schedule.establishmentId)),
+      db.select().from(schema.practiceLocations).where(eq(schema.practiceLocations.id, schedule.practiceLocationId))
+    ]);
 
     return c.json({
       success: true,
-      data: {
-        ...schedule,
-        doctor: doc,
-        establishment: est,
-        location: loc
-      }
+      data: { ...schedule, doctor: doctor ?? null, establishment: establishment ?? null, location: location ?? null }
     });
   },
 
   createSchedule: async (c: Context) => {
-    const body = (c.get('validatedBody') || (await c.req.json())) as CreateScheduleInput;
-    const user = c.get('user') as JWTPayload | undefined;
+    const body = validBody<CreateScheduleInput>(c);
+    const db = getDb();
+    const [[doctor], [establishment], locations] = await Promise.all([
+      db.select().from(schema.doctors).where(eq(schema.doctors.id, body.doctorId)),
+      db.select().from(schema.establishments).where(eq(schema.establishments.id, body.establishmentId)),
+      db.select().from(schema.practiceLocations).where(eq(schema.practiceLocations.establishmentId, body.establishmentId))
+    ]);
+    if (!doctor) return badRequest(c, `Doctor ${body.doctorId} does not exist`);
+    if (!establishment) return badRequest(c, `Establishment ${body.establishmentId} does not exist`);
+    const access = await getAccess(c);
+    const allowed = doctor.affiliatedEstablishmentIds.includes(body.establishmentId)
+      ? canManageSitting(access, doctor.id, body.establishmentId)
+      : canManageEstablishment(access, body.establishmentId);
+    if (!allowed) return fail(c, 403, 'FORBIDDEN', 'You can only change timing at your own establishments');
 
-    const doctorExists = memoryStore.doctors.some(d => d.id === body.doctorId);
-    if (!doctorExists) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: `Doctor ${body.doctorId} does not exist`
-          }
-        },
-        400
-      );
-    }
+    const room = resolveRoom(locations, body.practiceLocationId);
+    await ensureAffiliation(db, doctor, body.establishmentId);
+    const [schedule] = await db
+      .insert(schema.schedules)
+      .values({
+        id: newId('SCH'),
+        doctorId: body.doctorId,
+        establishmentId: body.establishmentId,
+        practiceLocationId: room?.id ?? '',
+        dayOfWeek: body.dayOfWeek,
+        startTime: body.startTime,
+        endTime: body.endTime,
+        shiftName: body.shiftName || shiftNameFor(body.startTime),
+        roomNumber: body.roomNumber || room?.roomDesignation || '',
+        tokenPolicy: body.tokenPolicy,
+        maxTokens: body.maxTokens
+      })
+      .returning();
 
-    const newSchedule = {
-      id: `SCH-${Date.now().toString().slice(-6)}`,
-      doctorId: body.doctorId,
-      establishmentId: body.establishmentId,
-      practiceLocationId: body.practiceLocationId,
-      dayOfWeek: body.dayOfWeek,
-      startTime: body.startTime,
-      endTime: body.endTime,
-      shiftName: body.shiftName,
-      roomNumber: body.roomNumber,
-      tokenPolicy: body.tokenPolicy || 'First Come First Served',
-      maxTokens: body.maxTokens || 30,
-      isActive: true
-    };
-
-    memoryStore.schedules.push(newSchedule);
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Anonymous',
-      action: 'Create',
+    await recordAudit(db, currentUser(c), {
+      action: 'Added session',
       entityType: 'Schedule',
-      entityId: newSchedule.id,
-      entityName: `${newSchedule.dayOfWeek} ${newSchedule.shiftName}`,
-      details: `Added new schedule for Doctor ${newSchedule.doctorId}`
+      entityId: schedule.id,
+      entityName: doctor.fullName,
+      details: `${establishment.name}: ${schedule.dayOfWeek} ${formatTo12Hour(schedule.startTime)}–${formatTo12Hour(schedule.endTime)}`
     });
 
-    return c.json(
-      {
-        success: true,
-        message: 'Schedule slot created successfully',
-        data: newSchedule
-      },
-      201
-    );
+    return c.json({ success: true, message: 'Schedule slot created successfully', data: schedule }, 201);
   },
 
   updateSchedule: async (c: Context) => {
-    const id = c.req.param('id');
-    const body = (c.get('validatedBody') || (await c.req.json())) as UpdateScheduleInput;
-    const user = c.get('user') as JWTPayload | undefined;
-
-    const index = memoryStore.schedules.findIndex(s => s.id === id);
-    if (index === -1) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Schedule ${id} does not exist`
-          }
-        },
-        404
-      );
+    const id = c.req.param('id')!;
+    const body = validBody<UpdateScheduleInput>(c);
+    const db = getDb();
+    const existing = await findSchedule(id);
+    if (!existing) return notFound(c, `Schedule ${id} was not found`);
+    if (!canManageSitting(await getAccess(c), existing.doctorId, existing.establishmentId)) {
+      return fail(c, 403, 'FORBIDDEN', 'You can only change timing at your own establishments');
     }
 
-    const existing = memoryStore.schedules[index];
-    const updated = {
-      ...existing,
-      ...body
-    };
+    if (body.practiceLocationId !== undefined) {
+      const [room] = await db
+        .select()
+        .from(schema.practiceLocations)
+        .where(and(eq(schema.practiceLocations.id, body.practiceLocationId), eq(schema.practiceLocations.establishmentId, existing.establishmentId)));
+      if (!room) return badRequest(c, 'That room does not belong to this establishment');
+      body.roomNumber = room.roomDesignation;
+    }
 
-    memoryStore.schedules[index] = updated;
+    const startTime = body.startTime ?? existing.startTime;
+    const endTime = body.endTime ?? existing.endTime;
+    if (startTime >= endTime) return badRequest(c, 'End time must be after start time');
 
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Anonymous',
-      action: 'Update',
+    const [schedule] = await db
+      .update(schema.schedules)
+      .set({ ...body, updatedAt: new Date() })
+      .where(eq(schema.schedules.id, id))
+      .returning();
+
+    await recordAudit(db, currentUser(c), {
+      action: 'Updated session',
       entityType: 'Schedule',
-      entityId: id || '',
-      entityName: `${updated.dayOfWeek} ${updated.shiftName}`,
-      details: `Updated schedule slot properties`
+      entityId: id,
+      entityName: `${schedule.dayOfWeek} ${schedule.shiftName}`,
+      details: `${formatTo12Hour(schedule.startTime)}–${formatTo12Hour(schedule.endTime)}`
     });
 
-    return c.json({
-      success: true,
-      message: 'Schedule updated successfully',
-      data: updated
-    });
+    return c.json({ success: true, message: 'Schedule updated successfully', data: schedule });
   },
 
   deleteSchedule: async (c: Context) => {
-    const id = c.req.param('id');
-    const user = c.get('user') as JWTPayload | undefined;
-
-    const index = memoryStore.schedules.findIndex(s => s.id === id);
-    if (index === -1) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Schedule ${id} does not exist`
-          }
-        },
-        404
-      );
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const existing = await findSchedule(id);
+    if (!existing) return notFound(c, `Schedule ${id} was not found`);
+    if (!canManageSitting(await getAccess(c), existing.doctorId, existing.establishmentId)) {
+      return fail(c, 403, 'FORBIDDEN', 'You can only change timing at your own establishments');
     }
 
-    const deleted = memoryStore.schedules.splice(index, 1)[0];
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Anonymous',
-      action: 'Delete',
+    await db.delete(schema.schedules).where(eq(schema.schedules.id, id));
+    await recordAudit(db, currentUser(c), {
+      action: 'Removed session',
       entityType: 'Schedule',
-      entityId: id || '',
-      entityName: `${deleted.dayOfWeek} ${deleted.shiftName}`,
-      details: `Deleted schedule slot`
+      entityId: id,
+      entityName: `${existing.dayOfWeek} ${existing.shiftName}`
     });
 
-    return c.json({
-      success: true,
-      message: 'Schedule deleted successfully'
-    });
+    return c.json({ success: true, message: 'Schedule deleted successfully' });
   },
 
   getOverrides: async (c: Context) => {
-    const doctorId = c.req.query('doctorId');
-    const establishmentId = c.req.query('establishmentId');
-    const date = c.req.query('date');
+    const { doctorId, establishmentId, date, from } = c.req.query();
+    const [list, names] = await Promise.all([getDb().select().from(schema.scheduleOverrides), nameMaps()]);
 
-    let list: ScheduleOverrideRecord[];
-    let doctorsList = memoryStore.doctors;
-    let establishmentsList = memoryStore.establishments;
-
-    if (db) {
-      try {
-        const [ovrs, docs, ests] = await Promise.all([
-          db.select().from(schema.scheduleOverrides),
-          db.select().from(schema.doctors),
-          db.select().from(schema.establishments)
-        ]);
-        list = ovrs as ScheduleOverrideRecord[];
-        doctorsList = docs as DoctorRecord[];
-        establishmentsList = ests as EstablishmentRecord[];
-      } catch {
-        list = [...memoryStore.overrides];
-      }
-    } else {
-      list = [...memoryStore.overrides];
-    }
-
-    if (doctorId) {
-      list = list.filter(o => o.doctorId === doctorId);
-    }
-
-    if (establishmentId) {
-      list = list.filter(o => o.establishmentId === establishmentId);
-    }
-
-    if (date) {
-      list = list.filter(o => o.date === date);
-    }
-
-    const enhanced = list.map(o => {
-      const doc = doctorsList.find(d => d.id === o.doctorId);
-      const est = establishmentsList.find(e => e.id === o.establishmentId);
-
-      return {
+    const data = list
+      .filter(
+        o =>
+          (!doctorId || o.doctorId === doctorId) &&
+          (!establishmentId || o.establishmentId === establishmentId) &&
+          (!date || o.date === date) &&
+          (!from || o.date >= from)
+      )
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map(({ internalNote: _, ...o }) => ({
         ...o,
-        doctorName: doc ? doc.fullName : '',
-        establishmentName: est ? est.name : ''
-      };
-    });
+        doctorName: names.doctors.get(o.doctorId)?.name ?? '',
+        establishmentName: names.establishments.get(o.establishmentId) ?? ''
+      }));
 
-    return c.json({
-      success: true,
-      data: enhanced,
-      total: enhanced.length
-    });
+    return c.json({ success: true, data, total: data.length });
   },
 
   createOverride: async (c: Context) => {
-    const body = (c.get('validatedBody') || (await c.req.json())) as CreateOverrideInput;
-    const user = c.get('user') as JWTPayload | undefined;
-
-    const doctorExists = memoryStore.doctors.some(d => d.id === body.doctorId);
-    if (!doctorExists) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: `Doctor ${body.doctorId} does not exist`
-          }
-        },
-        400
-      );
+    const body = validBody<CreateOverrideInput>(c);
+    const db = getDb();
+    const [[doctor], [establishment], sameDay, daySchedules] = await Promise.all([
+      db.select().from(schema.doctors).where(eq(schema.doctors.id, body.doctorId)),
+      db.select().from(schema.establishments).where(eq(schema.establishments.id, body.establishmentId)),
+      db
+        .select()
+        .from(schema.scheduleOverrides)
+        .where(
+          and(
+            eq(schema.scheduleOverrides.doctorId, body.doctorId),
+            eq(schema.scheduleOverrides.establishmentId, body.establishmentId),
+            eq(schema.scheduleOverrides.date, body.date)
+          )
+        ),
+      db
+        .select()
+        .from(schema.schedules)
+        .where(and(eq(schema.schedules.doctorId, body.doctorId), eq(schema.schedules.establishmentId, body.establishmentId)))
+    ]);
+    if (!doctor) return badRequest(c, `Doctor ${body.doctorId} does not exist`);
+    if (!establishment) return badRequest(c, `Establishment ${body.establishmentId} does not exist`);
+    if (!doctor.affiliatedEstablishmentIds.includes(body.establishmentId)) {
+      return badRequest(c, 'This doctor does not sit at that establishment');
+    }
+    const access = await getAccess(c);
+    if (!canManageSitting(access, doctor.id, body.establishmentId)) {
+      return fail(c, 403, 'FORBIDDEN', 'You can only change timing at your own establishments');
     }
 
-    const newOverride = {
-      id: `OVR-${Date.now().toString().slice(-6)}`,
-      doctorId: body.doctorId,
-      establishmentId: body.establishmentId,
-      date: body.date,
-      dayOfWeek: body.dayOfWeek,
-      overrideType: body.overrideType,
-      standardShift: body.standardShift,
-      publicReason: body.publicReason,
-      internalNote: body.internalNote || '',
-      reportedBy: body.reportedBy || user?.name || 'Operations Desk'
-    };
+    const dayOfWeek = dayOfDate(body.date);
+    const standardShift =
+      body.standardShift ||
+      daySchedules
+        .filter(s => s.dayOfWeek === dayOfWeek)
+        .map(s => `${s.startTime}-${s.endTime}`)
+        .join(', ') ||
+      'No regular session';
 
-    memoryStore.overrides.push(newOverride);
+    if (body.overrideType !== 'additional') {
+      const superseded = sameDay.filter(o => o.overrideType !== 'additional').map(o => o.id);
+      if (superseded.length) {
+        await db.delete(schema.scheduleOverrides).where(inArray(schema.scheduleOverrides.id, superseded));
+      }
+    }
 
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Anonymous',
-      action: 'Create',
-      entityType: 'ScheduleOverride',
-      entityId: newOverride.id,
-      entityName: `${newOverride.date} - ${newOverride.overrideType}`,
-      details: `Created schedule override for doctor ${newOverride.doctorId}: ${newOverride.publicReason}`
+    const [override] = await db
+      .insert(schema.scheduleOverrides)
+      .values({
+        id: newId('OVR'),
+        doctorId: body.doctorId,
+        establishmentId: body.establishmentId,
+        date: body.date,
+        dayOfWeek,
+        overrideType: body.overrideType,
+        standardShift,
+        newStartTime: body.overrideType === 'unavailable' ? null : body.newStartTime ?? null,
+        newEndTime: body.overrideType === 'unavailable' ? null : body.newEndTime ?? null,
+        publicReason: body.publicReason,
+        internalNote: body.internalNote,
+        reportedBy: (access.platform && body.reportedBy) || currentUser(c)?.name || 'Operations Desk'
+      })
+      .returning();
+
+    const labels = { unavailable: 'Marked not available', changed: 'Changed hours', additional: 'Added extra session' };
+    await recordAudit(db, currentUser(c), {
+      action: labels[body.overrideType],
+      entityType: 'Doctor',
+      entityId: doctor.id,
+      entityName: doctor.fullName,
+      details: `${establishment.name} on ${body.date}: ${body.publicReason}`
     });
 
-    return c.json(
-      {
-        success: true,
-        message: 'Schedule override created successfully',
-        data: newOverride
-      },
-      201
-    );
+    return c.json({ success: true, message: 'Schedule override created successfully', data: override }, 201);
   },
 
   deleteOverride: async (c: Context) => {
-    const id = c.req.param('id');
-    const user = c.get('user') as JWTPayload | undefined;
-
-    const index = memoryStore.overrides.findIndex(o => o.id === id);
-    if (index === -1) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Override ${id} does not exist`
-          }
-        },
-        404
-      );
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const [existing] = await db.select().from(schema.scheduleOverrides).where(eq(schema.scheduleOverrides.id, id));
+    if (!existing) return notFound(c, `Override ${id} was not found`);
+    if (!canManageSitting(await getAccess(c), existing.doctorId, existing.establishmentId)) {
+      return fail(c, 403, 'FORBIDDEN', 'You can only change timing at your own establishments');
     }
 
-    const deleted = memoryStore.overrides.splice(index, 1)[0];
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Anonymous',
-      action: 'Delete',
-      entityType: 'ScheduleOverride',
-      entityId: id || '',
-      entityName: `${deleted.date} - ${deleted.overrideType}`,
-      details: `Removed schedule override`
+    await db.delete(schema.scheduleOverrides).where(eq(schema.scheduleOverrides.id, id));
+    await recordAudit(db, currentUser(c), {
+      action: 'Cancelled schedule change',
+      entityType: 'Doctor',
+      entityId: existing.doctorId,
+      entityName: `${existing.date} ${existing.overrideType}`,
+      details: existing.publicReason
     });
 
-    return c.json({
-      success: true,
-      message: 'Schedule override deleted successfully'
-    });
+    return c.json({ success: true, message: 'Schedule override deleted successfully' });
   }
 };

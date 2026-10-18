@@ -3,9 +3,11 @@ import { Tabs } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Stethoscope, Building2, LayoutGrid } from 'lucide-react-native';
 import { Colors, Typography } from '../../constants/theme';
+import { usePartner } from '../../store/PartnerContext';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const { isDoctor } = usePartner();
 
   return (
     <Tabs
@@ -40,13 +42,14 @@ export default function TabLayout() {
         name="doctors"
         options={{
           title: 'Doctors',
+          href: isDoctor ? null : undefined,
           tabBarIcon: ({ color, size }) => <Stethoscope size={size || 22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="establishment"
         options={{
-          title: 'Establishment',
+          title: isDoctor ? 'Places' : 'Establishment',
           tabBarIcon: ({ color, size }) => <Building2 size={size || 22} color={color} />,
         }}
       />

@@ -1,5 +1,6 @@
 export const en = {
   common: {
+    retry: 'Try again',
     appName: 'DocTimings',
     tagline: 'Find doctors near you, right on time',
     verifiedDirectory: 'Community-Verified Local Healthcare Discovery',
@@ -48,7 +49,7 @@ export const en = {
   },
   status: {
     availableToday: 'Available today',
-    scheduledToday: 'Scheduled today',
+    scheduledToday: 'Other days',
     availabilityUnknown: 'Availability unknown',
     notAvailableToday: 'Not available today',
     openNow: 'Open now',
@@ -65,6 +66,8 @@ export const en = {
     women: "Women's Health",
   },
   search: {
+    autoExpanded: 'No doctors close by. Showing doctors within {{radius}} km.',
+    loadFailed: 'Could not load doctors. Check your internet and try again.',
     title: 'Find a Doctor',
     resultsTitle: 'Doctors Near You',
     foundCount: '{{count}} Doctors Found',
@@ -81,6 +84,10 @@ export const en = {
     filterDistance: 'Search Radius',
   },
   doctor: {
+    askAtCounter: 'Ask at counter',
+    fee: 'Fee',
+    practices: 'Where the doctor sits',
+    notFound: 'This doctor is no longer listed.',
     experience: '{{years}} yrs exp',
     registration: 'Reg. {{council}} #{{num}}',
     stateCouncilVerified: 'State Council Verified',
@@ -136,6 +143,7 @@ export const en = {
     statusCancelled: 'Cancelled',
   },
   plan: {
+    noUpcomingSessions: 'No upcoming sessions at this place in the next 3 weeks.',
     title: 'Plan a Doctor Visit',
     subtitle: 'Set a phone reminder for your doctor visit',
     selectChamber: 'Select Chamber Location',
@@ -147,6 +155,7 @@ export const en = {
     successMsg: 'Visit reminder saved successfully!',
   },
   report: {
+    generalIssue: 'General issue',
     title: 'Report An Issue',
     subtitle: 'Help neighbors find doctors accurately with community verification',
     issueType: 'What needs to be corrected?',
@@ -165,11 +174,15 @@ export const en = {
     thankYou: 'Thank you! An admin will verify this report with the establishment.',
   },
   location: {
+    detecting: 'Finding doctors near you…',
+    title: 'Where are you?',
+    intro: 'We show doctors closest to you first.',
+    doctorCount_one: '{{count}} doctor',
+    doctorCount_other: '{{count}} doctors',
     chooseTitle: 'Choose Your Location',
     whereAreYou: 'Where are you looking for a doctor?',
     permissionExplain: 'We use your location to find verified doctors and chambers nearest to you.',
     useCurrentLocation: 'Use my current location',
-    detecting: 'Detecting GPS coordinates...',
     searchPlace: 'Search city, town, village or PIN',
     popularNearby: 'Popular nearby locations',
     currentMatch: 'Selected location',
@@ -222,6 +235,7 @@ export const en = {
     privacyNote: 'Zero server tracking • 100% device-only storage',
   },
   offline: {
+    nothingCached: 'Search once while online to keep doctors available offline.',
     badge: 'Offline Mode',
     title: "You're offline",
     subtitle: 'Showing saved healthcare information',

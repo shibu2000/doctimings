@@ -119,7 +119,7 @@ export default function DoctorScheduleScreen() {
       const roomNumber = room?.roomDesignation || room?.name || 'Chamber 1';
 
       if (editingSlotId) {
-        await api.updateSchedule(editingSlotId, {
+        const res = await api.updateSchedule(editingSlotId, {
           dayOfWeek: selectedDay,
           shiftName,
           startTime,
@@ -129,9 +129,13 @@ export default function DoctorScheduleScreen() {
           consultationFee: parseInt(fee, 10) || 300,
           practiceLocationId: selectedRoomId,
         });
+        if (!res.success) {
+          Alert.alert('Not saved', res.error?.message || 'Please try again.');
+          return;
+        }
         Alert.alert('Slot Updated', 'Weekly consultation timing successfully updated.');
       } else {
-        await api.createSchedule({
+        const res = await api.createSchedule({
           doctorId: doctor.id,
           establishmentId: currentEstablishment.id,
           dayOfWeek: selectedDay,
@@ -143,13 +147,16 @@ export default function DoctorScheduleScreen() {
           consultationFee: parseInt(fee, 10) || 300,
           practiceLocationId: selectedRoomId,
         });
+        if (!res.success) {
+          Alert.alert('Not saved', res.error?.message || 'Please try again.');
+          return;
+        }
         Alert.alert('Slot Added', 'New weekly consultation slot active.');
       }
       setIsModalOpen(false);
       await loadSchedules();
     } catch {
-      Alert.alert('Notice', 'Schedule recorded.');
-      setIsModalOpen(false);
+      Alert.alert('Not saved', 'No internet connection. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -165,7 +172,11 @@ export default function DoctorScheduleScreen() {
           text: 'Remove',
           style: 'destructive',
           onPress: async () => {
-            await api.deleteSchedule(slotId);
+            const res = await api.deleteSchedule(slotId);
+            if (!res.success) {
+              Alert.alert('Not saved', res.error?.message || 'Please try again.');
+              return;
+            }
             await loadSchedules();
           },
         },
@@ -190,9 +201,9 @@ export default function DoctorScheduleScreen() {
             <Text style={styles.cardTitle}>Practice Location</Text>
           </View>
           <View style={styles.locationBox}>
-            <Text style={styles.estName}>{currentEstablishment?.name || 'Maa Medical Centre'}</Text>
+            <Text style={styles.estName}>{currentEstablishment?.name}</Text>
             <Text style={styles.estSub}>
-              {currentEstablishment?.address || 'Station Road, Gopiballavpur, Jhargram — 721506'}
+              {currentEstablishment?.address}
             </Text>
             <Text style={styles.locationNote}>
               Weekly schedules configured here apply specifically to this physical counter branch.

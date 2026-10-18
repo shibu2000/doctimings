@@ -43,8 +43,7 @@ export interface PartnerUser {
   name: string;
   email: string;
   phone?: string;
-  role: 'Establishment Admin' | 'Counter Staff' | 'Staff' | 'Super Admin' | 'Operations Admin';
-  establishmentId?: string;
+  role: 'Partner' | 'Staff' | 'Super Admin' | 'Operations Admin' | 'District Lead' | 'Verifier' | 'Patient';
   status?: string;
 }
 
@@ -74,6 +73,7 @@ export interface Establishment {
   verificationStatus: 'Verified' | 'Needs Review' | 'Pending';
   accountStatus: 'Platform Managed' | 'Invitation Pending' | 'Account Active';
   isActive: boolean;
+  memberRole?: 'Owner' | 'Staff';
   practiceLocations?: PracticeLocation[];
   doctorsCount?: number;
   lastUpdated?: string;
@@ -85,6 +85,7 @@ export interface DoctorScheduleSlot {
   establishmentId: string;
   practiceLocationId?: string;
   roomName?: string;
+  doctorName?: string;
   roomNumber?: string;
   dayOfWeek: DayOfWeek;
   shiftName: string;
@@ -177,4 +178,41 @@ export interface AttentionItem {
   timing?: string;
   scheduleId?: string;
   doctorId?: string;
+}
+
+export type AccessRole = 'Owner' | 'Staff' | 'Doctor';
+
+export interface PartnerAccount {
+  user: { id: string; name: string; email: string; role: string };
+  establishments: Establishment[];
+  doctor: (Doctor & { establishments: Establishment[] }) | null;
+}
+
+export interface TeamMemberView {
+  id: string;
+  role: 'Owner' | 'Staff';
+  userId: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  lastActive: string | null;
+}
+
+export interface InvitationView {
+  id: string;
+  role: string;
+  name: string;
+  phone: string;
+  expiresAt: string;
+}
+
+export interface TeamView {
+  members: TeamMemberView[];
+  invitations: InvitationView[];
+}
+
+export interface CreatedInvite {
+  invitation: InvitationView;
+  code: string;
 }

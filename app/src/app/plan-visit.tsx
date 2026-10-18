@@ -18,41 +18,75 @@ import {
   Check,
   User,
 } from 'lucide-react-native';
-import { DOCTORS } from '../data/mockData';
+import { useDoctor } from '../hooks/useDoctors';
+import { LoadState } from '../components/common/LoadState';
+import { istToday } from '../services/doctorMapper';
+import { Doctor, PracticeLocation } from '../types';
 import { useApp } from '../store/AppContext';
 import { ConfirmationModal } from '../components/common/ConfirmationModal';
 
-export default function PlanVisitScreen() {
+const sessionDates = (practice: PracticeLocation | undefined, locale: string) => {
+  if (!practice) return [];
+  const today = istToday();
+  const days = new Set(practice.schedules.map((s) => s.dayOfWeek));
+  const dates: { label: string; value: string; dayOfWeek: number }[] = [];
+  for (let offset = 0; offset < 21 && dates.length < 6; offset++) {
+    const date = new Date(`${today.date}T00:00:00Z`);
+    date.setUTCDate(date.getUTCDate() + offset);
+    const dayOfWeek = ((date.getUTCDay() + 6) % 7) + 1;
+    if (!days.has(dayOfWeek)) continue;
+    const value = date.toISOString().slice(0, 10);
+    if (offset === 0 && practice.schedules.filter((s) => s.dayOfWeek === dayOfWeek).every((s) => {
+      const [h, m] = s.endTime.split(':').map(Number);
+      return h * 60 + m <= today.minutes;
+    })) continue;
+    dates.push({
+      value,
+      dayOfWeek,
+      label: date.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short', timeZone: 'UTC' })
+    });
+  }
+  return dates;
+};
+
+function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor; establishmentId?: string }) {
   const router = useRouter();
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{ doctorId?: string; establishmentId?: string }>();
   const { addVisit, language, theme, isDark } = useApp();
+  const locale = language === 'bn' ? 'bn-IN' : 'en-IN';
 
-  const selectedDoctor = DOCTORS.find((d) => d.id === params.doctorId) || DOCTORS[0];
   const initialPractice = selectedDoctor.practices.find(
-    (p) => p.establishmentId === params.establishmentId
-  ) || selectedDoctor.practices[0];
+    (p) => p.establishmentId === establishmentId && p.schedules.length
+  ) || selectedDoctor.practices.find((p) => p.schedules.length) || selectedDoctor.practices[0];
+  const initialDate = sessionDates(initialPractice, locale)[0];
 
-  const [selectedPracticeId, setSelectedPracticeId] = useState<string>(
-    initialPractice?.id || ''
-  );
-  const [selectedDate, setSelectedDate] = useState<string>('2026-10-01');
+  const [selectedPracticeId, setSelectedPracticeId] = useState<string>(initialPractice?.id || '');
+  const [selectedDate, setSelectedDate] = useState<string>(initialDate?.value ?? '');
   const [selectedSlot, setSelectedSlot] = useState<string>(
-    initialPractice?.schedules[0]?.slotLabel || '5:00 PM – 8:00 PM'
+    initialPractice?.schedules.find((s) => s.dayOfWeek === initialDate?.dayOfWeek)?.slotLabel ?? ''
   );
   const [notes, setNotes] = useState<string>('');
   const [successModalVisible, setSuccessModalVisible] = useState(false);
 
   const currentPractice = selectedDoctor.practices.find((p) => p.id === selectedPracticeId) || selectedDoctor.practices[0];
+  const upcomingDates = sessionDates(currentPractice, locale);
+  const selectedDay = upcomingDates.find((d) => d.value === selectedDate)?.dayOfWeek;
+  const daySlots = currentPractice?.schedules.filter((s) => s.dayOfWeek === selectedDay) ?? [];
 
-  const upcomingDates = [
-    { label: 'Thursday, 1 Oct', value: '2026-10-01' },
-    { label: 'Saturday, 3 Oct', value: '2026-10-03' },
-    { label: 'Thursday, 8 Oct', value: '2026-10-08' },
-    { label: 'Saturday, 10 Oct', value: '2026-10-10' },
-  ];
+  const choosePractice = (practice: PracticeLocation) => {
+    const first = sessionDates(practice, locale)[0];
+    setSelectedPracticeId(practice.id);
+    setSelectedDate(first?.value ?? '');
+    setSelectedSlot(practice.schedules.find((s) => s.dayOfWeek === first?.dayOfWeek)?.slotLabel ?? '');
+  };
+
+  const chooseDate = (value: string, dayOfWeek: number) => {
+    setSelectedDate(value);
+    setSelectedSlot(currentPractice?.schedules.find((s) => s.dayOfWeek === dayOfWeek)?.slotLabel ?? '');
+  };
 
   const handleSave = async () => {
+    if (!currentPractice || !selectedDate || !selectedSlot) return;
     await addVisit({
       doctorId: selectedDoctor.id,
       doctorName: selectedDoctor.name,
@@ -184,7 +218,7 @@ export default function PlanVisitScreen() {
                   },
                 ]}
                 activeOpacity={0.8}
-                onPress={() => setSelectedPracticeId(practice.id)}
+                onPress={() => choosePractice(practice)}
               >
                 <View
                   style={[
@@ -245,6 +279,9 @@ export default function PlanVisitScreen() {
           <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
             {t('plan.selectDate')}
           </Text>
+          {upcomingDates.length === 0 && (
+            <Text style={{ fontSize: 13, color: theme.textSecondary }}>{t('plan.noUpcomingSessions')}</Text>
+          )}
           <View style={styles.datesGrid}>
             {upcomingDates.map((item) => {
               const isSelected = selectedDate === item.value;
@@ -261,7 +298,7 @@ export default function PlanVisitScreen() {
                     },
                   ]}
                   activeOpacity={0.7}
-                  onPress={() => setSelectedDate(item.value)}
+                  onPress={() => chooseDate(item.value, item.dayOfWeek)}
                 >
                   <Calendar
                     size={14}
@@ -291,7 +328,7 @@ export default function PlanVisitScreen() {
             {t('plan.selectTime')}
           </Text>
           <View style={styles.timeSlotRow}>
-            {currentPractice.schedules.map((sch) => {
+            {daySlots.map((sch) => {
               const isSelected = selectedSlot === sch.slotLabel;
               return (
                 <TouchableOpacity
@@ -364,9 +401,10 @@ export default function PlanVisitScreen() {
         ]}
       >
         <TouchableOpacity
-          style={[styles.saveBtn, { backgroundColor: theme.primary }]}
+          style={[styles.saveBtn, { backgroundColor: theme.primary, opacity: selectedSlot ? 1 : 0.5 }]}
           activeOpacity={0.8}
           onPress={handleSave}
+          disabled={!selectedSlot}
         >
           <Check size={18} color={theme.textInverse} strokeWidth={2.5} />
           <Text style={[styles.saveBtnText, { color: theme.textInverse }]}>
@@ -575,3 +613,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+export default function PlanVisitScreen() {
+  const params = useLocalSearchParams<{ doctorId?: string; establishmentId?: string }>();
+  const query = useDoctor(params.doctorId);
+  if (!query.data) {
+    return <LoadState loading={query.isPending && Boolean(params.doctorId)} notFound={!params.doctorId || (query.error as { status?: number } | null)?.status === 404} onRetry={() => query.refetch()} />;
+  }
+  return <PlanVisit doctor={query.data} establishmentId={params.establishmentId} />;
+}

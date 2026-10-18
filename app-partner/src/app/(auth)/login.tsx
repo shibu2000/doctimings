@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, Building2, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, Building2, AlertCircle, ArrowRight, ShieldCheck, Stethoscope } from 'lucide-react-native';
 import { Colors, Spacing, Typography, Radius } from '../../constants/theme';
 import { useAuth } from '../../store/AuthContext';
 
@@ -20,22 +20,22 @@ export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('rakesh@example.com');
-  const [password, setPassword] = useState('partner123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSignIn = async () => {
     if (!email.trim() || !password.trim()) {
-      setErrorMessage('Please enter both your establishment email and password.');
+      setErrorMessage('Please enter your email and password.');
       return;
     }
 
     setIsLoading(true);
     setErrorMessage(null);
 
-    const result = await login(email.trim(), password.trim());
+    const result = await login(email.trim(), password);
     setIsLoading(false);
 
     if (result.success) {
@@ -86,7 +86,7 @@ export default function LoginScreen() {
               <Mail size={18} color={Colors.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="e.g. rakesh@example.com"
+                placeholder="partner@example.com"
                 placeholderTextColor={Colors.textMuted}
                 value={email}
                 onChangeText={(text) => {
@@ -167,17 +167,33 @@ export default function LoginScreen() {
             <ShieldCheck size={20} color={Colors.primary} />
           </View>
           <View style={styles.invitationTextContainer}>
-            <Text style={styles.invitationTitle}>Received an invitation?</Text>
+            <Text style={styles.invitationTitle}>Have an access code?</Text>
             <Text style={styles.invitationDesc}>
-              Use the temporary passcode from your DocTimings official partnership letter to activate your panel.
+              DocTimings or your establishment owner gives you a one-time code. Use it to create your login.
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.invitationCard}
+          onPress={() => router.push('/(auth)/claim')}
+          activeOpacity={0.7}
+        >
+          <View style={styles.invitationIconBox}>
+            <Stethoscope size={20} color={Colors.primary} />
+          </View>
+          <View style={styles.invitationTextContainer}>
+            <Text style={styles.invitationTitle}>Are you a doctor listed on DocTimings?</Text>
+            <Text style={styles.invitationDesc}>
+              Claim your profile to update your own leave and timings. We confirm by calling the number on record.
             </Text>
           </View>
         </TouchableOpacity>
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerNote}>Authorized Healthcare Establishments Only</Text>
-          <Text style={styles.footerSub}>DocTimings Healthcare Platform • v2.4 Partner Edition</Text>
+          <Text style={styles.footerNote}>For establishments and doctors listed on DocTimings</Text>
+          <Text style={styles.footerSub}>DocTimings Partner</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

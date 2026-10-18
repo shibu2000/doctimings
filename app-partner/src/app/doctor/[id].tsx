@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { todayInIndia } from '../../utils/date';
 import {
   View,
   Text,
@@ -48,33 +49,37 @@ export default function DoctorProfileScreen() {
     );
   }
 
+  const todayStr = todayInIndia();
   const doctorOverrides = overrides.filter((o) => o.doctorId === doctor.id);
-  const isCurrentlyUnavailable = doctorOverrides.some((o) => o.overrideType === 'unavailable');
+  const todayUnavailableOverride = doctorOverrides.find((o) => o.overrideType === 'unavailable' && o.overrideDate === todayStr);
+  const isCurrentlyUnavailable = Boolean(todayUnavailableOverride);
 
   const handleToggleUnavailableToday = async () => {
     if (!currentEstablishment) return;
     setIsTogglingAvailability(true);
 
     try {
-      const todayStr = new Date().toISOString().split('T')[0];
-
-      if (isCurrentlyUnavailable) {
-        // Remove override
-        const activeOverride = doctorOverrides.find((o) => o.overrideType === 'unavailable');
-        if (activeOverride) {
-          await api.deleteOverride(activeOverride.id);
-          await refreshOverrides();
-          Alert.alert('Status Updated', `${doctor.fullName} is now marked Available for today's chamber.`);
+      if (todayUnavailableOverride) {
+        const res = await api.deleteOverride(todayUnavailableOverride.id);
+        if (!res.success) {
+          Alert.alert('Not saved', res.error?.message || 'Please try again.');
+          return;
         }
+        await refreshOverrides();
+        Alert.alert('Status Updated', `${doctor.fullName} is now marked Available for today's chamber.`);
       } else {
         // Add override
-        await api.createOverride({
+        const res = await api.createOverride({
           doctorId: doctor.id,
           establishmentId: currentEstablishment.id,
           overrideDate: todayStr,
           overrideType: 'unavailable',
           note: 'Doctor unavailable for today (Emergency / Leave)',
         });
+        if (!res.success) {
+          Alert.alert('Not saved', res.error?.message || 'Please try again.');
+          return;
+        }
         await refreshOverrides();
         Alert.alert('Status Updated', `${doctor.fullName} is now marked Not Available for today's chamber.`);
       }
@@ -172,10 +177,10 @@ export default function DoctorProfileScreen() {
           </View>
           <View style={styles.locationContent}>
             <Text style={styles.facilityName}>
-              {currentEstablishment?.name || 'Maa Medical Centre — Main Branch'}
+              {currentEstablishment?.name}
             </Text>
             <Text style={styles.facilityAddress}>
-              {currentEstablishment?.address || 'Station Road, Gopiballavpur, Jhargram — 721506'}
+              {currentEstablishment?.address}
             </Text>
             <Text style={styles.chamberRoom}>Chamber 1 · Ground Floor (Room MMC-01)</Text>
           </View>

@@ -35,7 +35,7 @@ const SPECIALTIES = [
 
 export default function DoctorsListScreen() {
   const router = useRouter();
-  const { rosterDoctors, refreshDoctors, currentEstablishment } = usePartner();
+  const { rosterDoctors, refreshDoctors, currentEstablishment, isDoctor } = usePartner();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
@@ -69,9 +69,10 @@ export default function DoctorsListScreen() {
           <View>
             <Text style={styles.title}>Doctors Roster</Text>
             <Text style={styles.subtitle}>
-              {currentEstablishment?.name || 'Maa Medical Centre'} · {rosterDoctors.length} Affiliated
+              {currentEstablishment?.name} · {rosterDoctors.length} Affiliated
             </Text>
           </View>
+          {!isDoctor && (
           <TouchableOpacity
             style={styles.addDoctorBtn}
             onPress={() => router.push('/doctor/add')}
@@ -80,6 +81,7 @@ export default function DoctorsListScreen() {
             <Plus size={18} color="#FFFFFF" />
             <Text style={styles.addDoctorBtnText}>Add Doctor</Text>
           </TouchableOpacity>
+          )}
         </View>
 
         {/* Search Bar */}
@@ -137,6 +139,7 @@ export default function DoctorsListScreen() {
                 ? `No doctors match "${searchQuery}". Try a different keyword.`
                 : 'No doctors affiliated with this facility yet. Add your first doctor now.'}
             </Text>
+            {!isDoctor && (
             <TouchableOpacity
               style={styles.emptyAddBtn}
               onPress={() => router.push('/doctor/add')}
@@ -144,6 +147,7 @@ export default function DoctorsListScreen() {
               <Plus size={16} color="#FFFFFF" />
               <Text style={styles.emptyAddBtnText}>Add Doctor to Roster</Text>
             </TouchableOpacity>
+            )}
           </View>
         ) : (
           filteredDoctors.map((doc, idx) => (

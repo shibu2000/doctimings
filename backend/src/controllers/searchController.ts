@@ -1,212 +1,126 @@
 import type { Context } from 'hono';
-import { db, memoryStore } from '../db/index.js';
+import { gte } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
 import * as schema from '../db/schema.js';
 import { SearchQueryParams } from '../validators/searchValidator.js';
-import {
-  DoctorRecord,
-  EstablishmentRecord,
-  ScheduleRecord,
-  ScheduleOverrideRecord
-} from '../types/index.js';
+import { sessionsOnDate } from '../lib/availability.js';
+import { validQuery } from '../lib/http.js';
+import { isPubliclyListed } from '../lib/access.js';
+import { DAYS, Day, formatTo12Hour, istNow, nextDateFor } from '../lib/time.js';
 
-const calculateHaversineDistanceKm = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number => {
+export const calculateHaversineDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return Math.round(R * c * 10) / 10;
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 10) / 10;
 };
 
-const getDayName = (date: Date): string => {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return days[date.getDay()];
-};
-
-const getISODate = (date: Date): string => {
-  return date.toISOString().split('T')[0];
-};
-
-const formatTo12Hour = (timeStr: string): string => {
-  if (!timeStr) return '';
-  const trimmed = timeStr.trim();
-  if (trimmed.includes('AM') || trimmed.includes('PM') || trimmed.includes('am') || trimmed.includes('pm')) {
-    return trimmed;
-  }
-  const parts = trimmed.split(':');
-  if (parts.length < 2) return trimmed;
-  const hours = parseInt(parts[0], 10);
-  const minutes = parseInt(parts[1], 10);
-  if (isNaN(hours) || isNaN(minutes) || hours > 23 || minutes > 59) return trimmed;
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 === 0 ? 12 : hours % 12;
-  const displayMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  return `${displayHours}:${displayMinutes} ${period}`;
-};
+const asDay = (value?: string): Day | undefined =>
+  DAYS.find(d => d.toLowerCase() === value?.toLowerCase());
 
 export const searchController = {
   searchDoctors: async (c: Context) => {
-    const query = c.req.query() as unknown as SearchQueryParams;
-    const q = query.q ? query.q.toLowerCase().trim() : '';
-    const lat = query.latitude ? Number(query.latitude) : undefined;
-    const lon = query.longitude ? Number(query.longitude) : undefined;
-    let radiusKm = query.radiusKm ? Number(query.radiusKm) : 15;
-    const specialty = query.specialty;
-    const requestedDay = query.dayOfWeek;
-    const availableOnly = String(query.availableOnly) === 'true';
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 20;
+    const query = validQuery<SearchQueryParams>(c);
+    const q = query.q?.toLowerCase().trim() ?? '';
+    const { latitude: lat, longitude: lon, specialty, page, limit } = query;
+    const availableOnly = query.availableOnly === 'true';
 
-    const now = new Date();
-    const todayDayName = requestedDay || getDayName(now);
-    const todayIsoDate = getISODate(now);
+    const today = istNow();
+    const targetDay = asDay(query.dayOfWeek) ?? today.dayOfWeek;
+    const targetDate = targetDay === today.dayOfWeek ? today.date : nextDateFor(targetDay, today.date);
 
-    let doctorsList: DoctorRecord[];
-    let establishmentsList: EstablishmentRecord[];
-    let schedulesList: ScheduleRecord[];
-    let overridesList: ScheduleOverrideRecord[];
+    const db = getDb();
+    const [doctorsList, establishmentsList, schedulesList, overridesList] = await Promise.all([
+      db.select().from(schema.doctors),
+      db.select().from(schema.establishments),
+      db.select().from(schema.schedules),
+      db.select().from(schema.scheduleOverrides).where(gte(schema.scheduleOverrides.date, today.date))
+    ]);
+    const establishmentMap = new Map(establishmentsList.filter(e => e.isActive).map(e => [e.id, e]));
 
-    if (db) {
-      try {
-        const [docs, ests, schs, ovrs] = await Promise.all([
-          db.select().from(schema.doctors),
-          db.select().from(schema.establishments),
-          db.select().from(schema.schedules),
-          db.select().from(schema.scheduleOverrides)
-        ]);
-        doctorsList = docs as DoctorRecord[];
-        establishmentsList = ests as EstablishmentRecord[];
-        schedulesList = schs as ScheduleRecord[];
-        overridesList = ovrs as ScheduleOverrideRecord[];
-      } catch {
-        doctorsList = memoryStore.doctors;
-        establishmentsList = memoryStore.establishments;
-        schedulesList = memoryStore.schedules;
-        overridesList = memoryStore.overrides;
-      }
-    } else {
-      doctorsList = memoryStore.doctors;
-      establishmentsList = memoryStore.establishments;
-      schedulesList = memoryStore.schedules;
-      overridesList = memoryStore.overrides;
-    }
-
-    let candidates = doctorsList.filter(d => d.isActive);
+    let candidates = doctorsList.filter(isPubliclyListed);
 
     if (q) {
       candidates = candidates.filter(doc => {
-        const matchesDoc =
-          doc.fullName.toLowerCase().includes(q) ||
-          doc.specialty.toLowerCase().includes(q) ||
-          doc.qualifications.toLowerCase().includes(q) ||
-          doc.registrationNumber.toLowerCase().includes(q);
-
-        if (matchesDoc) return true;
-
-        const affiliatedEsts = establishmentsList.filter(e =>
-          doc.affiliatedEstablishmentIds.includes(e.id)
-        );
-        return affiliatedEsts.some(
-          e =>
-            e.name.toLowerCase().includes(q) ||
-            e.district.toLowerCase().includes(q) ||
-            (e.subDistrict && e.subDistrict.toLowerCase().includes(q)) ||
-            (e.pinCode && e.pinCode.includes(q)) ||
-            e.address.toLowerCase().includes(q)
-        );
+        if ([doc.fullName, doc.specialty, doc.qualifications, doc.registrationNumber].some(v => v.toLowerCase().includes(q))) {
+          return true;
+        }
+        return doc.affiliatedEstablishmentIds.some(id => {
+          const e = establishmentMap.get(id);
+          return e && [e.name, e.district, e.subDistrict, e.pinCode, e.address].some(v => v.toLowerCase().includes(q));
+        });
       });
     }
 
     if (specialty && specialty !== 'All') {
-      candidates = candidates.filter(
-        d => d.specialty.toLowerCase() === specialty.toLowerCase()
-      );
+      const wanted = specialty.toLowerCase();
+      candidates = candidates.filter(d => d.specialty.toLowerCase().startsWith(wanted));
     }
 
     let enriched = candidates.map(doctor => {
-      const affiliatedEsts = establishmentsList.filter(e =>
-        doctor.affiliatedEstablishmentIds.includes(e.id)
-      );
+      const affiliatedEsts = doctor.affiliatedEstablishmentIds
+        .map(id => establishmentMap.get(id))
+        .filter((e): e is NonNullable<typeof e> => Boolean(e));
 
-      let minDistance = Infinity;
-      let closestEstablishment = affiliatedEsts[0] || null;
-
+      let distanceKm: number | undefined;
+      let primaryEstablishment = affiliatedEsts[0] ?? null;
       if (lat !== undefined && lon !== undefined) {
         for (const est of affiliatedEsts) {
           const d = calculateHaversineDistanceKm(lat, lon, est.latitude, est.longitude);
-          if (d < minDistance) {
-            minDistance = d;
-            closestEstablishment = est;
+          if (distanceKm === undefined || d < distanceKm) {
+            distanceKm = d;
+            primaryEstablishment = est;
           }
         }
       }
 
       const schedules = schedulesList.filter(s => s.doctorId === doctor.id && s.isActive);
-      const todaySchedules = schedules.filter(s => s.dayOfWeek.toLowerCase() === todayDayName.toLowerCase());
-
-      const todayOverride = overridesList.find(
-        o => o.doctorId === doctor.id && o.date === todayIsoDate
-      );
-
-      let isAvailableToday = todaySchedules.length > 0;
-      let availabilityNote = '';
-
-      if (todayOverride) {
-        if (todayOverride.overrideType === 'unavailable') {
-          isAvailableToday = false;
-          availabilityNote = todayOverride.publicReason;
-        } else if (todayOverride.overrideType === 'changed') {
-          isAvailableToday = true;
-          availabilityNote = `Shift modified: ${todayOverride.publicReason}`;
-        } else if (todayOverride.overrideType === 'additional') {
-          isAvailableToday = true;
-          availabilityNote = `Special session: ${todayOverride.publicReason}`;
-        }
-      }
+      const overrides = overridesList.filter(o => o.doctorId === doctor.id).map(({ internalNote: _, ...o }) => o);
+      const day = sessionsOnDate(targetDate, schedules, overridesList.filter(o => o.doctorId === doctor.id));
 
       return {
         ...doctor,
-        distanceKm: minDistance !== Infinity ? minDistance : undefined,
-        primaryEstablishment: closestEstablishment,
+        distanceKm,
+        primaryEstablishment,
         affiliatedEstablishments: affiliatedEsts,
         schedules,
+        overrides,
         todayAvailability: {
-          isAvailable: isAvailableToday,
-          day: todayDayName,
-          shifts: todaySchedules.map(s => `${formatTo12Hour(s.startTime)} – ${formatTo12Hour(s.endTime)} (${s.shiftName})`),
-          note: availabilityNote
+          isAvailable: day.sessions.length > 0,
+          status: day.sessions.length
+            ? 'available'
+            : day.hadRegularSessions
+              ? 'cancelled'
+              : schedules.length
+                ? 'not_today'
+                : 'no_schedule',
+          day: targetDay,
+          date: targetDate,
+          shifts: day.sessions.map(s => {
+            const place = affiliatedEsts.length > 1 ? `, ${establishmentMap.get(s.establishmentId)?.name ?? ''}` : '';
+            return `${formatTo12Hour(s.startTime)} – ${formatTo12Hour(s.endTime)} (${s.shiftName}${place})`;
+          }),
+          note: day.notes.join(' · ')
         }
       };
     });
 
+    let radiusKm = query.radiusKm;
     let autoExpanded = false;
 
     if (lat !== undefined && lon !== undefined) {
-      let filteredByRadius = enriched.filter(
-        d => d.distanceKm !== undefined && d.distanceKm <= radiusKm
-      );
-
-      if (filteredByRadius.length === 0 && enriched.length > 0) {
-        radiusKm = Math.min(radiusKm * 3, 100);
-        filteredByRadius = enriched.filter(
-          d => d.distanceKm !== undefined && d.distanceKm <= radiusKm
-        );
+      const within = (r: number) => enriched.filter(d => d.distanceKm !== undefined && d.distanceKm <= r);
+      let filtered = within(radiusKm);
+      const expanded = Math.min(radiusKm * 3, 100);
+      if (filtered.length === 0 && expanded > radiusKm) {
+        radiusKm = expanded;
+        filtered = within(radiusKm);
         autoExpanded = true;
       }
-
-      enriched = filteredByRadius.sort(
-        (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity)
-      );
+      enriched = filtered.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
     }
 
     if (availableOnly) {
@@ -214,25 +128,18 @@ export const searchController = {
     }
 
     const total = enriched.length;
-    const startIndex = (page - 1) * limit;
-    const pagedItems = enriched.slice(startIndex, startIndex + limit);
-
     return c.json({
       success: true,
-      data: pagedItems,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      },
+      data: enriched.slice((page - 1) * limit, page * limit),
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
       searchMeta: {
         query: q || null,
         specialty: specialty || null,
         coordinates: lat !== undefined && lon !== undefined ? { latitude: lat, longitude: lon } : null,
         appliedRadiusKm: radiusKm,
         autoExpandedRadius: autoExpanded,
-        targetDay: todayDayName
+        targetDay,
+        targetDate
       }
     });
   }

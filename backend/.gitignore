@@ -1,2 +1,6 @@
 .neon
 node_modules/
+.local-db/
+.env
+.env.*
+!.env.example

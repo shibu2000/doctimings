@@ -1,253 +1,323 @@
 import type { Context } from 'hono';
-import { db, memoryStore } from '../db/index.js';
+import { and, eq, inArray } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
 import * as schema from '../db/schema.js';
-import { eq } from 'drizzle-orm';
-import { CreateDoctorInput, UpdateDoctorInput, DoctorQueryParams } from '../validators/doctorValidator.js';
 import {
-  DoctorRecord,
-  EstablishmentRecord,
-  ScheduleRecord,
-  ScheduleOverrideRecord,
-  JWTPayload
-} from '../types/index.js';
+  CreateDoctorInput,
+  UpdateDoctorInput,
+  DoctorQueryParams,
+  SittingInput,
+  LeaveInput
+} from '../validators/doctorValidator.js';
+import { recordAudit } from '../lib/audit.js';
+import { badRequest, currentUser, fail, newId, notFound, paginate, validBody, validQuery } from '../lib/http.js';
+import {
+  accessIfSignedIn,
+  canEditDoctorProfile,
+  canSeeDoctor,
+  canManageEstablishment,
+  canManageSitting,
+  getAccess,
+  PROFILE_FIELDS_FOR_DOCTOR,
+  PROFILE_FIELDS_FOR_PARTNERS
+} from '../lib/access.js';
+import { ensureAffiliation, findOverlap, removeSitting, replaceSessions } from '../lib/sittings.js';
+import { datesBetween, dayOfDate, istNow } from '../lib/time.js';
+
+const findDoctor = async (id: string) => {
+  const [doctor] = await getDb().select().from(schema.doctors).where(eq(schema.doctors.id, id));
+  return doctor;
+};
+
+const forbidden = (c: Context, message: string) => fail(c, 403, 'FORBIDDEN', message);
+
+const findEstablishment = async (id: string) => {
+  const [establishment] = await getDb().select().from(schema.establishments).where(eq(schema.establishments.id, id));
+  return establishment;
+};
 
 export const doctorController = {
   getDoctors: async (c: Context) => {
-    const query = c.req.query() as unknown as DoctorQueryParams;
-    const { search, specialty, verificationStatus, establishmentId } = query;
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 20;
+    const { search, q, specialty, verificationStatus, establishmentId, page, limit } = validQuery<DoctorQueryParams>(c);
+    const viewer = await accessIfSignedIn(c);
+    let list = (await getDb().select().from(schema.doctors).orderBy(schema.doctors.fullName)).filter(d => canSeeDoctor(viewer, d));
 
-    let list: DoctorRecord[];
-    if (db) {
-      try {
-        const rows = await db.select().from(schema.doctors);
-        list = rows as DoctorRecord[];
-      } catch {
-        list = [...memoryStore.doctors];
-      }
-    } else {
-      list = [...memoryStore.doctors];
-    }
-
-    if (search && search.trim()) {
-      const q = search.toLowerCase().trim();
-      list = list.filter(
-        d =>
-          d.fullName.toLowerCase().includes(q) ||
-          d.specialty.toLowerCase().includes(q) ||
-          d.registrationNumber.toLowerCase().includes(q) ||
-          d.qualifications.toLowerCase().includes(q)
+    const term = (search || q || '').toLowerCase().trim();
+    if (term) {
+      list = list.filter(d =>
+        [d.fullName, d.specialty, d.registrationNumber, d.qualifications].some(v => v.toLowerCase().includes(term))
       );
     }
-
     if (specialty && specialty !== 'All') {
       list = list.filter(d => d.specialty.toLowerCase() === specialty.toLowerCase());
     }
-
     if (verificationStatus && verificationStatus !== 'All') {
       list = list.filter(d => d.verificationStatus.toLowerCase() === verificationStatus.toLowerCase());
     }
-
     if (establishmentId) {
       list = list.filter(d => d.affiliatedEstablishmentIds.includes(establishmentId));
     }
 
-    const total = list.length;
-    const startIndex = (page - 1) * limit;
-    const items = list.slice(startIndex, startIndex + limit);
-
-    return c.json({
-      success: true,
-      data: items,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
-    });
+    return c.json({ success: true, ...paginate(list, page, limit) });
   },
 
   getDoctorById: async (c: Context) => {
-    const id = c.req.param('id') as string;
-    if (!id) {
-      return c.json({ success: false, error: { code: 'NOT_FOUND', message: 'Doctor ID is required' } }, 404);
-    }
-    let doctor: DoctorRecord | undefined;
-    let establishmentsList = memoryStore.establishments;
-    let schedulesList = memoryStore.schedules;
-    let overridesList = memoryStore.overrides;
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const doctor = await findDoctor(id);
+    if (!doctor || !canSeeDoctor(await accessIfSignedIn(c), doctor)) return notFound(c, `Doctor ${id} was not found`);
 
-    if (db) {
-      try {
-        const [docs, ests, schs, ovrs] = await Promise.all([
-          db.select().from(schema.doctors).where(eq(schema.doctors.id, id)),
-          db.select().from(schema.establishments),
-          db.select().from(schema.schedules).where(eq(schema.schedules.doctorId, id)),
-          db.select().from(schema.scheduleOverrides).where(eq(schema.scheduleOverrides.doctorId, id))
-        ]);
-        doctor = docs[0] as DoctorRecord | undefined;
-        establishmentsList = ests as EstablishmentRecord[];
-        schedulesList = schs as ScheduleRecord[];
-        overridesList = ovrs as ScheduleOverrideRecord[];
-      } catch {
-        doctor = memoryStore.doctors.find(d => d.id === id);
-      }
-    } else {
-      doctor = memoryStore.doctors.find(d => d.id === id);
-    }
-
-    if (!doctor) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Doctor record with ID ${id} was not found`
-          }
-        },
-        404
-      );
-    }
-
-    const affiliatedEstablishments = establishmentsList.filter(e =>
-      doctor.affiliatedEstablishmentIds.includes(e.id)
-    );
-
-    const schedules = schedulesList.filter(s => s.doctorId === doctor.id);
-    const overrides = overridesList.filter(o => o.doctorId === doctor.id);
+    const [affiliatedEstablishments, schedules, overrides] = await Promise.all([
+      doctor.affiliatedEstablishmentIds.length
+        ? db.select().from(schema.establishments).where(inArray(schema.establishments.id, doctor.affiliatedEstablishmentIds))
+        : Promise.resolve([]),
+      db.select().from(schema.schedules).where(eq(schema.schedules.doctorId, id)),
+      db.select().from(schema.scheduleOverrides).where(eq(schema.scheduleOverrides.doctorId, id))
+    ]);
 
     return c.json({
       success: true,
-      data: {
-        ...doctor,
-        affiliatedEstablishments,
-        schedules,
-        overrides
-      }
+      data: { ...doctor, affiliatedEstablishments, schedules, overrides: overrides.map(({ internalNote: _, ...o }) => o) }
     });
   },
 
   createDoctor: async (c: Context) => {
-    const data: CreateDoctorInput = await c.req.json();
-    const currentUser = c.get('user') as JWTPayload | undefined;
+    const { sittings, affiliatedEstablishmentIds, ...data } = validBody<CreateDoctorInput>(c);
+    const db = getDb();
+    const access = await getAccess(c);
 
-    const newDoctor = {
-      ...data,
-      id: `DOC-WB-${Date.now().toString().slice(-4)}`,
-      council: data.council || 'West Bengal Medical Council',
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastUpdated: new Date().toISOString()
-    };
+    const establishmentIds = [...new Set([...affiliatedEstablishmentIds, ...sittings.map(s => s.establishmentId)])];
+    if (!access.platform) {
+      if (!establishmentIds.length) return forbidden(c, 'Add the doctor to one of your establishments');
+      if (!establishmentIds.every(id => canManageEstablishment(access, id))) {
+        return forbidden(c, 'You can only add doctors to your own establishments');
+      }
+      data.verificationStatus = 'Needs Review';
+      data.isActive = true;
+    }
+    if (establishmentIds.length) {
+      const found = await db
+        .select({ id: schema.establishments.id })
+        .from(schema.establishments)
+        .where(inArray(schema.establishments.id, establishmentIds));
+      if (found.length !== establishmentIds.length) {
+        return badRequest(c, 'One of the selected establishments no longer exists');
+      }
+    }
+    for (const sitting of sittings) {
+      const overlapDay = findOverlap(sitting.sessions);
+      if (overlapDay) return badRequest(c, `Two sessions overlap on ${overlapDay}`);
+    }
 
-    memoryStore.doctors.unshift(newDoctor);
+    const [doctor] = await db
+      .insert(schema.doctors)
+      .values({ ...data, id: newId('DOC'), affiliatedEstablishmentIds: establishmentIds })
+      .returning();
 
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: currentUser?.sub || 'SYSTEM',
-      actorName: currentUser?.name || 'Admin',
-      action: 'Created Doctor Record',
+    for (const sitting of sittings) {
+      await replaceSessions(db, doctor.id, sitting.establishmentId, sitting.sessions);
+    }
+
+    await recordAudit(db, currentUser(c), {
+      action: 'Created doctor',
       entityType: 'Doctor',
-      entityId: newDoctor.id,
-      entityName: newDoctor.fullName,
-      details: `Specialty: ${newDoctor.specialty}, Reg: ${newDoctor.registrationNumber}`
+      entityId: doctor.id,
+      entityName: doctor.fullName,
+      details: `${doctor.specialty}; ${establishmentIds.length} establishment(s)`
     });
 
-    return c.json(
-      {
-        success: true,
-        data: newDoctor
-      },
-      201
-    );
+    return c.json({ success: true, data: doctor }, 201);
   },
 
   updateDoctor: async (c: Context) => {
-    const id = c.req.param('id');
-    const updates: UpdateDoctorInput = await c.req.json();
-    const currentUser = c.get('user') as JWTPayload | undefined;
+    const id = c.req.param('id')!;
+    const body = validBody<UpdateDoctorInput>(c);
+    const db = getDb();
+    const existing = await findDoctor(id);
+    if (!existing) return notFound(c, `Doctor ${id} was not found`);
 
-    const index = memoryStore.doctors.findIndex(d => d.id === id);
-    if (index === -1) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Doctor record with ID ${id} was not found`
-          }
-        },
-        404
-      );
+    const access = await getAccess(c);
+    if (!(await canEditDoctorProfile(access, existing))) {
+      return forbidden(c, 'Only the doctor or DocTimings can change this profile');
     }
+    const allowedFields: readonly string[] = access.doctorId === id ? PROFILE_FIELDS_FOR_DOCTOR : PROFILE_FIELDS_FOR_PARTNERS;
+    const updates = access.platform ? body : Object.fromEntries(Object.entries(body).filter(([key]) => allowedFields.includes(key)));
 
-    const existing = memoryStore.doctors[index];
-    const updated = {
-      ...existing,
-      ...updates,
-      updatedAt: new Date(),
-      lastUpdated: new Date().toISOString()
-    };
+    const [doctor] = await db
+      .update(schema.doctors)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(schema.doctors.id, id))
+      .returning();
 
-    memoryStore.doctors[index] = updated;
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: currentUser?.sub || 'SYSTEM',
-      actorName: currentUser?.name || 'Admin',
-      action: 'Updated Doctor Profile',
+    const fields = Object.keys(updates);
+    await recordAudit(db, currentUser(c), {
+      action: fields.length ? 'Updated doctor' : 'Confirmed doctor details',
       entityType: 'Doctor',
-      entityId: id || '',
-      entityName: updated.fullName,
-      details: `Updated fields: ${Object.keys(updates).join(', ')}`
+      entityId: id,
+      entityName: doctor.fullName,
+      details: fields.length ? `Changed: ${fields.join(', ')}` : 'Marked as checked'
     });
 
-    return c.json({
-      success: true,
-      data: updated
-    });
+    return c.json({ success: true, data: doctor });
   },
 
   deleteDoctor: async (c: Context) => {
-    const id = c.req.param('id');
-    const currentUser = c.get('user') as JWTPayload | undefined;
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const existing = await findDoctor(id);
+    if (!existing) return notFound(c, `Doctor ${id} was not found`);
 
-    const index = memoryStore.doctors.findIndex(d => d.id === id);
-    if (index === -1) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Doctor record with ID ${id} was not found`
-          }
-        },
-        404
-      );
+    await db.delete(schema.doctors).where(eq(schema.doctors.id, id));
+    await recordAudit(db, currentUser(c), {
+      action: 'Deleted doctor',
+      entityType: 'Doctor',
+      entityId: id,
+      entityName: existing.fullName
+    });
+
+    return c.json({ success: true, message: `${existing.fullName} was removed` });
+  },
+
+  saveSitting: async (c: Context) => {
+    const doctorId = c.req.param('id')!;
+    const establishmentId = c.req.param('establishmentId')!;
+    const { sessions } = validBody<SittingInput>(c);
+    const db = getDb();
+
+    const [doctor, establishment] = await Promise.all([findDoctor(doctorId), findEstablishment(establishmentId)]);
+    if (!doctor) return notFound(c, `Doctor ${doctorId} was not found`);
+    if (!establishment) return notFound(c, `Establishment ${establishmentId} was not found`);
+
+    const isNew = !doctor.affiliatedEstablishmentIds.includes(establishmentId);
+    const access = await getAccess(c);
+    const allowed = isNew ? canManageEstablishment(access, establishmentId) : canManageSitting(access, doctorId, establishmentId);
+    if (!allowed) return forbidden(c, 'You can only change timing at your own establishments');
+
+    const overlapDay = findOverlap(sessions);
+    if (overlapDay) return badRequest(c, `Two sessions overlap on ${overlapDay}`);
+
+    await ensureAffiliation(db, doctor, establishmentId);
+    const schedules = await replaceSessions(db, doctorId, establishmentId, sessions);
+    await db.update(schema.doctors).set({ updatedAt: new Date() }).where(eq(schema.doctors.id, doctorId));
+
+    await recordAudit(db, currentUser(c), {
+      action: isNew ? 'Added doctor to establishment' : 'Updated weekly timing',
+      entityType: 'Doctor',
+      entityId: doctorId,
+      entityName: doctor.fullName,
+      details: `${establishment.name}: ${sessions.length} session(s) per week`
+    });
+
+    return c.json({ success: true, data: { doctorId, establishmentId, schedules } });
+  },
+
+  removeSitting: async (c: Context) => {
+    const doctorId = c.req.param('id')!;
+    const establishmentId = c.req.param('establishmentId')!;
+    const db = getDb();
+    const doctor = await findDoctor(doctorId);
+    if (!doctor) return notFound(c, `Doctor ${doctorId} was not found`);
+    if (!doctor.affiliatedEstablishmentIds.includes(establishmentId)) {
+      return notFound(c, 'This doctor does not sit at that establishment');
+    }
+    if (!canManageSitting(await getAccess(c), doctorId, establishmentId)) {
+      return forbidden(c, 'You can only change your own establishments');
     }
 
-    const removed = memoryStore.doctors.splice(index, 1)[0];
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: currentUser?.sub || 'SYSTEM',
-      actorName: currentUser?.name || 'Admin',
-      action: 'Deleted Doctor Record',
+    const establishment = await findEstablishment(establishmentId);
+    await removeSitting(db, doctor, establishmentId);
+    await recordAudit(db, currentUser(c), {
+      action: 'Removed doctor from establishment',
       entityType: 'Doctor',
-      entityId: id || '',
-      entityName: removed.fullName,
-      details: `Deleted doctor ${removed.fullName} (${removed.registrationNumber})`
+      entityId: doctorId,
+      entityName: doctor.fullName,
+      details: establishment?.name ?? establishmentId
     });
 
-    return c.json({
-      success: true,
-      message: `Doctor ${removed.fullName} successfully removed`
+    return c.json({ success: true, message: 'Removed' });
+  },
+
+  markLeave: async (c: Context) => {
+    const doctorId = c.req.param('id')!;
+    const { from, to, establishmentIds, reason } = validBody<LeaveInput>(c);
+    const db = getDb();
+    const doctor = await findDoctor(doctorId);
+    if (!doctor) return notFound(c, `Doctor ${doctorId} was not found`);
+
+    const access = await getAccess(c);
+    if (establishmentIds?.some(id => !canManageSitting(access, doctorId, id))) {
+      return forbidden(c, 'You can only change timing at your own establishments');
+    }
+    const targetIds = (establishmentIds?.length ? establishmentIds : doctor.affiliatedEstablishmentIds).filter(
+      id => doctor.affiliatedEstablishmentIds.includes(id) && canManageSitting(access, doctorId, id)
+    );
+    if (!targetIds.length) {
+      return doctor.affiliatedEstablishmentIds.length
+        ? forbidden(c, 'You can only change timing at your own establishments')
+        : badRequest(c, 'This doctor has no establishments yet');
+    }
+
+    const today = istNow().date;
+    if (to < today) return badRequest(c, 'Leave dates are in the past');
+    const dates = datesBetween(from < today ? today : from, to, 93);
+
+    const [schedules, existingOverrides] = await Promise.all([
+      db
+        .select()
+        .from(schema.schedules)
+        .where(and(eq(schema.schedules.doctorId, doctorId), inArray(schema.schedules.establishmentId, targetIds))),
+      db
+        .select()
+        .from(schema.scheduleOverrides)
+        .where(
+          and(
+            eq(schema.scheduleOverrides.doctorId, doctorId),
+            inArray(schema.scheduleOverrides.establishmentId, targetIds),
+            inArray(schema.scheduleOverrides.date, dates)
+          )
+        )
+    ]);
+
+    const inserts: (typeof schema.scheduleOverrides.$inferInsert)[] = [];
+    const replaced: string[] = [];
+    for (const date of dates) {
+      const day = dayOfDate(date);
+      for (const establishmentId of targetIds) {
+        const daySessions = schedules.filter(s => s.isActive && s.establishmentId === establishmentId && s.dayOfWeek === day);
+        if (!daySessions.length) continue;
+        const sameDay = existingOverrides.filter(o => o.establishmentId === establishmentId && o.date === date);
+        if (sameDay.some(o => o.overrideType === 'unavailable')) continue;
+        replaced.push(...sameDay.filter(o => o.overrideType === 'changed').map(o => o.id));
+        inserts.push({
+          id: newId('OVR'),
+          doctorId,
+          establishmentId,
+          date,
+          dayOfWeek: day,
+          overrideType: 'unavailable',
+          standardShift: daySessions.map(s => `${s.startTime}-${s.endTime}`).join(', '),
+          publicReason: reason,
+          reportedBy: currentUser(c)?.name ?? 'Operations Desk'
+        });
+      }
+    }
+
+    if (!inserts.length) {
+      return badRequest(c, 'The doctor has no sessions on those dates, or is already marked away');
+    }
+    if (replaced.length) {
+      await db.delete(schema.scheduleOverrides).where(inArray(schema.scheduleOverrides.id, replaced));
+    }
+    const created = await db.insert(schema.scheduleOverrides).values(inserts).returning();
+
+    await recordAudit(db, currentUser(c), {
+      action: 'Marked doctor away',
+      entityType: 'Doctor',
+      entityId: doctorId,
+      entityName: doctor.fullName,
+      details: `${from} to ${to}: ${reason} (${created.length} session day(s))`
     });
+
+    return c.json({ success: true, data: created }, 201);
   }
 };

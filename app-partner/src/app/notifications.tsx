@@ -24,43 +24,7 @@ import { NotificationItem } from '../types';
 export default function NotificationsScreen() {
   const router = useRouter();
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: 'NOTIF-01',
-      title: 'Schedule Verification Urgent',
-      message: 'Dr. Amit Das weekly slot timing expires in 2 days. Please confirm current visiting hours.',
-      type: 'urgent',
-      timestamp: '10 mins ago',
-      read: false,
-      link: '/doctor/schedule/DOC-BWN-101',
-    },
-    {
-      id: 'NOTIF-02',
-      title: 'Quarterly Information Review',
-      message: 'Your establishment record was last verified 90 days ago. Requires 1-minute confirmation.',
-      type: 'warning',
-      timestamp: '2 hours ago',
-      read: false,
-      link: '/updates-verification',
-    },
-    {
-      id: 'NOTIF-03',
-      title: 'Chamber Capacity Alert',
-      message: 'Dr. Amit Das evening chamber has reached 20 out of 25 booked patient tokens.',
-      type: 'info',
-      timestamp: 'Yesterday',
-      read: true,
-      link: '/(tabs)',
-    },
-    {
-      id: 'NOTIF-04',
-      title: 'Platform Maintenance Notice',
-      message: 'DocTimings partner coordination sync will undergo regular indexing at 02:00 AM IST.',
-      type: 'info',
-      timestamp: '2 days ago',
-      read: true,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   const handleMarkAllRead = () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
@@ -74,14 +38,27 @@ export default function NotificationsScreen() {
         showBack
         backLabel="More"
         rightAction={
-          <TouchableOpacity onPress={handleMarkAllRead}>
-            <Text style={styles.markReadText}>Mark read</Text>
-          </TouchableOpacity>
+          notifications.length > 0 ? (
+            <TouchableOpacity onPress={handleMarkAllRead}>
+              <Text style={styles.markReadText}>Mark read</Text>
+            </TouchableOpacity>
+          ) : undefined
         }
       />
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        {notifications.map((notif) => {
+        {notifications.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <View style={styles.emptyIconBox}>
+              <Bell size={32} color={Colors.textMuted} />
+            </View>
+            <Text style={styles.emptyTitle}>All caught up</Text>
+            <Text style={styles.emptyText}>
+              Operational alerts, roster notices, and schedule updates will appear here.
+            </Text>
+          </View>
+        ) : (
+          notifications.map((notif) => {
           const isUrgent = notif.type === 'urgent';
           const isWarning = notif.type === 'warning';
 
@@ -122,7 +99,7 @@ export default function NotificationsScreen() {
               {notif.link && <ChevronRight size={18} color={Colors.textMuted} style={styles.arrow} />}
             </TouchableOpacity>
           );
-        })}
+        }))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -211,5 +188,32 @@ const styles = StyleSheet.create({
   },
   arrow: {
     alignSelf: 'center',
+  },
+  emptyContainer: {
+    paddingVertical: Spacing.xxxl,
+    paddingHorizontal: Spacing.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyIconBox: {
+    width: 64,
+    height: 64,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surfaceVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+  },
+  emptyTitle: {
+    ...Typography.h4,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
+  },
+  emptyText: {
+    ...Typography.bodySm,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    maxWidth: 280,
+    lineHeight: 18,
   },
 });

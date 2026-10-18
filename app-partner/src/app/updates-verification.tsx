@@ -70,21 +70,21 @@ export default function UpdatesVerificationScreen() {
             <View style={styles.checkItem}>
               <CheckCircle2 size={16} color={Colors.primary} />
               <Text style={styles.checkText}>
-                Facility Name: <Text style={styles.boldText}>{currentEstablishment?.name || 'Maa Medical Centre'}</Text>
+                Facility Name: <Text style={styles.boldText}>{currentEstablishment?.name}</Text>
               </Text>
             </View>
 
             <View style={styles.checkItem}>
               <CheckCircle2 size={16} color={Colors.primary} />
               <Text style={styles.checkText}>
-                Address: <Text style={styles.boldText}>{currentEstablishment?.address || 'Station Road, Gopiballavpur'}</Text>
+                Address: <Text style={styles.boldText}>{currentEstablishment?.address}</Text>
               </Text>
             </View>
 
             <View style={styles.checkItem}>
               <CheckCircle2 size={16} color={Colors.primary} />
               <Text style={styles.checkText}>
-                Phone: <Text style={styles.boldText}>{currentEstablishment?.phone || '+91 98765 43210'}</Text>
+                Phone: <Text style={styles.boldText}>{currentEstablishment?.phone || '—'}</Text>
               </Text>
             </View>
           </View>

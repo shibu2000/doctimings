@@ -5,8 +5,6 @@ interface RateLimitRecord {
   resetTime: number;
 }
 
-const clientLimits = new Map<string, RateLimitRecord>();
-
 export const rateLimiter = (options?: {
   windowMs?: number;
   max?: number;
@@ -15,18 +13,22 @@ export const rateLimiter = (options?: {
   const windowMs = options?.windowMs || Number(process.env.RATE_LIMIT_WINDOW_MS) || 60000;
   const max = options?.max || Number(process.env.RATE_LIMIT_MAX) || 100;
   const message = options?.message || 'Too many requests, please try again later.';
+  const clientLimits = new Map<string, RateLimitRecord>();
 
   return async (c, next) => {
     const now = Date.now();
-    const forwarded = c.req.header('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-    const key = `${ip}:${c.req.path}`;
+    const ip =
+      c.req.header('cf-connecting-ip') ||
+      c.req.header('x-forwarded-for')?.split(',')[0].trim() ||
+      'local';
+    const key = `${ip}:${c.req.routePath}`;
 
-    if (clientLimits.size > 10000) {
+    if (clientLimits.size > 5000) {
       for (const [k, v] of clientLimits.entries()) {
-        if (now > v.resetTime) {
-          clientLimits.delete(k);
-        }
+        if (now > v.resetTime) clientLimits.delete(k);
+      }
+      while (clientLimits.size > 5000) {
+        clientLimits.delete(clientLimits.keys().next().value!);
       }
     }
 

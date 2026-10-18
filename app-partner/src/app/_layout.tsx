@@ -64,7 +64,6 @@ function RootNavigation() {
       <Stack.Screen name="help-support" options={{ headerShown: false }} />
       <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen name="change-password" options={{ headerShown: false }} />
-      <Stack.Screen name="civic-health" options={{ headerShown: false }} />
     </Stack>
   );
 }

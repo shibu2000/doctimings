@@ -1,5 +1,6 @@
 export const bn = {
   common: {
+    retry: 'আবার চেষ্টা করুন',
     appName: 'DocTimings',
     tagline: 'সঠিক ডাক্তার খুঁজুন, কাছেই, সঠিক সময়ে',
     verifiedDirectory: 'স্থানীয় স্বাস্থ্যসেবা নির্দেশিকা',
@@ -48,7 +49,7 @@ export const bn = {
   },
   status: {
     availableToday: 'আজ উপস্থিত',
-    scheduledToday: 'আজ সূচি অনুযায়ী',
+    scheduledToday: 'অন্য দিনে বসেন',
     availabilityUnknown: 'সময়সূচি অজানা',
     notAvailableToday: 'আজ অনুপস্থিত',
     openNow: 'এখন খোলা',
@@ -65,6 +66,8 @@ export const bn = {
     women: 'স্ত্রীরোগ বিশেষজ্ঞ',
   },
   search: {
+    autoExpanded: 'কাছাকাছি কোনো ডাক্তার নেই। {{radius}} কিমির মধ্যে ডাক্তার দেখানো হচ্ছে।',
+    loadFailed: 'ডাক্তারদের তথ্য আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।',
     title: 'ডাক্তার অনুসন্ধান',
     resultsTitle: 'নিকটবর্তী ডাক্তারগণ',
     foundCount: '{{count}} জন ডাক্তার পাওয়া গেছে',
@@ -81,6 +84,10 @@ export const bn = {
     filterDistance: 'অনুসন্ধানের ব্যাসার্ধ',
   },
   doctor: {
+    askAtCounter: 'কাউন্টারে জানুন',
+    fee: 'ফি',
+    practices: 'যেখানে ডাক্তার বসেন',
+    notFound: 'এই ডাক্তারের তথ্য আর নেই।',
     experience: '{{years}} বছরের অভিজ্ঞতা',
     registration: 'রেজিস্ট্রেশন: {{council}} #{{num}}',
     stateCouncilVerified: 'কাউন্সিল দ্বারা যাচাইকৃত',
@@ -136,6 +143,7 @@ export const bn = {
     statusCancelled: 'বাতিল',
   },
   plan: {
+    noUpcomingSessions: 'আগামী ৩ সপ্তাহে এখানে কোনো সেশন নেই।',
     title: 'সময় নির্ধারণ করুন',
     subtitle: 'ডাক্তার দেখানোর দিন স্মরণ করিয়ে দেওয়া হবে',
     selectChamber: 'চেম্বার নির্বাচন করুন',
@@ -147,6 +155,7 @@ export const bn = {
     successMsg: 'রিমাইন্ডার সংরক্ষিত হয়েছে!',
   },
   report: {
+    generalIssue: 'সাধারণ সমস্যা',
     title: 'সমস্যা জানান',
     subtitle: 'সবার সুবিধার্থে তথ্যের সঠিকতা যাচাইয়ে সাহায্য করুন',
     issueType: 'কী সংশোধন করা দরকার?',
@@ -165,11 +174,15 @@ export const bn = {
     thankYou: 'ধন্যবাদ! এডমিন এই তথ্য যাচাই করে আপডেট করবেন।',
   },
   location: {
+    detecting: 'আপনার কাছের ডাক্তার খোঁজা হচ্ছে…',
+    title: 'আপনি কোথায় আছেন?',
+    intro: 'আপনার সবচেয়ে কাছের ডাক্তার আগে দেখানো হয়।',
+    doctorCount_one: '{{count}} জন ডাক্তার',
+    doctorCount_other: '{{count}} জন ডাক্তার',
     chooseTitle: 'আপনার এলাকা নির্বাচন করুন',
     whereAreYou: 'আপনি কোথায় ডাক্তার খুঁজছেন?',
     permissionExplain: 'নিকটবর্তী ডাক্তার ও চেম্বারের তথ্য পেতে আপনার অবস্থান ব্যবহার করা হয়।',
     useCurrentLocation: 'আমার বর্তমান অবস্থান ব্যবহার করুন',
-    detecting: 'জিপিএস নির্ণয় করা হচ্ছে...',
     searchPlace: 'শহর, গ্রাম বা পিন কোড লিখুন',
     popularNearby: 'নিকটবর্তী জনপ্রিয় স্থান',
     currentMatch: 'নির্বাচিত এলাকা',
@@ -222,6 +235,7 @@ export const bn = {
     privacyNote: 'কোনো সার্ভার ট্র্যাকিং নেই • ১০০% ডিভাইসে সংরক্ষিত',
   },
   offline: {
+    nothingCached: 'অফলাইনে দেখতে, অনলাইনে থাকার সময় একবার খুঁজে নিন।',
     badge: 'অফলাইন মোড',
     title: 'ইন্টারনেট সংযোগ নেই',
     subtitle: 'সংরক্ষিত তথ্য দেখানো হচ্ছে',

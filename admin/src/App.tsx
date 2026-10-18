@@ -1,76 +1,63 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AdminProvider } from './context/AdminContext';
-import { AdminLayout } from './components/layout/AdminLayout';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuth } from './lib/auth';
+import { AppShell } from './components/layout/AppShell';
+import { Loading } from './components/ui/Layout';
 import { LoginPage } from './pages/LoginPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { DoctorsDirectoryPage } from './pages/doctors/DoctorsDirectoryPage';
-import { AddDoctorPage } from './pages/doctors/AddDoctorPage';
-import { DoctorDetailPage } from './pages/doctors/DoctorDetailPage';
-import { SchedulesPage } from './pages/schedules/SchedulesPage';
-import { ManageDoctorSchedulePage } from './pages/schedules/ManageDoctorSchedulePage';
-import { TemporaryOverridesPage } from './pages/schedules/TemporaryOverridesPage';
-import { EstablishmentsPage } from './pages/establishments/EstablishmentsPage';
-import { AddEstablishmentPage } from './pages/establishments/AddEstablishmentPage';
-import { EstablishmentDetailPage } from './pages/establishments/EstablishmentDetailPage';
-import { PracticeLocationsPage } from './pages/establishments/PracticeLocationsPage';
-import { VerificationQueuePage } from './pages/verification/VerificationQueuePage';
-import { CommunityReportsPage } from './pages/reports/CommunityReportsPage';
-import { ReportDetailPage } from './pages/reports/ReportDetailPage';
-import { HealthGuidePage } from './pages/health-guide/HealthGuidePage';
-import { HealthTopicsPage } from './pages/health-guide/HealthTopicsPage';
-import { AddEditArticlePage } from './pages/health-guide/AddEditArticlePage';
-import { TerritoriesPage } from './pages/territories/TerritoriesPage';
-import { UsersAccessPage } from './pages/users/UsersAccessPage';
-import { AuditLogPage } from './pages/audit/AuditLogPage';
-import { SystemSettingsPage } from './pages/settings/SystemSettingsPage';
-import { TitleUpdater } from './components/common/TitleUpdater';
+import { TodayPage } from './pages/TodayPage';
+import { DoctorsPage } from './pages/DoctorsPage';
+import { DoctorNewPage } from './pages/DoctorNewPage';
+import { DoctorPage } from './pages/DoctorPage';
+import { EstablishmentsPage } from './pages/EstablishmentsPage';
+import { EstablishmentNewPage } from './pages/EstablishmentNewPage';
+import { EstablishmentPage } from './pages/EstablishmentPage';
+import { ReportsPage } from './pages/ReportsPage';
+import { TeamPage } from './pages/TeamPage';
 
-export function App() {
+const TITLES: [RegExp, string][] = [
+  [/^\/login/, 'Sign in'],
+  [/^\/doctors\/new/, 'Add doctor'],
+  [/^\/doctors\/.+/, 'Doctor'],
+  [/^\/doctors/, 'Doctors'],
+  [/^\/establishments\/new/, 'Add establishment'],
+  [/^\/establishments\/.+/, 'Establishment'],
+  [/^\/establishments/, 'Establishments'],
+  [/^\/reports/, 'Reports'],
+  [/^\/team/, 'Team & activity'],
+  [/^\/$/, 'Today']
+];
+
+const RequireAuth = () => {
+  const { user, checking } = useAuth();
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  if (checking) return <Loading label="Checking your session…" />;
+  return <AppShell />;
+};
+
+export const App = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const title = TITLES.find(([pattern]) => pattern.test(location.pathname))?.[1];
+    document.title = title ? `${title} · DocTimings Admin` : 'DocTimings Admin';
+  }, [location.pathname]);
+
   return (
-    <AdminProvider>
-      <BrowserRouter>
-        <TitleUpdater />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          
-          <Route element={<AdminLayout />}>
-            <Route path="/" element={<DashboardPage />} />
-            
-            <Route path="/doctors" element={<DoctorsDirectoryPage />} />
-            <Route path="/doctors/new" element={<AddDoctorPage />} />
-            <Route path="/doctors/:id" element={<DoctorDetailPage />} />
-            
-            <Route path="/establishments" element={<EstablishmentsPage />} />
-            <Route path="/establishments/new" element={<AddEstablishmentPage />} />
-            <Route path="/establishments/:id" element={<EstablishmentDetailPage />} />
-            <Route path="/practice-locations" element={<PracticeLocationsPage />} />
-            
-            <Route path="/schedules" element={<SchedulesPage />} />
-            <Route path="/schedules/doctor/:doctorId/establishment/:establishmentId" element={<ManageDoctorSchedulePage />} />
-            <Route path="/schedules/overrides" element={<TemporaryOverridesPage />} />
-            <Route path="/schedules/overrides/doctor/:doctorId/establishment/:establishmentId" element={<TemporaryOverridesPage />} />
-            
-            <Route path="/health-guide" element={<HealthGuidePage />} />
-            <Route path="/health-guide/new" element={<AddEditArticlePage />} />
-            <Route path="/health-guide/edit/:id" element={<AddEditArticlePage />} />
-            <Route path="/health-topics" element={<HealthTopicsPage />} />
-            
-            <Route path="/verification-queue" element={<VerificationQueuePage />} />
-            <Route path="/reports" element={<CommunityReportsPage />} />
-            <Route path="/reports/:id" element={<ReportDetailPage />} />
-            <Route path="/audit-log" element={<AuditLogPage />} />
-            
-            <Route path="/territories" element={<TerritoriesPage />} />
-            <Route path="/users" element={<UsersAccessPage />} />
-            <Route path="/settings" element={<SystemSettingsPage />} />
-          </Route>
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AdminProvider>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route element={<RequireAuth />}>
+        <Route index element={<TodayPage />} />
+        <Route path="doctors" element={<DoctorsPage />} />
+        <Route path="doctors/new" element={<DoctorNewPage />} />
+        <Route path="doctors/:id" element={<DoctorPage />} />
+        <Route path="establishments" element={<EstablishmentsPage />} />
+        <Route path="establishments/new" element={<EstablishmentNewPage />} />
+        <Route path="establishments/:id" element={<EstablishmentPage />} />
+        <Route path="reports" element={<ReportsPage />} />
+        <Route path="team" element={<TeamPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
-}
-
-export default App;
+};

@@ -35,9 +35,15 @@ export type DayOfWeek =
 
 export type OverrideType = 'unavailable' | 'changed' | 'additional';
 
-export type AdminRole = 'Super Admin' | 'Operations Admin' | 'District Lead' | 'Verifier';
+export const ADMIN_ROLES = ['Super Admin', 'Operations Admin', 'District Lead', 'Verifier'] as const;
 
-export type UserRole = AdminRole | 'Staff' | 'Patient';
+export const STAFF_ROLES = [...ADMIN_ROLES, 'Staff'] as const;
+
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
+export type UserRole = AdminRole | 'Staff' | 'Partner' | 'Patient';
+
+export const ACCOUNT_ROLES = [...STAFF_ROLES, 'Partner'] as const;
 
 export type ReportIssueType =
   | 'doc_unavailable'
@@ -196,4 +202,13 @@ export interface HealthArticleRecord {
   readTimeMin: number;
   status: string;
   viewsCount: number;
+}
+
+declare module 'hono' {
+  interface ContextVariableMap {
+    user: JWTPayload;
+    validatedBody: unknown;
+    validatedQuery: unknown;
+    access: import('../lib/access.js').Access;
+  }
 }

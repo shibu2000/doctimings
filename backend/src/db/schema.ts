@@ -1,4 +1,4 @@
-import { pgTable, varchar, text, integer, doublePrecision, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, integer, doublePrecision, boolean, timestamp, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: varchar('id', { length: 50 }).primaryKey(),
@@ -150,3 +150,67 @@ export const healthArticles = pgTable('health_articles', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 });
+
+export const establishmentMembers = pgTable(
+  'establishment_members',
+  {
+    id: varchar('id', { length: 50 }).primaryKey(),
+    userId: varchar('user_id', { length: 50 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+    establishmentId: varchar('establishment_id', { length: 50 }).notNull().references(() => establishments.id, { onDelete: 'cascade' }),
+    role: varchar('role', { length: 20 }).notNull(),
+    invitedBy: varchar('invited_by', { length: 50 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  t => [uniqueIndex('establishment_members_user_establishment').on(t.userId, t.establishmentId)]
+);
+
+export const doctorLinks = pgTable(
+  'doctor_links',
+  {
+    id: varchar('id', { length: 50 }).primaryKey(),
+    userId: varchar('user_id', { length: 50 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+    doctorId: varchar('doctor_id', { length: 50 }).notNull().references(() => doctors.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  t => [uniqueIndex('doctor_links_doctor').on(t.doctorId), uniqueIndex('doctor_links_user').on(t.userId)]
+);
+
+export const invitations = pgTable(
+  'invitations',
+  {
+    id: varchar('id', { length: 50 }).primaryKey(),
+    kind: varchar('kind', { length: 20 }).notNull(),
+    establishmentId: varchar('establishment_id', { length: 50 }).references(() => establishments.id, { onDelete: 'cascade' }),
+    doctorId: varchar('doctor_id', { length: 50 }).references(() => doctors.id, { onDelete: 'cascade' }),
+    role: varchar('role', { length: 20 }).notNull(),
+    name: varchar('name', { length: 150 }).notNull().default(''),
+    phone: varchar('phone', { length: 30 }).notNull().default(''),
+    codeHash: varchar('code_hash', { length: 64 }).notNull().unique(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    usedAt: timestamp('used_at', { withTimezone: true }),
+    usedBy: varchar('used_by', { length: 50 }),
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    createdBy: varchar('created_by', { length: 50 }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  t => [index('invitations_establishment').on(t.establishmentId), index('invitations_doctor').on(t.doctorId)]
+);
+
+export const doctorClaims = pgTable(
+  'doctor_claims',
+  {
+    id: varchar('id', { length: 50 }).primaryKey(),
+    doctorId: varchar('doctor_id', { length: 50 }).notNull().references(() => doctors.id, { onDelete: 'cascade' }),
+    claimantName: varchar('claimant_name', { length: 150 }).notNull(),
+    phone: varchar('phone', { length: 30 }).notNull(),
+    email: varchar('email', { length: 150 }),
+    registrationNumber: varchar('registration_number', { length: 100 }).notNull(),
+    message: text('message').notNull().default(''),
+    status: varchar('status', { length: 20 }).notNull().default('pending'),
+    reviewNote: text('review_note'),
+    reviewedBy: varchar('reviewed_by', { length: 50 }),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+  },
+  t => [index('doctor_claims_status').on(t.status)]
+);

@@ -84,13 +84,10 @@ export default function AddDoctorScreen() {
         await refreshDoctors();
         router.back();
       } else {
-        Alert.alert('Notice', 'Doctor registered in facility roster.');
-        await refreshDoctors();
-        router.back();
+        Alert.alert('Not saved', res.error?.message || 'Please try again.');
       }
     } catch {
-      Alert.alert('Notice', 'Doctor added.');
-      router.back();
+      Alert.alert('Not saved', 'No internet connection. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -109,7 +106,7 @@ export default function AddDoctorScreen() {
         <View style={styles.establishmentBanner}>
           <Building2 size={16} color={Colors.primary} />
           <Text style={styles.estBannerText}>
-            Affiliating to: <Text style={{ fontWeight: '700' }}>{currentEstablishment?.name || 'Maa Medical Centre'}</Text>
+            Affiliating to: <Text style={{ fontWeight: '700' }}>{currentEstablishment?.name}</Text>
           </Text>
         </View>
 

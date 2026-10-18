@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import {
   Doctor,
   Establishment,
@@ -7,8 +8,9 @@ import {
   DoctorScheduleSlot,
   TemporaryOverride,
   PartnerUser,
-  TeamMember,
-  NotificationItem
+  PartnerAccount,
+  TeamView,
+  CreatedInvite
 } from '../types';
 
 const DEFAULT_API_HOST = Platform.OS === 'android' ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
@@ -17,12 +19,43 @@ const API_BASE_URL = `${process.env.EXPO_PUBLIC_API_URL || DEFAULT_API_HOST}/api
 const TOKEN_KEY = '@doctimings_partner_token';
 const ESTABLISHMENT_KEY = '@doctimings_partner_current_establishment_id';
 
+const SECURE_TOKEN_KEY = 'doctimings_partner_token';
+
+const tokenStore = {
+  get: () => (Platform.OS === 'web' ? AsyncStorage.getItem(TOKEN_KEY) : SecureStore.getItemAsync(SECURE_TOKEN_KEY)),
+  set: (value: string) =>
+    Platform.OS === 'web' ? AsyncStorage.setItem(TOKEN_KEY, value) : SecureStore.setItemAsync(SECURE_TOKEN_KEY, value),
+  clear: () => (Platform.OS === 'web' ? AsyncStorage.removeItem(TOKEN_KEY) : SecureStore.deleteItemAsync(SECURE_TOKEN_KEY))
+};
+
+type Result<T> = { success: boolean; data?: T; error?: { code?: string; message: string } };
+
+const mapOverride = (o: any): TemporaryOverride => ({
+  id: o.id,
+  doctorId: o.doctorId,
+  doctorName: o.doctorName,
+  establishmentId: o.establishmentId,
+  establishmentName: o.establishmentName,
+  overrideDate: o.date,
+  overrideType: o.overrideType,
+  note: o.publicReason ?? '',
+  startTime: o.newStartTime ?? undefined,
+  endTime: o.newEndTime ?? undefined,
+  createdAt: o.createdAt
+});
+
 class ApiService {
   private token: string | null = null;
+  private unauthorizedListener: (() => void) | null = null;
+
+  onUnauthorized(listener: (() => void) | null) {
+    this.unauthorizedListener = listener;
+  }
 
   async initToken(): Promise<string | null> {
     try {
-      this.token = (await AsyncStorage.getItem(TOKEN_KEY)) || (await AsyncStorage.getItem('@docnear_partner_token'));
+      this.token = await tokenStore.get();
+      await AsyncStorage.multiRemove(['@doctimings_partner_token', '@docnear_partner_token']).catch(() => {});
       return this.token;
     } catch {
       return null;
@@ -32,10 +65,9 @@ class ApiService {
   async setToken(token: string | null): Promise<void> {
     this.token = token;
     if (token) {
-      await AsyncStorage.setItem(TOKEN_KEY, token);
+      await tokenStore.set(token);
     } else {
-      await AsyncStorage.removeItem(TOKEN_KEY);
-      await AsyncStorage.removeItem('@docnear_partner_token').catch(() => {});
+      await tokenStore.clear().catch(() => {});
     }
   }
 
@@ -81,6 +113,10 @@ class ApiService {
         error: { message: `HTTP ${res.status}: Failed to parse response` },
       }));
 
+      if (res.status === 401 && this.token && !endpoint.startsWith('/auth/login')) {
+        this.unauthorizedListener?.();
+      }
+
       if (!res.ok || !json.success) {
         return {
           success: false,
@@ -89,12 +125,71 @@ class ApiService {
       }
 
       return { success: true, data: json.data };
-    } catch (err: any) {
+    } catch {
       return {
         success: false,
-        error: { message: err.message || 'Network error. Please check your connection.' },
+        error: { message: 'No internet connection. Please check your connection and try again.' },
       };
     }
+  }
+
+  async getAccount() {
+    return this.request<PartnerAccount>('/auth/partner');
+  }
+
+  async activate(data: { code: string; name: string; email: string; phone: string; password: string }) {
+    const res = await this.request<{ token: string; user: PartnerUser }>('/auth/activate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    if (res.success && res.data?.token) {
+      await this.setToken(res.data.token);
+    }
+    return res;
+  }
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    const res = await this.request<{ token: string }>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    if (res.success && res.data?.token) {
+      await this.setToken(res.data.token);
+    }
+    return res;
+  }
+
+  async getTeam(establishmentId: string) {
+    return this.request<TeamView>(`/establishments/${establishmentId}/access`);
+  }
+
+  async inviteStaff(establishmentId: string, data: { name: string; phone: string }) {
+    return this.request<CreatedInvite>(`/establishments/${establishmentId}/invitations`, {
+      method: 'POST',
+      body: JSON.stringify({ ...data, role: 'Staff' }),
+    });
+  }
+
+  async removeMember(establishmentId: string, memberId: string) {
+    return this.request<unknown>(`/establishments/${establishmentId}/members/${memberId}`, { method: 'DELETE' });
+  }
+
+  async cancelInvite(id: string) {
+    return this.request<unknown>(`/admin/invitations/${id}`, { method: 'DELETE' });
+  }
+
+  async searchDirectory(search: string) {
+    return this.request<Doctor[]>(`/doctors?search=${encodeURIComponent(search)}&limit=20`);
+  }
+
+  async submitClaim(
+    doctorId: string,
+    data: { claimantName: string; phone: string; email?: string; registrationNumber: string; message?: string }
+  ) {
+    return this.request<{ id: string }>(`/doctors/${doctorId}/claims`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   }
 
   // --- Auth Endpoints ---
@@ -157,10 +252,10 @@ class ApiService {
     const query = new URLSearchParams();
     if (params.establishmentId) query.append('establishmentId', params.establishmentId);
     if (params.specialty) query.append('specialty', params.specialty);
-    if (params.q) query.append('q', params.q);
+    if (params.q) query.append('search', params.q);
+    query.append('limit', '200');
 
-    const qs = query.toString() ? `?${query.toString()}` : '';
-    return this.request<Doctor[]>(`/doctors${qs}`);
+    return this.request<Doctor[]>(`/doctors?${query.toString()}`);
   }
 
   async getDoctorById(id: string) {
@@ -182,13 +277,14 @@ class ApiService {
     consultationFee?: number;
   }) {
     const payload = {
-      fullName: data.fullName,
+      fullName: data.fullName.trim(),
       specialty: data.specialty,
-      registrationNumber: data.registrationNumber,
+      registrationNumber: data.registrationNumber.trim(),
       council: data.council || 'West Bengal Medical Council',
-      qualifications: data.qualifications || 'MBBS',
-      experienceYears: data.experienceYears ?? 5,
-      primaryPhone: data.primaryPhone && data.primaryPhone.trim().length >= 10 ? data.primaryPhone.trim() : '+91 98000 00000',
+      qualifications: data.qualifications.trim(),
+      experienceYears: data.experienceYears ?? 0,
+      primaryPhone: data.primaryPhone.trim(),
+      email: data.email?.trim() || undefined,
       languages: data.languages || ['Bengali', 'English'],
       affiliatedEstablishmentIds: data.affiliatedEstablishmentIds || [],
     };
@@ -231,12 +327,12 @@ class ApiService {
     const payload = {
       doctorId: data.doctorId,
       establishmentId: data.establishmentId,
-      practiceLocationId: data.practiceLocationId || 'LOC-JHR-301-1',
+      practiceLocationId: data.practiceLocationId || undefined,
       dayOfWeek: data.dayOfWeek,
       shiftName: data.shiftName || 'General Consultation',
       startTime: data.startTime,
       endTime: data.endTime,
-      roomNumber: data.roomNumber || 'Chamber 1',
+      roomNumber: data.roomNumber || undefined,
       tokenPolicy: data.tokenPolicy || 'First Come First Served',
       maxTokens: data.maxTokens || 25,
     };
@@ -265,7 +361,8 @@ class ApiService {
     if (params.establishmentId) query.append('establishmentId', params.establishmentId);
 
     const qs = query.toString() ? `?${query.toString()}` : '';
-    return this.request<TemporaryOverride[]>(`/schedules/overrides${qs}`);
+    const res = await this.request<any[]>(`/schedules/overrides${qs}`);
+    return { ...res, data: res.data?.map(mapOverride) } as Result<TemporaryOverride[]>;
   }
 
   async createOverride(data: {
@@ -282,30 +379,22 @@ class ApiService {
     publicReason?: string;
     internalNote?: string;
   }) {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const parsedDate = new Date(data.overrideDate);
-    const dayOfWeek = isNaN(parsedDate.getTime())
-      ? 'Monday'
-      : days[parsedDate.getDay()];
-
     const payload = {
       doctorId: data.doctorId,
       establishmentId: data.establishmentId,
       date: data.overrideDate,
-      dayOfWeek,
       overrideType: data.overrideType,
-      standardShift: data.standardShift || (data.startTime && data.endTime ? `${data.startTime} - ${data.endTime}` : 'Regular Shift'),
-      newStartTime: data.startTime,
-      newEndTime: data.endTime,
-      publicReason: data.publicReason || data.note || (data.delayMinutes ? `Doctor running late by ${data.delayMinutes} mins` : 'Chamber unavailable for today'),
-      internalNote: data.internalNote || data.note || '',
-      reportedBy: 'Counter Staff',
+      newStartTime: data.startTime || undefined,
+      newEndTime: data.endTime || undefined,
+      publicReason: data.publicReason || data.note || (data.delayMinutes ? `Doctor running late by ${data.delayMinutes} mins` : 'Not available today'),
+      internalNote: data.internalNote || '',
     };
 
-    return this.request<TemporaryOverride>('/schedules/overrides', {
+    const res = await this.request<any>('/schedules/overrides', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+    return { ...res, data: res.data ? mapOverride(res.data) : undefined } as Result<TemporaryOverride>;
   }
 
   async deleteOverride(id: string) {

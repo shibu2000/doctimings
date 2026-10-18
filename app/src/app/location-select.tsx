@@ -11,7 +11,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import * as Location from 'expo-location';
 import {
   X,
   MapPin,
@@ -26,7 +25,7 @@ import {
   Store,
   Building2,
 } from 'lucide-react-native';
-import { LOCATIONS } from '../data/mockData';
+import { locationFromCoords, detectCoords } from '../services/location';
 import { Colors } from '../constants/theme';
 import { useApp } from '../store/AppContext';
 import { LocationItem } from '../types';
@@ -34,14 +33,16 @@ import { LocationItem } from '../types';
 export default function LocationSelectScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { currentLocation, setCurrentLocation, language } = useApp();
+  const { currentLocation, setCurrentLocation, language, towns, locationStatus } = useApp();
 
   const [selectedLoc, setSelectedLoc] = useState<LocationItem>(currentLocation);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(false);
-  const [systemState, setSystemState] = useState<'default' | 'denied' | 'gps-off'>('default');
+  const [systemState, setSystemState] = useState<'default' | 'denied' | 'gps-off'>(
+    locationStatus === 'denied' ? 'denied' : locationStatus === 'off' ? 'gps-off' : 'default'
+  );
 
-  const filteredLocations = LOCATIONS.filter((loc) => {
+  const filteredLocations = towns.filter((loc) => {
     if (!searchQuery.trim()) return true;
     const term = searchQuery.toLowerCase();
     return (
@@ -55,31 +56,14 @@ export default function LocationSelectScreen() {
 
   const handleUseGPS = async () => {
     setIsDetecting(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setSystemState('denied');
-        setIsDetecting(false);
-        return;
-      }
-
-      const loc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-
-      const matched = LOCATIONS[0];
-      const detectedLoc = {
-        ...matched,
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-      };
-      setSelectedLoc(detectedLoc);
-      setSystemState('default');
-      setIsDetecting(false);
-    } catch {
-      setSystemState('gps-off');
-      setIsDetecting(false);
+    const result = await detectCoords();
+    setIsDetecting(false);
+    if (!result.ok) {
+      setSystemState(result.reason === 'denied' ? 'denied' : 'gps-off');
+      return;
     }
+    setSelectedLoc(locationFromCoords(towns, result.latitude, result.longitude));
+    setSystemState('default');
   };
 
   const handleConfirmLocation = () => {
@@ -96,7 +80,7 @@ export default function LocationSelectScreen() {
       </View>
 
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Location Landmark Filter</Text>
+        <Text style={styles.headerTitle}>{t('location.title')}</Text>
         <TouchableOpacity
           style={styles.closeBtn}
           activeOpacity={0.7}
@@ -111,7 +95,7 @@ export default function LocationSelectScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.introText}>Choose where you want to find a doctor.</Text>
+        <Text style={styles.introText}>{t('location.intro')}</Text>
 
         <TouchableOpacity
           style={styles.gpsCard}
@@ -233,7 +217,7 @@ export default function LocationSelectScreen() {
                         )}
                       </View>
                       <Text style={styles.placeDistrict}>
-                        {district} · PIN {loc.pincode}
+                        {district} · {t('location.doctorCount', { count: loc.doctorCount })}
                       </Text>
                     </View>
                   </View>
@@ -264,7 +248,7 @@ export default function LocationSelectScreen() {
           <View style={styles.confLocationRow}>
             <MapPin size={18} color={Colors.primary} />
             <Text style={styles.confLocationText}>
-              {displayName} ({selectedLoc.pincode})
+              {displayName}
             </Text>
           </View>
           <Text style={styles.confSubtitle}>

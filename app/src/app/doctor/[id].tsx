@@ -28,19 +28,19 @@ import {
   CalendarPlus,
   Ticket,
 } from 'lucide-react-native';
-import { DOCTORS } from '../../data/mockData';
+import { useDoctor } from '../../hooks/useDoctors';
+import { LoadState } from '../../components/common/LoadState';
+import { Doctor } from '../../types';
 import { useApp } from '../../store/AppContext';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { VerifiedBadge } from '../../components/common/VerifiedBadge';
 import { GlowingIcon } from '../../components/common/GlowingIcon';
 
-export default function DoctorProfileScreen() {
+function DoctorProfile({ doctor }: { doctor: Doctor }) {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { language, theme, isDark } = useApp();
 
-  const doctor = DOCTORS.find((d) => d.id === id) || DOCTORS[0];
 
   const doctorName = language === 'bn' && doctor.nameBn ? doctor.nameBn : doctor.name;
   const specialty = language === 'bn' && doctor.specialtiesBn.length > 0
@@ -224,7 +224,7 @@ export default function DoctorProfileScreen() {
               <Text
                 style={[styles.statValue, { color: theme.textPrimary }]}
               >
-                ₹{doctor.consultationFee}
+                {doctor.consultationFee ? `₹${doctor.consultationFee}` : t('doctor.askAtCounter')}
               </Text>
               <Text
                 style={[styles.statLabel, { color: theme.textSecondary }]}
@@ -896,3 +896,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+export default function DoctorProfileScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const query = useDoctor(id);
+  if (!query.data) {
+    return <LoadState loading={query.isPending && Boolean(id)} notFound={(query.error as { status?: number } | null)?.status === 404 || !id} onRetry={() => query.refetch()} />;
+  }
+  return <DoctorProfile doctor={query.data} />;
+}

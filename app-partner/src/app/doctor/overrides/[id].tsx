@@ -30,6 +30,7 @@ import { Colors, Spacing, Typography, Radius } from '../../../constants/theme';
 import { usePartner } from '../../../store/PartnerContext';
 import { api } from '../../../services/api';
 import { OverrideType } from '../../../types';
+import { todayInIndia } from '../../../utils/date';
 
 export default function TemporaryChangesScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -40,7 +41,7 @@ export default function TemporaryChangesScreen() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [overrideType, setOverrideType] = useState<OverrideType>('unavailable');
-  const [overrideDate, setOverrideDate] = useState('2026-09-28');
+  const [overrideDate, setOverrideDate] = useState(todayInIndia());
   const [delayMinutes, setDelayMinutes] = useState('45');
   const [publicReason, setPublicReason] = useState('Attending emergency seminar');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,12 +72,10 @@ export default function TemporaryChangesScreen() {
         await refreshOverrides();
         setIsModalOpen(false);
       } else {
-        Alert.alert('Notice', 'Override recorded.');
-        setIsModalOpen(false);
+        Alert.alert('Not saved', res.error?.message || 'Please try again.');
       }
     } catch {
-      Alert.alert('Notice', 'Temporary change recorded.');
-      setIsModalOpen(false);
+      Alert.alert('Not saved', 'No internet connection. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -92,7 +91,11 @@ export default function TemporaryChangesScreen() {
           text: 'Restore Regular Timing',
           style: 'destructive',
           onPress: async () => {
-            await api.deleteOverride(overrideId);
+            const res = await api.deleteOverride(overrideId);
+            if (!res.success) {
+              Alert.alert('Not saved', res.error?.message || 'Please try again.');
+              return;
+            }
             await refreshOverrides();
             Alert.alert('Restored', 'Regular schedule resumed for that date.');
           },
@@ -114,10 +117,10 @@ export default function TemporaryChangesScreen() {
         {/* Screen Context Card */}
         <View style={styles.card}>
           <Text style={styles.estName}>
-            {currentEstablishment?.name || 'Maa Medical Centre — Main Branch'}
+            {currentEstablishment?.name}
           </Text>
           <Text style={styles.estAddress}>
-            {currentEstablishment?.subDistrict || 'Gopiballavpur'}, {currentEstablishment?.district || 'Jhargram'} · Chamber 1
+            {currentEstablishment?.subDistrict}, {currentEstablishment?.district} · Chamber 1
           </Text>
         </View>
 
@@ -307,7 +310,7 @@ export default function TemporaryChangesScreen() {
                 style={styles.modalInput}
                 value={overrideDate}
                 onChangeText={setOverrideDate}
-                placeholder="2026-09-28"
+                placeholder={todayInIndia()}
               />
 
               {/* Delay Minutes if Delay Chamber */}

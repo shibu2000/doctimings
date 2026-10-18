@@ -15,7 +15,7 @@ import {
   Send,
   HeartHandshake,
 } from 'lucide-react-native';
-import { DOCTORS } from '../data/mockData';
+import { useDoctor } from '../hooks/useDoctors';
 import { ReportIssueType } from '../types';
 import { useApp } from '../store/AppContext';
 import { ConfirmationModal } from '../components/common/ConfirmationModal';
@@ -26,7 +26,9 @@ export default function ReportIssueScreen() {
   const { theme, isDark, submitReport } = useApp();
   const params = useLocalSearchParams<{ doctorId?: string; establishmentId?: string }>();
 
-  const doctor = DOCTORS.find((d) => d.id === params.doctorId) || DOCTORS[0];
+  const doctor = useDoctor(params.doctorId).data;
+  const [submitError, setSubmitError] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
 
   const [selectedType, setSelectedType] = useState<ReportIssueType>('doctor_not_arrived');
   const [message, setMessage] = useState<string>('');
@@ -42,18 +44,31 @@ export default function ReportIssueScreen() {
     { type: 'other', label: t('report.types.other') },
   ];
 
+  const ISSUE_MAP: Record<ReportIssueType, string> = {
+    doctor_not_arrived: 'doc_unavailable',
+    no_longer_visits: 'no_longer_practices',
+    schedule_changed: 'sched_change',
+    wrong_phone: 'info_incorrect',
+    incorrect_fee: 'info_incorrect',
+    other: 'other'
+  };
+
   const handleSubmit = async () => {
-    try {
-      await submitReport({
-        doctorId: doctor?.id,
-        establishmentId: params.establishmentId,
-        issueType: selectedType === 'doctor_not_arrived' ? 'doc_unavailable' : selectedType === 'schedule_changed' ? 'sched_change' : selectedType === 'no_longer_visits' ? 'no_longer_practices' : 'other',
-        issueTitle: `Discrepancy report for ${doctor?.displayName || 'Doctor'}`,
-        description: message.trim() || `Report regarding ${selectedType}`,
-        reporterPhone: phone.trim() || undefined
-      });
-    } catch {}
-    setSuccessModalVisible(true);
+    const label = issueTypes.find((i) => i.type === selectedType)?.label ?? selectedType;
+    const text = message.trim();
+    setSubmitError('');
+    setSubmitting(true);
+    const result = await submitReport({
+      doctorId: doctor?.id,
+      establishmentId: params.establishmentId || doctor?.practices[0]?.establishmentId,
+      issueType: ISSUE_MAP[selectedType],
+      issueTitle: `${label}${doctor ? ` · ${doctor.name}` : ''}`.slice(0, 200),
+      description: text.length >= 10 ? text : `${label}. ${text}`.trim().padEnd(10, '.'),
+      reporterPhone: phone.trim() || undefined
+    });
+    setSubmitting(false);
+    if (result.success) setSuccessModalVisible(true);
+    else setSubmitError(result.error || t('search.loadFailed'));
   };
 
   const handleModalDone = () => {
@@ -131,11 +146,13 @@ export default function ReportIssueScreen() {
             Reporting info for:
           </Text>
           <Text style={[styles.targetDoctor, { color: theme.textPrimary }]}>
-            {doctor.name}
+            {doctor?.name ?? t('report.generalIssue')}
           </Text>
-          <Text style={[styles.targetChamber, { color: theme.textSecondary }]}>
-            {doctor.practices[0]?.establishmentName}, {doctor.practices[0]?.locality}
-          </Text>
+          {doctor?.practices[0] && (
+            <Text style={[styles.targetChamber, { color: theme.textSecondary }]}>
+              {doctor.practices[0].establishmentName}, {doctor.practices[0].locality}
+            </Text>
+          )}
         </View>
 
         <View style={styles.section}>
@@ -249,10 +266,12 @@ export default function ReportIssueScreen() {
           },
         ]}
       >
+        {submitError ? <Text style={{ color: theme.error, fontSize: 13, marginBottom: 8 }}>{submitError}</Text> : null}
         <TouchableOpacity
-          style={[styles.submitBtn, { backgroundColor: theme.primary }]}
+          style={[styles.submitBtn, { backgroundColor: theme.primary, opacity: submitting ? 0.6 : 1 }]}
           activeOpacity={0.8}
           onPress={handleSubmit}
+          disabled={submitting}
         >
           <Send size={16} color={theme.textInverse} />
           <Text style={[styles.submitBtnText, { color: theme.textInverse }]}>

@@ -9,159 +9,94 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyRound, Mail, Lock, ShieldCheck, CheckCircle2 } from 'lucide-react-native';
+import { KeyRound, Mail, Lock, ShieldCheck, User, Phone } from 'lucide-react-native';
+import { useAuth } from '../../store/AuthContext';
 import { Header } from '../../components/Header';
 import { Colors, Spacing, Typography, Radius } from '../../constants/theme';
 
+const Field = ({
+  label,
+  icon,
+  ...props
+}: React.ComponentProps<typeof TextInput> & { label: string; icon: React.ReactNode }) => (
+  <View style={styles.fieldGroup}>
+    <Text style={styles.fieldLabel}>{label}</Text>
+    <View style={styles.inputContainer}>
+      <View style={styles.inputIcon}>{icon}</View>
+      <TextInput style={styles.input} placeholderTextColor={Colors.textMuted} {...props} />
+    </View>
+  </View>
+);
+
 export default function AccountActivationScreen() {
   const router = useRouter();
-  const [inviteCode, setInviteCode] = useState('');
+  const { activate } = useAuth();
+  const [code, setCode] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isActivated, setIsActivated] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleActivate = () => {
-    if (!inviteCode.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Required Fields', 'Please complete all required fields.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      Alert.alert('Password Mismatch', 'The passwords entered do not match.');
-      return;
-    }
+  const handleActivate = async () => {
+    setError('');
+    if (code.replace(/[^A-Za-z0-9]/g, '').length < 10) return setError('Enter the full 10-character code.');
+    if (name.trim().length < 2) return setError('Enter your name.');
+    if (phone.replace(/\D/g, '').length < 10) return setError('Enter your mobile number.');
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setError('Enter a valid email address.');
+    if (password.length < 8) return setError('Password must be at least 8 characters.');
+    if (password !== confirmPassword) return setError('The two passwords do not match.');
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsActivated(true);
-    }, 900);
+    const result = await activate({ code: code.trim(), name: name.trim(), phone: phone.trim(), email: email.trim(), password });
+    setIsLoading(false);
+    if (result.success) router.replace('/(tabs)');
+    else setError(result.error || 'Could not activate. Check the code and try again.');
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <Header title="Account Activation" showBack backLabel="Login" />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+        <Header title="Activate with a code" showBack backLabel="Login" />
         <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {isActivated ? (
-          <View style={styles.card}>
-            <View style={styles.successIconBox}>
-              <CheckCircle2 size={40} color={Colors.success} />
-            </View>
-            <Text style={styles.successTitle}>Account Activated!</Text>
-            <Text style={styles.successDesc}>
-              Your establishment panel is now active and ready for live chamber coordination. You can sign in using your newly configured credentials.
-            </Text>
-            <TouchableOpacity
-              style={styles.loginBtn}
-              onPress={() => router.replace('/(auth)/login')}
-            >
-              <Text style={styles.loginBtnText}>Proceed to Sign In</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
           <View style={styles.card}>
             <View style={styles.infoBanner}>
               <ShieldCheck size={20} color={Colors.primary} />
               <Text style={styles.infoBannerText}>
-                Use your official DocTimings partnership onboarding letter to locate your unique invitation code.
+                Enter the one-time code you received from DocTimings or your establishment owner. If you already have a DocTimings Partner login, use the same email and password to add this access to it.
               </Text>
             </View>
 
-            {/* Invite Code */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>Invitation Code / Passcode</Text>
-              <View style={styles.inputContainer}>
-                <KeyRound size={18} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="e.g. DN-MMC-2026-99"
-                  placeholderTextColor={Colors.textMuted}
-                  value={inviteCode}
-                  onChangeText={setInviteCode}
-                  autoCapitalize="characters"
-                />
-              </View>
-            </View>
+            <Field label="Access code" icon={<KeyRound size={18} color={Colors.textSecondary} />} placeholder="e.g. K7Q2M-9XDHA" value={code} onChangeText={setCode} autoCapitalize="characters" autoCorrect={false} />
+            <Field label="Your name" icon={<User size={18} color={Colors.textSecondary} />} placeholder="Full name" value={name} onChangeText={setName} />
+            <Field label="Mobile number" icon={<Phone size={18} color={Colors.textSecondary} />} placeholder="+91" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+            <Field label="Email (used to sign in)" icon={<Mail size={18} color={Colors.textSecondary} />} placeholder="you@example.com" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+            <Field label="Password" icon={<Lock size={18} color={Colors.textSecondary} />} placeholder="At least 8 characters" value={password} onChangeText={setPassword} secureTextEntry />
+            <Field label="Confirm password" icon={<Lock size={18} color={Colors.textSecondary} />} placeholder="Type it again" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
 
-            {/* Email */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>Official Establishment Email</Text>
-              <View style={styles.inputContainer}>
-                <Mail size={18} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="e.g. desk@maamedical.org"
-                  placeholderTextColor={Colors.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                />
-              </View>
-            </View>
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-            {/* Password */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>Create Security Password</Text>
-              <View style={styles.inputContainer}>
-                <Lock size={18} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Minimum 8 characters"
-                  placeholderTextColor={Colors.textMuted}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                />
-              </View>
-            </View>
-
-            {/* Confirm Password */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>Confirm Security Password</Text>
-              <View style={styles.inputContainer}>
-                <Lock size={18} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Re-enter password"
-                  placeholderTextColor={Colors.textMuted}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-              onPress={handleActivate}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#FFFFFF" />
-              ) : (
-                <Text style={styles.submitButtonText}>Activate Establishment Panel</Text>
-              )}
+            <TouchableOpacity style={[styles.submitButton, isLoading && styles.submitButtonDisabled]} onPress={handleActivate} disabled={isLoading}>
+              {isLoading ? <ActivityIndicator size="small" color="#FFFFFF" /> : <Text style={styles.submitButtonText}>Activate and sign in</Text>}
             </TouchableOpacity>
           </View>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: Colors.error,
+    fontSize: 13,
+    marginBottom: Spacing.sm,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: Colors.surface,

@@ -3,15 +3,16 @@
 import React from "react";
 import Image from "next/image";
 import { PhoneCall, ShieldAlert, Heart } from "lucide-react";
-import { BengalCity } from "@/types";
-import { BENGAL_CITIES } from "@/data/bengalLocations";
+import type { Town } from "@/types";
 
 interface FooterProps {
-  onSelectCity: (city: BengalCity) => void;
+  towns: Town[];
+  onSelectTown: (town: Town) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectCity }) => {
-  const popularCities = BENGAL_CITIES.filter((c) => c.isPopular).slice(0, 6);
+export const Footer: React.FC<FooterProps> = ({ towns, onSelectTown }) => {
+  const popularTowns = towns.filter((t) => t.doctorCount > 0).slice(0, 6);
+  const districts = [...new Set(towns.map((t) => t.district))];
 
   return (
     <footer className="w-full bg-slate-900 text-slate-300 pt-12 pb-24 sm:pb-16 border-t border-slate-800">
@@ -75,11 +76,11 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCity }) => {
               Popular Towns
             </span>
             <div className="flex flex-col gap-1.5">
-              {popularCities.map((city) => (
+              {popularTowns.map((city) => (
                 <button
                   key={city.id}
                   onClick={() => {
-                    onSelectCity(city);
+                    onSelectTown(city);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                   className="text-left text-xs text-slate-400 hover:text-teal-400 transition-colors cursor-pointer"
@@ -95,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCity }) => {
               Coverage Districts
             </span>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Purba Bardhaman, Jhargram, Paschim Medinipur, Bankura, Hooghly, Birbhum, and Nadia.
+              {districts.length ? districts.join(", ") : "Paschim Medinipur"}
             </p>
             <div className="flex items-center gap-1 text-[11px] text-teal-400 mt-2">
               <Heart className="w-3.5 h-3.5 fill-teal-400 text-teal-400" />

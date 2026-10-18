@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -23,10 +24,9 @@ import {
 import { Header } from '../../components/common/Header';
 import { DoctorCard } from '../../components/common/DoctorCard';
 import { RadiusSelector } from '../../components/common/RadiusSelector';
-import { DOCTORS } from '../../data/mockData';
+import { useDoctorSearch } from '../../hooks/useDoctors';
 import { Colors } from '../../constants/theme';
 import { useApp } from '../../store/AppContext';
-import { Doctor } from '../../types';
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -46,59 +46,15 @@ export default function SearchScreen() {
     }
   }, [params.q, params.specialty]);
 
-  const normalizeQuery = (text: string) => {
-    const lower = text.toLowerCase().trim();
-    if (lower.includes('skin') || lower.includes('rash') || lower.includes('চামড়া') || lower.includes('চর্ম')) {
-      return 'dermatolog';
-    }
-    if (lower.includes('child') || lower.includes('baby') || lower.includes('বাচ্চা') || lower.includes('শিশু')) {
-      return 'pediatric';
-    }
-    if (lower.includes('eye') || lower.includes('vision') || lower.includes('চোখ')) {
-      return 'ophthalmolog';
-    }
-    if (lower.includes('stomach') || lower.includes('gastric') || lower.includes('পেট') || lower.includes('হজম')) {
-      return 'gastro';
-    }
-    if (lower.includes('bone') || lower.includes('joint') || lower.includes('হাড়') || lower.includes('বাত')) {
-      return 'orthoped';
-    }
-    if (lower.includes('tooth') || lower.includes('teeth') || lower.includes('dental') || lower.includes('দাঁত')) {
-      return 'dental';
-    }
-    if (lower.includes('women') || lower.includes('period') || lower.includes('মহিলা') || lower.includes('স্ত্রী')) {
-      return 'gynecolog';
-    }
-    return lower;
-  };
+  const [debounced, setDebounced] = useState(query);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(query), 300);
+    return () => clearTimeout(timer);
+  }, [query]);
 
-  const normalized = normalizeQuery(query);
-
-  const matchedDoctors: Doctor[] = DOCTORS.filter((doctor) => {
-    const matchesDistance = doctor.practices.some(
-      (p) => (p.distanceKm || 0) <= searchRadius
-    );
-    if (!matchesDistance) return false;
-
-    if (onlyAvailableToday && doctor.todayAvailability !== 'available_today') {
-      return false;
-    }
-
-    if (!normalized) return true;
-
-    const nameMatch = doctor.name.toLowerCase().includes(normalized);
-    const specialtyMatch = doctor.specialties.some((s) =>
-      s.toLowerCase().includes(normalized)
-    );
-    const specialtyBnMatch = doctor.specialtiesBn.some((s) =>
-      s.toLowerCase().includes(normalized)
-    );
-    const establishmentMatch = doctor.practices.some((p) =>
-      p.establishmentName.toLowerCase().includes(normalized)
-    );
-
-    return nameMatch || specialtyMatch || specialtyBnMatch || establishmentMatch;
-  });
+  const search = useDoctorSearch(debounced, onlyAvailableToday);
+  const matchedDoctors = search.data?.doctors ?? [];
+  const isLoading = !search.data && (search.isPending || search.isFetching);
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
 
@@ -182,7 +138,7 @@ export default function SearchScreen() {
       >
         <View style={styles.resultsHeader}>
           <Text style={styles.resultsCount}>
-            {t('search.foundCount', { count: matchedDoctors.length })}
+            {isLoading ? t('common.loading') : t('search.foundCount', { count: search.data?.total ?? 0 })}
           </Text>
           <View style={styles.locationBadge}>
             <MapPin size={12} color={Colors.primaryDark} />
@@ -190,7 +146,24 @@ export default function SearchScreen() {
           </View>
         </View>
 
-        {matchedDoctors.length > 0 ? (
+        {search.data?.autoExpanded && matchedDoctors.length > 0 && (
+          <Text style={styles.expandedNote}>
+            {t('search.autoExpanded', { radius: search.data.radiusKm })}
+          </Text>
+        )}
+
+        {isLoading ? (
+          <View style={styles.loadingBox}>
+            <ActivityIndicator color={Colors.primary} />
+          </View>
+        ) : search.isError && !search.data ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>{t('search.loadFailed')}</Text>
+            <TouchableOpacity style={styles.expandButton} activeOpacity={0.8} onPress={() => search.refetch()}>
+              <Text style={styles.expandButtonText}>{t('common.retry')}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : matchedDoctors.length > 0 ? (
           <View style={styles.doctorList}>
             {matchedDoctors.map((doc) => (
               <DoctorCard key={doc.id} doctor={doc} />
@@ -245,6 +218,19 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
+  loadingBox: {
+    paddingVertical: 48,
+    alignItems: 'center',
+  },
+  expandedNote: {
+    fontSize: 12,
+    color: Colors.warningText,
+    backgroundColor: Colors.warningLight,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 10,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: Colors.surface,

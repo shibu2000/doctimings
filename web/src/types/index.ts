@@ -42,6 +42,7 @@ export interface Schedule {
 
 export interface TodayAvailability {
   isAvailable: boolean;
+  status?: "available" | "cancelled" | "not_today" | "no_schedule";
   day: string;
   shifts: string[];
   note: string;
@@ -87,11 +88,21 @@ export interface SearchApiResponse {
   };
 }
 
-export interface BengalCity {
+export interface Town {
   id: string;
   name: string;
   district: string;
   latitude: number;
   longitude: number;
-  isPopular?: boolean;
+  doctorCount: number;
+  establishmentCount: number;
+}
+
+export interface SearchLocation {
+  name: string;
+  district: string;
+  latitude: number;
+  longitude: number;
+  townId?: string;
+  source: "gps" | "town";
 }

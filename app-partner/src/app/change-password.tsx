@@ -12,6 +12,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { api } from '../services/api';
 import { Lock, Eye, EyeOff, ShieldCheck, CheckCircle2 } from 'lucide-react-native';
 import { Header } from '../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,29 +28,30 @@ export default function ChangePasswordScreen() {
   const [showNew, setShowNew] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleUpdatePassword = () => {
-    if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
-      Alert.alert('Required Fields', 'Please complete all password fields.');
+  const handleUpdatePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Required fields', 'Please complete all password fields.');
       return;
     }
-
     if (newPassword.length < 8) {
-      Alert.alert('Password Length', 'New password must be at least 8 characters long.');
+      Alert.alert('Password too short', 'New password must be at least 8 characters long.');
       return;
     }
-
     if (newPassword !== confirmPassword) {
-      Alert.alert('Mismatch', 'The new passwords do not match.');
+      Alert.alert('Passwords do not match', 'Type the same new password twice.');
       return;
     }
 
     setIsUpdating(true);
-    setTimeout(() => {
-      setIsUpdating(false);
-      Alert.alert('Password Updated', 'Your security password has been changed successfully.', [
-        { text: 'OK', onPress: () => router.back() },
-      ]);
-    }, 700);
+    const res = await api.changePassword(currentPassword, newPassword);
+    setIsUpdating(false);
+    if (!res.success) {
+      Alert.alert('Not changed', res.error?.message || 'Could not change the password. Try again.');
+      return;
+    }
+    Alert.alert('Password changed', 'Other devices signed in with your old password are now signed out.', [
+      { text: 'OK', onPress: () => router.back() },
+    ]);
   };
 
   return (

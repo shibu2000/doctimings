@@ -1,21 +1,23 @@
+import { app } from '../src/index.js';
 import { signToken } from '../src/middleware/auth.js';
+import type { UserRole } from '../src/types/index.js';
 
-export const getAdminAuthHeader = (): { Authorization: string } => {
-  const token = signToken({
-    sub: 'USR-ADMIN-01',
-    email: 'admin@whereismydoctor.internal',
-    name: 'Shibu Dhara',
-    role: 'Super Admin'
-  });
-  return { Authorization: `Bearer ${token}` };
-};
+export const OWNER_EMAIL = 'shibudhara147@gmail.com';
+export const OWNER_PASSWORD = 'owner-password-123';
 
-export const getPatientAuthHeader = (): { Authorization: string } => {
-  const token = signToken({
-    sub: 'USR-PATIENT-01',
-    email: 'patient@example.com',
-    name: 'Rahul Sen',
-    role: 'Patient'
+const header = (sub: string, role: UserRole) => ({
+  Authorization: `Bearer ${signToken({ sub, email: `${sub}@example.com`, name: `Test ${role}`, role })}`
+});
+
+export const adminAuth = () => header('USR-OWNER-SHIBU', 'Super Admin');
+export const staffAuth = () => header('USR-STAFF-TEST', 'Staff');
+export const patientAuth = () => header('USR-PATIENT-TEST', 'Patient');
+
+export const call = async (method: string, path: string, options: { body?: unknown; headers?: Record<string, string> } = {}) => {
+  const res = await app.request(`/api/v1${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+    body: options.body === undefined ? undefined : JSON.stringify(options.body)
   });
-  return { Authorization: `Bearer ${token}` };
+  return { status: res.status, body: await res.json() };
 };

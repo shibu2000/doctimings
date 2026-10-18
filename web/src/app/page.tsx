@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { 
   Search, 
   MapPin, 
@@ -12,9 +12,10 @@ import {
   Building,
   Users
 } from "lucide-react";
-import { BengalCity, Doctor } from "@/types";
-import { DEFAULT_CITY } from "@/data/bengalLocations";
+import type { Doctor, SearchApiResponse, Town } from "@/types";
 import { fetchDoctors } from "@/lib/api";
+import { distanceKm, locationFromTown } from "@/lib/location";
+import { useSearchLocation } from "@/hooks/useSearchLocation";
 import { Header } from "@/components/Header";
 import { LocationModal } from "@/components/LocationModal";
 import { SpecialtyFilter } from "@/components/SpecialtyFilter";
@@ -27,21 +28,7 @@ import { Footer } from "@/components/Footer";
 const RADIUS_OPTIONS = [15, 25, 50, 100];
 
 export default function HomePage() {
-  const [currentCity, setCurrentCity] = useState<BengalCity>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("doctimings_selected_city") || localStorage.getItem("docnear_selected_city");
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed?.name && parsed?.latitude && parsed?.longitude) {
-            return parsed;
-          }
-        }
-      } catch {
-      }
-    }
-    return DEFAULT_CITY;
-  });
+  const { towns, location, locating, locationDenied, setLocation } = useSearchLocation();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -52,46 +39,57 @@ export default function HomePage() {
   const [radiusKm, setRadiusKm] = useState(25);
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [meta, setMeta] = useState<{ total: number; radiusKm: number; expanded: boolean } | null>(null);
+  const requestId = useRef(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSelectCity = (city: BengalCity) => {
-    setCurrentCity(city);
-    try {
-      localStorage.setItem("doctimings_selected_city", JSON.stringify(city));
-    } catch {
-    }
-  };
+  const handleSelectTown = (town: Town) => setLocation(locationFromTown(town));
+
+  const placeName = location?.name ?? "your area";
 
   const loadDoctors = useCallback(async () => {
+    const id = ++requestId.current;
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchDoctors({
+      const response: SearchApiResponse = await fetchDoctors({
         q: searchQuery.trim() || undefined,
-        latitude: currentCity.latitude,
-        longitude: currentCity.longitude,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
         radiusKm,
         specialty: selectedSpecialty !== "All" ? selectedSpecialty : undefined,
         availableOnly,
+        limit: 50,
       });
-
+      if (id !== requestId.current) return;
       setDoctors(response.data || []);
+      setMeta({
+        total: response.pagination?.total ?? response.data.length,
+        radiusKm: response.searchMeta?.appliedRadiusKm ?? radiusKm,
+        expanded: Boolean(response.searchMeta?.autoExpandedRadius),
+      });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to load doctors";
-      setError(message);
+      if (id !== requestId.current) return;
+      setError(err instanceof Error ? err.message : "Failed to load doctors");
     } finally {
-      setLoading(false);
+      if (id === requestId.current) setLoading(false);
     }
-  }, [currentCity, searchQuery, selectedSpecialty, availableOnly, radiusKm]);
+  }, [location, searchQuery, selectedSpecialty, availableOnly, radiusKm]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      loadDoctors();
-    }, 250);
-
+    if (locating) return;
+    const timer = setTimeout(loadDoctors, 250);
     return () => clearTimeout(timer);
-  }, [loadDoctors]);
+  }, [loadDoctors, locating]);
+
+  const nearbyTowns = location
+    ? towns
+        .filter((t) => t.doctorCount > 0 && t.id !== location.townId)
+        .map((t) => ({ town: t, km: distanceKm(location.latitude, location.longitude, t.latitude, t.longitude) }))
+        .sort((a, b) => a.km - b.km)
+        .slice(0, 3)
+    : [];
 
   const handleResetFilters = () => {
     setSearchQuery("");
@@ -103,7 +101,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Header
-        currentCity={currentCity}
+        location={location}
+        locating={locating}
         onOpenLocationModal={() => setIsLocationModalOpen(true)}
         onOpenAppModal={() => setIsAppModalOpen(true)}
       />
@@ -121,7 +120,13 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xs sm:text-sm text-teal-100 max-w-lg leading-relaxed">
-              Serving patients across <span className="font-semibold text-white">{currentCity.name} ({currentCity.district})</span> and surrounding rural &amp; semi-urban areas.
+              {locating ? (
+                "Finding doctors near you…"
+              ) : (
+                <>
+                  Doctors and chamber timings around <span className="font-semibold text-white">{placeName}{location?.district ? ` (${location.district})` : ""}</span>
+                </>
+              )}
             </p>
 
             <div className="w-full max-w-2xl mt-2 flex flex-col gap-2">
@@ -147,7 +152,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between text-xs text-teal-200/90 px-1 pt-1">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-teal-300" />
-                  <span>Searching around {currentCity.name}</span>
+                  <span>{locating ? "Detecting your location…" : locationDenied && location?.source !== "gps" ? `Location is off · showing ${placeName}` : `Searching around ${placeName}`}</span>
                 </span>
                 <button
                   onClick={() => setIsLocationModalOpen(true)}
@@ -224,12 +229,12 @@ export default function HomePage() {
                 Verified Doctor Chambers
               </h2>
               <span className="text-xs text-slate-500 font-medium">
-                ({doctors.length} {doctors.length === 1 ? "doctor" : "doctors"} in {currentCity.name})
+                {!loading && meta && `(${meta.total} ${meta.total === 1 ? "doctor" : "doctors"} within ${meta.radiusKm} km)`}
               </span>
             </div>
 
             <span className="text-xs text-teal-800 font-semibold bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 hidden sm:inline-block">
-              Radius: {radiusKm} km
+              {meta?.expanded ? `Nothing within ${radiusKm} km · widened to ${meta.radiusKm} km` : `Radius: ${radiusKm} km`}
             </span>
           </div>
 
@@ -248,7 +253,7 @@ export default function HomePage() {
             </div>
           )}
 
-          {loading ? (
+          {loading || locating ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
@@ -273,11 +278,26 @@ export default function HomePage() {
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                No doctors found within {radiusKm} km of {currentCity.name}
+                No doctors found near {placeName}
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 max-w-md">
-                Try expanding the search radius to 50 km or 100 km, resetting specialty filters, or searching for neighboring towns like Bardhaman or Gopiballavpur.
+                {nearbyTowns.length
+                  ? "Try a wider radius, clear the filters, or look in a nearby town:"
+                  : "Try a wider radius or clear the filters."}
               </p>
+              {nearbyTowns.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2">
+                  {nearbyTowns.map(({ town, km }) => (
+                    <button
+                      key={town.id}
+                      onClick={() => handleSelectTown(town)}
+                      className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-900 text-xs font-semibold cursor-pointer"
+                    >
+                      {town.name} · {town.doctorCount} doctors · {Math.round(km)} km
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="flex items-center gap-2 mt-2">
                 <button
                   onClick={() => setRadiusKm(50)}
@@ -319,7 +339,7 @@ export default function HomePage() {
             </div>
 
             <a
-              href="http://localhost:5173"
+              href={process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin-doctimings.vercel.app"}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-xl bg-white border border-teal-300 hover:bg-teal-100 text-teal-900 font-bold text-xs shrink-0 text-center transition-colors shadow-xs"
@@ -330,15 +350,16 @@ export default function HomePage() {
         </div>
       </main>
 
-      <Footer onSelectCity={handleSelectCity} />
+      <Footer towns={towns} onSelectTown={handleSelectTown} />
 
       <SmartAppBanner onOpenAppModal={() => setIsAppModalOpen(true)} />
 
       <LocationModal
         isOpen={isLocationModalOpen}
-        currentCity={currentCity}
+        towns={towns}
+        current={location}
         onClose={() => setIsLocationModalOpen(false)}
-        onSelectCity={handleSelectCity}
+        onSelect={setLocation}
       />
 
       <DoctorDetailsModal

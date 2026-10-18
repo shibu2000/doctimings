@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const establishmentTypeEnum = z.enum([
+export const ESTABLISHMENT_TYPES = [
   'Pharmacy',
   'Clinic',
   'Doctor Chamber',
@@ -8,31 +8,32 @@ export const establishmentTypeEnum = z.enum([
   'Diagnostic Center',
   'Nursing Home',
   'Hospital'
-]);
+] as const;
 
-export const accountStatusEnum = z.enum([
-  'Platform Managed',
-  'Invitation Pending',
-  'Account Active'
-]);
+export const establishmentTypeEnum = z.enum(ESTABLISHMENT_TYPES);
 
-export const createEstablishmentSchema = z.object({
-  name: z.string().min(2, 'Establishment name must be at least 2 characters'),
-  type: establishmentTypeEnum.default('Doctor Chamber'),
-  district: z.string().min(2, 'District is required'),
-  subDistrict: z.string().min(2, 'Sub-district / Block is required'),
-  address: z.string().min(5, 'Physical address is required'),
-  pinCode: z.string().regex(/^[1-9][0-9]{5}$/, 'Valid 6-digit Indian PIN code required'),
-  phone: z.string().min(10, 'Contact telephone is required'),
-  proprietorName: z.string().min(2, 'Proprietor name is required'),
-  licenseNumber: z.string().min(3, 'Drug / Trade license number is required'),
+export const accountStatusEnum = z.enum(['Platform Managed', 'Invitation Pending', 'Account Active']);
+
+const establishmentFields = {
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(150),
+  type: establishmentTypeEnum.default('Pharmacy'),
+  district: z.string().trim().min(2, 'District is required').max(100),
+  subDistrict: z.string().trim().max(100).default(''),
+  address: z.string().trim().min(3, 'Address is required'),
+  pinCode: z.string().trim().regex(/^[1-9][0-9]{5}$/, 'Enter a valid 6-digit PIN code'),
+  phone: z.string().trim().max(30).default(''),
+  proprietorName: z.string().trim().max(150).default(''),
+  licenseNumber: z.string().trim().max(100).default(''),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
   verificationStatus: z.enum(['Verified', 'Needs Review', 'Pending']).default('Verified'),
-  accountStatus: accountStatusEnum.default('Platform Managed')
-});
+  accountStatus: accountStatusEnum.default('Platform Managed'),
+  isActive: z.boolean().default(true)
+};
 
-export const updateEstablishmentSchema = createEstablishmentSchema.partial();
+export const createEstablishmentSchema = z.object(establishmentFields);
+
+export const updateEstablishmentSchema = z.object(establishmentFields).partial();
 
 export const establishmentQuerySchema = z.object({
   search: z.string().optional(),
@@ -41,17 +42,24 @@ export const establishmentQuerySchema = z.object({
   verificationStatus: z.string().optional(),
   accountStatus: z.string().optional(),
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(20)
+  limit: z.coerce.number().int().min(1).max(500).default(20)
 });
 
 export const createLocationSchema = z.object({
-  establishmentId: z.string().min(1, 'Establishment ID is required'),
-  name: z.string().min(2, 'Location name is required'),
-  roomDesignation: z.string().min(1, 'Room / Bay designation is required'),
-  floor: z.string().default('Ground Floor')
+  establishmentId: z.string().optional(),
+  name: z.string().trim().min(1, 'Room name is required').max(150),
+  roomDesignation: z.string().trim().max(100).optional(),
+  floor: z.string().trim().max(50).default('Ground Floor')
+});
+
+export const updateLocationSchema = z.object({
+  name: z.string().trim().min(1, 'Room name is required').max(150).optional(),
+  roomDesignation: z.string().trim().max(100).optional(),
+  floor: z.string().trim().max(50).optional()
 });
 
 export type CreateEstablishmentInput = z.infer<typeof createEstablishmentSchema>;
 export type UpdateEstablishmentInput = z.infer<typeof updateEstablishmentSchema>;
 export type EstablishmentQueryParams = z.infer<typeof establishmentQuerySchema>;
 export type CreateLocationInput = z.infer<typeof createLocationSchema>;
+export type UpdateLocationInput = z.infer<typeof updateLocationSchema>;

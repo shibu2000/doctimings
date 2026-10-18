@@ -3,16 +3,18 @@
 import React from "react";
 import Image from "next/image";
 import { MapPin, Smartphone, ChevronDown } from "lucide-react";
-import { BengalCity } from "@/types";
+import type { SearchLocation } from "@/types";
 
 interface HeaderProps {
-  currentCity: BengalCity;
+  location: SearchLocation | null;
+  locating: boolean;
   onOpenLocationModal: () => void;
   onOpenAppModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentCity,
+  location,
+  locating,
   onOpenLocationModal,
   onOpenAppModal,
 }) => {
@@ -49,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Change location"
           >
             <MapPin className="w-3.5 h-3.5 text-teal-700 group-hover:scale-110 transition-transform" />
-            <span className="truncate max-w-[120px] sm:max-w-[160px]">{currentCity.name}</span>
+            <span className="truncate max-w-[120px] sm:max-w-[160px]">{locating ? "Locating…" : location?.name ?? "Choose town"}</span>
             <ChevronDown className="w-3 h-3 text-teal-600 opacity-70" />
           </button>
         </div>

@@ -28,7 +28,7 @@ import { StatusBadge } from '../../components/StatusBadge';
 
 export default function EstablishmentProfileScreen() {
   const router = useRouter();
-  const { currentEstablishment, practiceLocations, rosterDoctors } = usePartner();
+  const { currentEstablishment, practiceLocations, rosterDoctors, isDoctor, canManagePeople } = usePartner();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -58,11 +58,11 @@ export default function EstablishmentProfileScreen() {
                 </View>
                 <StatusBadge status="verified" />
               </View>
-              <Text style={styles.estName}>{currentEstablishment?.name || 'Maa Medical Centre'}</Text>
+              <Text style={styles.estName}>{currentEstablishment?.name}</Text>
               <View style={styles.locationRow}>
                 <MapPin size={14} color={Colors.primary} />
                 <Text style={styles.locationText}>
-                  {currentEstablishment?.subDistrict || 'Gopiballavpur'}, {currentEstablishment?.district || 'Jhargram'}
+                  {currentEstablishment?.subDistrict}, {currentEstablishment?.district}
                 </Text>
               </View>
             </View>
@@ -76,7 +76,7 @@ export default function EstablishmentProfileScreen() {
             </View>
             <TouchableOpacity
               style={styles.previewBtn}
-              onPress={() => Alert.alert('Patient View', 'This listing is discoverable by patients within 25 km of Gopiballavpur.')}
+              onPress={() => Alert.alert('Patient view', `Patients near ${currentEstablishment?.subDistrict || currentEstablishment?.district || 'you'} can find this listing.`)}
             >
               <Text style={styles.previewBtnText}>Preview</Text>
               <ExternalLink size={12} color={Colors.primary} />
@@ -94,7 +94,7 @@ export default function EstablishmentProfileScreen() {
             <StatusBadge status="verified" />
           </View>
           <Text style={styles.cardDesc}>
-            Your public listing is up-to-date and fully discoverable by nearby patients in Gopiballavpur rural subdivisions.
+            Patients nearby can find this listing and see your doctors’ timing.
           </Text>
           <View style={styles.infoAlert}>
             <Text style={styles.infoAlertText}>
@@ -113,9 +113,9 @@ export default function EstablishmentProfileScreen() {
             <View style={styles.attrContent}>
               <Text style={styles.attrLabel}>Physical Location</Text>
               <Text style={styles.attrValue}>
-                {currentEstablishment?.address || 'Station Road, Gopiballavpur, Jhargram, West Bengal — 721506'}
+                {currentEstablishment?.address}
               </Text>
-              <Text style={styles.attrSub}>Near Gopiballavpur Bazaar Junction</Text>
+              <Text style={styles.attrSub}>{[currentEstablishment?.subDistrict, currentEstablishment?.pinCode].filter(Boolean).join(' · ')}</Text>
             </View>
           </View>
 
@@ -134,7 +134,7 @@ export default function EstablishmentProfileScreen() {
             <Phone size={18} color={Colors.primary} style={styles.attrIcon} />
             <View style={styles.attrContent}>
               <Text style={styles.attrLabel}>Front Desk Helpdesk</Text>
-              <Text style={styles.attrValue}>{currentEstablishment?.phone || '+91 98765 43210'}</Text>
+              <Text style={styles.attrValue}>{currentEstablishment?.phone || '—'}</Text>
             </View>
           </View>
 
@@ -147,12 +147,14 @@ export default function EstablishmentProfileScreen() {
                 {currentEstablishment?.licenseNumber || 'WB-DL-JHR-2021-9981'}
               </Text>
               <Text style={styles.attrSub}>
-                Proprietor: {currentEstablishment?.proprietorName || 'Rakesh Das'}
+                Proprietor: {currentEstablishment?.proprietorName}
               </Text>
             </View>
           </View>
         </View>
 
+        {!isDoctor && (
+          <>
         {/* 4. Quick Nav: Practice Locations (Rooms) */}
         <TouchableOpacity
           style={styles.navRowCard}
@@ -173,6 +175,10 @@ export default function EstablishmentProfileScreen() {
           <ChevronRight size={20} color={Colors.textMuted} />
         </TouchableOpacity>
 
+          </>
+        )}
+        {canManagePeople && (
+          <>
         {/* 5. Quick Nav: Counter Team */}
         <TouchableOpacity
           style={styles.navRowCard}
@@ -192,6 +198,8 @@ export default function EstablishmentProfileScreen() {
           </View>
           <ChevronRight size={20} color={Colors.textMuted} />
         </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

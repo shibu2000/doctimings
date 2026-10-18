@@ -1,122 +1,126 @@
 import { Platform } from 'react-native';
-import { Doctor, Establishment, PracticeLocation, AvailabilityStatus, EstablishmentType } from '../types';
+import { Doctor, LocationItem } from '../types';
+import { ApiDoctor, mapDoctor, Origin } from './doctorMapper';
 
 const DEFAULT_API_HOST = Platform.OS === 'android' ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
 const API_BASE_URL = `${process.env.EXPO_PUBLIC_API_URL || DEFAULT_API_HOST}/api/v1`;
+const TIMEOUT_MS = 12000;
 
-const mapBackendToMobileDoctor = (backendDoc: any): Doctor => {
-  const isAvailable = backendDoc.todayAvailability?.isAvailable;
-  const availStatus: AvailabilityStatus = isAvailable ? 'available_today' : 'not_available';
+export class ApiError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+  }
+}
 
-  const practices: PracticeLocation[] = (backendDoc.affiliatedEstablishments || []).map((est: any) => ({
-    id: `PRAC-${est.id}`,
-    establishmentId: est.id,
-    establishmentName: est.name,
-    establishmentType: (est.type?.toLowerCase().replace(/ /g, '_') || 'doctor_chamber') as EstablishmentType,
-    addressLine: est.address,
-    locality: est.subDistrict || est.district,
-    pincode: est.pinCode,
-    latitude: est.latitude,
-    longitude: est.longitude,
-    phone: est.phone,
-    distanceKm: backendDoc.distanceKm || 3.5,
-    consultationFee: 300,
-    availability: availStatus,
-    lastVerifiedAt: est.lastUpdated || new Date().toISOString(),
-    schedules: (backendDoc.schedules || []).map((s: any) => ({
-      id: s.id,
-      doctorPracticeId: `PRAC-${est.id}`,
-      dayOfWeek: 1,
-      dayName: s.dayOfWeek,
-      dayNameBn: s.dayOfWeek,
-      startTime: s.startTime,
-      endTime: s.endTime,
-      slotLabel: s.shiftName,
-      slotLabelBn: s.shiftName,
-      isToday: s.dayOfWeek === backendDoc.todayAvailability?.day
-    }))
-  }));
-
-  return {
-    id: backendDoc.id,
-    name: backendDoc.fullName,
-    displayName: backendDoc.fullName,
-    photoUrl: backendDoc.photoUrl,
-    bio: `${backendDoc.qualifications} with ${backendDoc.experienceYears} years experience. Registered with ${backendDoc.council}.`,
-    qualifications: backendDoc.qualifications,
-    experienceYears: backendDoc.experienceYears,
-    consultationFee: 300,
-    phone: backendDoc.primaryPhone,
-    registrationNumber: backendDoc.registrationNumber,
-    registrationCouncil: backendDoc.council,
-    verificationStatus: (backendDoc.verificationStatus?.toLowerCase() || 'verified') as any,
-    lastVerifiedAt: backendDoc.lastUpdated || new Date().toISOString(),
-    specialties: [backendDoc.specialty],
-    specialtiesBn: [backendDoc.specialty],
-    languages: backendDoc.languages || ['Bengali', 'English'],
-    practices,
-    todayAvailability: availStatus
-  };
+const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', ...init?.headers }
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok || body.success === false) {
+      throw new ApiError(body?.error?.message || `Request failed (${res.status})`, res.status);
+    }
+    return body as T;
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError('No internet connection', 0);
+  } finally {
+    clearTimeout(timer);
+  }
 };
+
+interface ApiTown {
+  id: string;
+  name: string;
+  district: string;
+  latitude: number;
+  longitude: number;
+  doctorCount: number;
+}
+
+export interface Town extends LocationItem {
+  doctorCount: number;
+}
+
+const toLocation = (t: Omit<ApiTown, 'doctorCount'>, doctorCount = 0): Town => ({
+  id: t.id,
+  name: t.name,
+  nameBn: t.name,
+  district: t.district,
+  districtBn: t.district,
+  state: 'West Bengal',
+  pincode: '',
+  latitude: t.latitude,
+  longitude: t.longitude,
+  isPopular: doctorCount > 0,
+  doctorCount
+});
+
+export interface SearchParams {
+  q?: string;
+  specialty?: string;
+  latitude: number;
+  longitude: number;
+  radiusKm: number;
+  availableOnly?: boolean;
+}
+
+export interface SearchResult {
+  doctors: Doctor[];
+  total: number;
+  radiusKm: number;
+  autoExpanded: boolean;
+}
 
 export const api = {
   checkHealth: async (): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_BASE_URL}/health`);
-      const body = await res.json();
+      const body = await request<{ status: string }>('/health');
       return body.status === 'ok';
     } catch {
       return false;
     }
   },
 
-  searchDoctors: async (params: {
-    q?: string;
-    latitude?: number;
-    longitude?: number;
-    radiusKm?: number;
-    specialty?: string;
-    dayOfWeek?: string;
-    availableOnly?: boolean;
-  }): Promise<{ success: boolean; data: Doctor[]; autoExpanded?: boolean }> => {
-    try {
-      const cleanParams: Record<string, string> = {};
-      if (params.q) cleanParams.q = params.q;
-      if (params.latitude !== undefined) cleanParams.latitude = String(params.latitude);
-      if (params.longitude !== undefined) cleanParams.longitude = String(params.longitude);
-      if (params.radiusKm !== undefined) cleanParams.radiusKm = String(params.radiusKm);
-      if (params.specialty) cleanParams.specialty = params.specialty;
-      if (params.dayOfWeek) cleanParams.dayOfWeek = params.dayOfWeek;
-      if (params.availableOnly) cleanParams.availableOnly = 'true';
-
-      const qs = new URLSearchParams(cleanParams).toString();
-      const res = await fetch(`${API_BASE_URL}/search?${qs}`);
-      const body = await res.json();
-
-      if (!res.ok || !body.success) {
-        return { success: false, data: [] };
-      }
-
-      const doctors: Doctor[] = (body.data || []).map(mapBackendToMobileDoctor);
-      return {
-        success: true,
-        data: doctors,
-        autoExpanded: body.searchMeta?.autoExpandedRadius
-      };
-    } catch {
-      return { success: false, data: [] };
-    }
+  towns: async (): Promise<{ towns: Town[]; defaultLocation: Town }> => {
+    const body = await request<{ data: ApiTown[]; defaultLocation: Omit<ApiTown, 'doctorCount'> }>('/locations/towns');
+    return { towns: body.data.map(t => toLocation(t, t.doctorCount)), defaultLocation: toLocation(body.defaultLocation) };
   },
 
-  getDoctorById: async (id: string): Promise<Doctor | null> => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/doctors/${id}`);
-      const body = await res.json();
-      if (!res.ok || !body.success || !body.data) return null;
-      return mapBackendToMobileDoctor(body.data);
-    } catch {
-      return null;
-    }
+  searchDoctors: async (params: SearchParams): Promise<SearchResult> => {
+    const query = new URLSearchParams({
+      latitude: String(params.latitude),
+      longitude: String(params.longitude),
+      radiusKm: String(params.radiusKm),
+      limit: '50'
+    });
+    if (params.q) query.set('q', params.q);
+    if (params.specialty) query.set('specialty', params.specialty);
+    if (params.availableOnly) query.set('availableOnly', 'true');
+
+    const body = await request<{
+      data: ApiDoctor[];
+      pagination: { total: number };
+      searchMeta: { appliedRadiusKm: number; autoExpandedRadius: boolean };
+    }>(`/search?${query.toString()}`);
+
+    const origin: Origin = { latitude: params.latitude, longitude: params.longitude };
+    return {
+      doctors: body.data.map(d => mapDoctor(d, origin)),
+      total: body.pagination.total,
+      radiusKm: body.searchMeta.appliedRadiusKm,
+      autoExpanded: body.searchMeta.autoExpandedRadius
+    };
+  },
+
+  getDoctor: async (id: string, origin?: Origin): Promise<Doctor> => {
+    const body = await request<{ data: ApiDoctor }>(`/doctors/${encodeURIComponent(id)}`);
+    return mapDoctor(body.data, origin);
   },
 
   submitReport: async (reportData: {
@@ -127,20 +131,12 @@ export const api = {
     description: string;
     severity?: 'low' | 'medium' | 'high';
     reporterPhone?: string;
-  }): Promise<{ success: boolean; data?: any; error?: string }> => {
+  }): Promise<{ success: boolean; data?: unknown; error?: string }> => {
     try {
-      const res = await fetch(`${API_BASE_URL}/reports`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reportData)
-      });
-      const body = await res.json();
-      if (!res.ok || !body.success) {
-        return { success: false, error: body.error?.message || 'Failed to submit report' };
-      }
+      const body = await request<{ data: unknown }>('/reports', { method: 'POST', body: JSON.stringify(reportData) });
       return { success: true, data: body.data };
-    } catch (err: any) {
-      return { success: false, error: err.message || 'Network error' };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
     }
   }
 };

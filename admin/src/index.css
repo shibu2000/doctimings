@@ -1,44 +1,22 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --color-primary: #0F766E;
-  --color-primary-dark: #115E59;
-  --color-primary-light: #CCFBF1;
-  --color-sidebar: #115E59;
-  --color-sidebar-dark: #0D4A46;
-  --color-sidebar-hover: #136C66;
-  
-  --color-success: #16A34A;
-  --color-success-light: #DCFCE7;
-  --color-success-text: #15803D;
-
-  --color-warning: #D97706;
-  --color-warning-light: #FEF3C7;
-  --color-warning-text: #B45309;
-
-  --color-error: #DC2626;
-  --color-error-light: #FEE2E2;
-  --color-error-text: #B91C1C;
-
-  --color-info: #2563EB;
-  --color-info-light: #DBEAFE;
-
-  --color-surface: #FFFFFF;
-  --color-background: #F8FAFC;
-  --color-border: #E2E8F0;
-  --color-text-main: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94A3B8;
+  --font-sans: 'Noto Sans', 'Noto Sans Bengali', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 :root {
-  font-family: 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #0F172A;
-  background-color: #F8FAFC;
+  color: #0f172a;
+  background-color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #F8FAFC;
+}
+
+input[type='time']::-webkit-calendar-picker-indicator,
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
 }

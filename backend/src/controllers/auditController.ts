@@ -1,64 +1,23 @@
 import type { Context } from 'hono';
-import { memoryStore } from '../db/index.js';
+import { desc } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
+import * as schema from '../db/schema.js';
+import { paginate } from '../lib/http.js';
 
 export const auditController = {
   getAuditLogs: async (c: Context) => {
-    const entityType = c.req.query('entityType');
-    const entityId = c.req.query('entityId');
-    const action = c.req.query('action');
-    const actorId = c.req.query('actorId');
+    const { entityType, entityId, action, actorId } = c.req.query();
     const page = Number(c.req.query('page')) || 1;
-    const limit = Number(c.req.query('limit')) || 20;
+    const limit = Math.min(Number(c.req.query('limit')) || 20, 200);
 
-    let list = [...memoryStore.auditLogs];
+    const list = (await getDb().select().from(schema.auditLogs).orderBy(desc(schema.auditLogs.timestamp))).filter(
+      l =>
+        (!entityType || entityType === 'All' || l.entityType.toLowerCase() === entityType.toLowerCase()) &&
+        (!entityId || l.entityId === entityId) &&
+        (!action || action === 'All' || l.action.toLowerCase() === action.toLowerCase()) &&
+        (!actorId || l.actorId === actorId)
+    );
 
-    if (entityType && entityType !== 'All') {
-      list = list.filter(l => l.entityType.toLowerCase() === entityType.toLowerCase());
-    }
-
-    if (entityId) {
-      list = list.filter(l => l.entityId === entityId);
-    }
-
-    if (action && action !== 'All') {
-      list = list.filter(l => l.action.toLowerCase() === action.toLowerCase());
-    }
-
-    if (actorId) {
-      list = list.filter(l => l.actorId === actorId);
-    }
-
-    const total = list.length;
-    const startIndex = (page - 1) * limit;
-    const paged = list.slice(startIndex, startIndex + limit);
-
-    return c.json({
-      success: true,
-      data: paged,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
-    });
-  },
-
-  createAuditLog: async (c: Context) => {
-    const user = c.get('user');
-    const body = await c.req.json();
-    const newLog = {
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || body.actorId || 'USR-ADMIN',
-      actorName: user?.name || body.actorName || 'System Admin',
-      action: body.action || 'Admin Action',
-      entityType: body.entityType || 'System',
-      entityId: body.entityId || '0',
-      entityName: body.entityName || '',
-      details: body.details || ''
-    };
-    memoryStore.auditLogs.unshift(newLog);
-    return c.json({ success: true, data: newLog }, 201);
+    return c.json({ success: true, ...paginate(list, page, limit) });
   }
 };

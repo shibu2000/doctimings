@@ -7,7 +7,7 @@ export const searchQuerySchema = z.object({
   radiusKm: z.coerce.number().min(1).max(200).default(15),
   specialty: z.string().optional(),
   dayOfWeek: z.string().optional(),
-  availableOnly: z.coerce.boolean().default(false),
+  availableOnly: z.enum(['true', 'false']).default('false'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(20)
 });

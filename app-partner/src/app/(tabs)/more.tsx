@@ -29,7 +29,8 @@ import { usePartner } from '../../store/PartnerContext';
 export default function MoreScreen() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const { currentEstablishment, unreadNotificationsCount } = usePartner();
+  const { currentEstablishment, unreadNotificationsCount, isDoctor, canManagePeople, accessRole } = usePartner();
+  const roleLabel = accessRole === 'Owner' ? 'Owner' : accessRole === 'Staff' ? 'Counter staff' : accessRole === 'Doctor' ? 'Doctor' : '';
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure you want to end your active partner session?', [
@@ -62,12 +63,12 @@ export default function MoreScreen() {
           <View style={styles.profileTopRow}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>
-                {user?.name ? user.name.slice(0, 2).toUpperCase() : 'RD'}
+                {user?.name ? user.name.replace(/^dr\.?\s*/i, '').slice(0, 2).toUpperCase() : ''}
               </Text>
             </View>
             <View style={styles.profileInfo}>
-              <Text style={styles.userName}>{user?.name || 'Rakesh Das'}</Text>
-              <Text style={styles.userRole}>{user?.role || 'Establishment Admin'}</Text>
+              <Text style={styles.userName}>{user?.name}</Text>
+              <Text style={styles.userRole}>{roleLabel}</Text>
             </View>
             <View style={styles.sessionBadge}>
               <View style={styles.activeDot} />
@@ -81,7 +82,7 @@ export default function MoreScreen() {
             <View style={styles.facilityTextContainer}>
               <Text style={styles.facilitySub}>Primary Facility</Text>
               <Text style={styles.facilityTitle}>
-                {currentEstablishment?.name || 'Maa Medical Centre'} · {currentEstablishment?.subDistrict || 'Gopiballavpur'}
+                {currentEstablishment?.name} · {currentEstablishment?.subDistrict}
               </Text>
             </View>
           </View>
@@ -177,6 +178,8 @@ export default function MoreScreen() {
               </View>
             </TouchableOpacity>
 
+            {!isDoctor && (
+              <>
             <View style={styles.divider} />
 
             <TouchableOpacity
@@ -194,9 +197,11 @@ export default function MoreScreen() {
               </View>
               <ChevronRight size={18} color={Colors.textMuted} />
             </TouchableOpacity>
-
-            <View style={styles.divider} />
-
+              </>
+            )}
+            {canManagePeople && (
+              <>
+                <View style={styles.divider} />
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/team')}
@@ -212,31 +217,15 @@ export default function MoreScreen() {
               </View>
               <ChevronRight size={18} color={Colors.textMuted} />
             </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
 
         {/* Section: Platform & Support */}
         <View style={styles.menuSection}>
-          <Text style={styles.sectionHeader}>SUPPORT & CIVIC DIRECTORY</Text>
+          <Text style={styles.sectionHeader}>SUPPORT</Text>
           <View style={styles.cardMenu}>
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => router.push('/civic-health')}
-            >
-              <View style={styles.menuLeft}>
-                <View style={styles.iconBox}>
-                  <HeartPulse size={18} color={Colors.primary} />
-                </View>
-                <View>
-                  <Text style={styles.menuTitle}>DocTimings Civic Health</Text>
-                  <Text style={styles.menuDesc}>Regional healthcare network overview</Text>
-                </View>
-              </View>
-              <ChevronRight size={18} color={Colors.textMuted} />
-            </TouchableOpacity>
-
-            <View style={styles.divider} />
-
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/help-support')}

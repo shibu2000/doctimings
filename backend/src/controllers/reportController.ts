@@ -1,181 +1,128 @@
 import type { Context } from 'hono';
-import { memoryStore } from '../db/index.js';
+import { desc, eq } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
+import * as schema from '../db/schema.js';
 import { CreateReportInput, UpdateReportInput } from '../validators/reportValidator.js';
-import { JWTPayload } from '../types/index.js';
+import { recordAudit } from '../lib/audit.js';
+import { currentUser, newId, notFound, paginate, validBody } from '../lib/http.js';
+
+const withNames = async <T extends { doctorId: string | null; establishmentId: string | null }>(reports: T[]) => {
+  const db = getDb();
+  const [doctors, establishments] = await Promise.all([
+    db.select({ id: schema.doctors.id, name: schema.doctors.fullName, specialty: schema.doctors.specialty }).from(schema.doctors),
+    db.select({ id: schema.establishments.id, name: schema.establishments.name }).from(schema.establishments)
+  ]);
+  const doctorMap = new Map(doctors.map(d => [d.id, d]));
+  const establishmentMap = new Map(establishments.map(e => [e.id, e.name]));
+  return reports.map(r => ({
+    ...r,
+    doctorName: (r.doctorId && doctorMap.get(r.doctorId)?.name) || null,
+    doctorSpecialty: (r.doctorId && doctorMap.get(r.doctorId)?.specialty) || null,
+    establishmentName: (r.establishmentId && establishmentMap.get(r.establishmentId)) || null
+  }));
+};
 
 export const reportController = {
   submitReport: async (c: Context) => {
-    const body = (c.get('validatedBody') || (await c.req.json())) as CreateReportInput;
-    const user = c.get('user') as JWTPayload | undefined;
+    const body = validBody<CreateReportInput>(c);
+    const user = currentUser(c);
+    const db = getDb();
 
-    const newReport = {
-      id: `RPT-${Date.now().toString().slice(-6)}`,
-      doctorId: body.doctorId || null,
-      establishmentId: body.establishmentId || null,
-      issueType: body.issueType,
-      issueTitle: body.issueTitle,
-      description: body.description,
-      severity: body.severity || 'medium',
-      status: 'pending',
-      source: user ? 'Registered User' : 'Mobile App Patient',
-      reporterPhone: body.reporterPhone || null,
-      resolutionNotes: null,
-      createdAt: new Date().toISOString()
-    };
+    const [report] = await db
+      .insert(schema.reports)
+      .values({
+        id: newId('RPT'),
+        doctorId: body.doctorId || null,
+        establishmentId: body.establishmentId || null,
+        issueType: body.issueType,
+        issueTitle: body.issueTitle,
+        description: body.description,
+        severity: body.severity,
+        status: 'pending',
+        source: user ? 'Registered User' : 'Mobile App Patient',
+        reporterPhone: body.reporterPhone || null
+      })
+      .returning();
 
-    memoryStore.reports.unshift(newReport);
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'GUEST',
-      actorName: user?.name || 'Public Patient',
-      action: 'Create',
+    await recordAudit(db, user, {
+      action: 'Submitted report',
       entityType: 'Report',
-      entityId: newReport.id,
-      entityName: newReport.issueTitle,
-      details: `Crowdsourced report filed: ${newReport.issueType}`
+      entityId: report.id,
+      entityName: report.issueTitle,
+      details: report.issueType
     });
 
     return c.json(
       {
         success: true,
         message: 'Report submitted successfully. Our operations team will verify this promptly.',
-        data: newReport
+        data: report
       },
       201
     );
   },
 
   getReports: async (c: Context) => {
-    const status = c.req.query('status');
-    const severity = c.req.query('severity');
-    const issueType = c.req.query('issueType');
-    const doctorId = c.req.query('doctorId');
-    const establishmentId = c.req.query('establishmentId');
+    const { status, severity, issueType, doctorId, establishmentId } = c.req.query();
     const page = Number(c.req.query('page')) || 1;
-    const limit = Number(c.req.query('limit')) || 20;
+    const limit = Math.min(Number(c.req.query('limit')) || 20, 500);
+    const matches = (value: string, filter?: string) =>
+      !filter || filter === 'All' || value.toLowerCase() === filter.toLowerCase();
 
-    let list = [...memoryStore.reports];
+    const list = (await getDb().select().from(schema.reports).orderBy(desc(schema.reports.createdAt))).filter(
+      r =>
+        matches(r.status, status) &&
+        matches(r.severity, severity) &&
+        matches(r.issueType, issueType) &&
+        (!doctorId || r.doctorId === doctorId) &&
+        (!establishmentId || r.establishmentId === establishmentId)
+    );
 
-    if (status && status !== 'All') {
-      list = list.filter(r => r.status.toLowerCase() === status.toLowerCase());
-    }
-
-    if (severity && severity !== 'All') {
-      list = list.filter(r => r.severity.toLowerCase() === severity.toLowerCase());
-    }
-
-    if (issueType && issueType !== 'All') {
-      list = list.filter(r => r.issueType.toLowerCase() === issueType.toLowerCase());
-    }
-
-    if (doctorId) {
-      list = list.filter(r => r.doctorId === doctorId);
-    }
-
-    if (establishmentId) {
-      list = list.filter(r => r.establishmentId === establishmentId);
-    }
-
-    const total = list.length;
-    const startIndex = (page - 1) * limit;
-    const paged = list.slice(startIndex, startIndex + limit);
-
-    const enriched = paged.map(r => {
-      const doc = r.doctorId ? memoryStore.doctors.find(d => d.id === r.doctorId) : null;
-      const est = r.establishmentId ? memoryStore.establishments.find(e => e.id === r.establishmentId) : null;
-
-      return {
-        ...r,
-        doctorName: doc ? doc.fullName : null,
-        doctorSpecialty: doc ? doc.specialty : null,
-        establishmentName: est ? est.name : null
-      };
-    });
-
-    return c.json({
-      success: true,
-      data: enriched,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
-    });
+    const result = paginate(list, page, limit);
+    return c.json({ success: true, data: await withNames(result.data), pagination: result.pagination });
   },
 
   getReportById: async (c: Context) => {
-    const id = c.req.param('id');
-    const report = memoryStore.reports.find(r => r.id === id);
+    const id = c.req.param('id')!;
+    const db = getDb();
+    const [report] = await db.select().from(schema.reports).where(eq(schema.reports.id, id));
+    if (!report) return notFound(c, `Report ${id} was not found`);
 
-    if (!report) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Report ${id} not found`
-          }
-        },
-        404
-      );
-    }
+    const [[doctor], [establishment]] = await Promise.all([
+      report.doctorId ? db.select().from(schema.doctors).where(eq(schema.doctors.id, report.doctorId)) : Promise.resolve([]),
+      report.establishmentId
+        ? db.select().from(schema.establishments).where(eq(schema.establishments.id, report.establishmentId))
+        : Promise.resolve([])
+    ]);
 
-    const doc = report.doctorId ? memoryStore.doctors.find(d => d.id === report.doctorId) : null;
-    const est = report.establishmentId ? memoryStore.establishments.find(e => e.id === report.establishmentId) : null;
-
-    return c.json({
-      success: true,
-      data: {
-        ...report,
-        doctor: doc || null,
-        establishment: est || null
-      }
-    });
+    return c.json({ success: true, data: { ...report, doctor: doctor ?? null, establishment: establishment ?? null } });
   },
 
   updateReportStatus: async (c: Context) => {
-    const id = c.req.param('id');
-    const body = (c.get('validatedBody') || (await c.req.json())) as UpdateReportInput;
-    const user = c.get('user') as JWTPayload | undefined;
+    const id = c.req.param('id')!;
+    const body = validBody<UpdateReportInput>(c);
+    const db = getDb();
+    const [existing] = await db.select().from(schema.reports).where(eq(schema.reports.id, id));
+    if (!existing) return notFound(c, `Report ${id} was not found`);
 
-    const report = memoryStore.reports.find(r => r.id === id);
-    if (!report) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: `Report ${id} not found`
-          }
-        },
-        404
-      );
-    }
+    const [report] = await db
+      .update(schema.reports)
+      .set({
+        status: body.status,
+        ...(body.resolutionNotes !== undefined ? { resolutionNotes: body.resolutionNotes } : {}),
+        updatedAt: new Date()
+      })
+      .where(eq(schema.reports.id, id))
+      .returning();
 
-    report.status = body.status;
-    if (body.resolutionNotes) {
-      report.resolutionNotes = body.resolutionNotes;
-    }
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user?.sub || 'SYSTEM',
-      actorName: user?.name || 'Administrator',
-      action: 'Update',
+    await recordAudit(db, currentUser(c), {
+      action: `Report ${body.status}`,
       entityType: 'Report',
-      entityId: id || '',
+      entityId: id,
       entityName: report.issueTitle,
-      details: `Report status updated to ${body.status}`
+      details: body.resolutionNotes ?? ''
     });
 
-    return c.json({
-      success: true,
-      message: `Report status updated to ${body.status}`,
-      data: report
-    });
+    return c.json({ success: true, message: `Report status updated to ${body.status}`, data: report });
   }
 };

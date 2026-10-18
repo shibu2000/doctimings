@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -23,14 +24,15 @@ import {
 import { Header } from '../../components/common/Header';
 import { DoctorCard } from '../../components/common/DoctorCard';
 import { CategoryChip } from '../../components/common/CategoryChip';
-import { DOCTORS } from '../../data/mockData';
+import { useDoctorSearch } from '../../hooks/useDoctors';
 import { useApp } from '../../store/AppContext';
 import { GlowingIcon } from '../../components/common/GlowingIcon';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { currentLocation, language, theme, isDark } = useApp();
+  const { currentLocation, language, theme, isDark, locationStatus } = useApp();
+  const nearby = useDoctorSearch('');
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'today' | 'evening' | 'nearest'>('all');
 
@@ -63,7 +65,7 @@ export default function HomeScreen() {
     });
   };
 
-  const filteredDoctors = DOCTORS.filter((doctor) => {
+  const filteredDoctors = (nearby.data?.doctors ?? []).filter((doctor) => {
     if (activeFilter === 'today') {
       return doctor.todayAvailability === 'available_today';
     }
@@ -73,7 +75,7 @@ export default function HomeScreen() {
       );
     }
     if (activeFilter === 'nearest') {
-      return doctor.practices.some((p) => (p.distanceKm || 99) < 5);
+      return doctor.practices.some((p) => (p.distanceKm ?? 99) < 5);
     }
     return true;
   });
@@ -314,9 +316,34 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.doctorList}>
-          {filteredDoctors.map((doc) => (
-            <DoctorCard key={doc.id} doctor={doc} />
-          ))}
+          {locationStatus === 'detecting' || (!nearby.data && nearby.isFetching) ? (
+            <View style={styles.listState}>
+              <ActivityIndicator color={theme.primary} />
+              <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
+                {locationStatus === 'detecting' ? t('location.detecting') : t('common.loading')}
+              </Text>
+            </View>
+          ) : nearby.isError && !nearby.data ? (
+            <TouchableOpacity style={styles.listState} onPress={() => nearby.refetch()}>
+              <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.loadFailed')}</Text>
+              <Text style={[styles.listStateText, { color: theme.primary, fontWeight: '700' }]}>{t('common.retry')}</Text>
+            </TouchableOpacity>
+          ) : filteredDoctors.length === 0 ? (
+            <View style={styles.listState}>
+              <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.emptyTitle')}</Text>
+            </View>
+          ) : (
+            <>
+              {nearby.data?.autoExpanded && activeFilter === 'all' && (
+                <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
+                  {t('search.autoExpanded', { radius: nearby.data.radiusKm })}
+                </Text>
+              )}
+              {filteredDoctors.map((doc) => (
+                <DoctorCard key={doc.id} doctor={doc} />
+              ))}
+            </>
+          )}
         </View>
 
         <TouchableOpacity
@@ -382,6 +409,15 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  listState: {
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 32,
+  },
+  listStateText: {
+    fontSize: 13,
+    textAlign: 'center',
+  },
   safeArea: {
     flex: 1,
   },

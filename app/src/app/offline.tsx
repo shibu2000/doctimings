@@ -18,7 +18,8 @@ import {
 } from 'lucide-react-native';
 import { useApp } from '../store/AppContext';
 import { DoctorCard } from '../components/common/DoctorCard';
-import { DOCTORS } from '../data/mockData';
+import { useQueryClient } from '@tanstack/react-query';
+import type { SearchResult } from '../services/api';
 import { ConfirmationModal } from '../components/common/ConfirmationModal';
 import { GlowingIcon } from '../components/common/GlowingIcon';
 
@@ -27,6 +28,11 @@ export default function OfflineScreen() {
   const { t } = useTranslation();
   const { lastSyncTime, refreshSync, setIsOffline, theme, isDark } = useApp();
   const [reconnectModalVisible, setReconnectModalVisible] = useState(false);
+  const client = useQueryClient();
+  const cachedDoctors = client
+    .getQueriesData<SearchResult>({ queryKey: ['search'] })
+    .map(([, data]) => data?.doctors ?? [])
+    .find((list) => list.length > 0) ?? [];
 
   const handleReconnect = () => {
     refreshSync();
@@ -147,7 +153,10 @@ export default function OfflineScreen() {
             </Text>
           </View>
 
-          {DOCTORS.slice(0, 3).map((doctor) => (
+          {cachedDoctors.length === 0 && (
+            <Text style={{ fontSize: 13, color: theme.textSecondary }}>{t('offline.nothingCached')}</Text>
+          )}
+          {cachedDoctors.slice(0, 5).map((doctor) => (
             <DoctorCard key={doctor.id} doctor={doctor} />
           ))}
         </View>

@@ -1,105 +1,33 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, CheckCircle2, ArrowRight } from 'lucide-react-native';
+import { KeyRound } from 'lucide-react-native';
 import { Header } from '../../components/Header';
 import { Colors, Spacing, Typography, Radius } from '../../constants/theme';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = async () => {
-    if (!email.trim()) return;
-    setIsLoading(true);
-    // Simulate reset request
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 800);
-  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <Header title="Reset Password" showBack backLabel="Login" />
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {isSubmitted ? (
-          <View style={styles.successCard}>
-            <View style={styles.successIconBox}>
-              <CheckCircle2 size={36} color={Colors.success} />
-            </View>
-            <Text style={styles.successTitle}>Instructions Sent</Text>
-            <Text style={styles.successDesc}>
-              We have dispatched password reset instructions to{' '}
-              <Text style={{ fontWeight: '600', color: Colors.textPrimary }}>{email}</Text>. Please follow the link in your email to reset your credentials.
-            </Text>
-            <TouchableOpacity
-              style={styles.backToLoginButton}
-              onPress={() => router.replace('/(auth)/login')}
-            >
-              <Text style={styles.backToLoginText}>Back to Sign In</Text>
-            </TouchableOpacity>
+      <Header title="Forgot password" showBack backLabel="Login" />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <View style={styles.successCard}>
+          <View style={styles.successIconBox}>
+            <KeyRound size={32} color={Colors.primary} />
           </View>
-        ) : (
-          <View style={styles.formCard}>
-            <Text style={styles.cardTitle}>Find Your Establishment Account</Text>
-            <Text style={styles.cardDesc}>
-              Enter the registered email associated with your clinic or pharmacy counter desk.
-            </Text>
-
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>Registered Email</Text>
-              <View style={styles.inputContainer}>
-                <Mail size={18} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="e.g. partner@maamedical.org"
-                  placeholderTextColor={Colors.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  autoFocus
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={[styles.submitButton, (!email.trim() || isLoading) && styles.submitButtonDisabled]}
-              onPress={handleSubmit}
-              disabled={!email.trim() || isLoading}
-              activeOpacity={0.8}
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#FFFFFF" />
-              ) : (
-                <>
-                  <Text style={styles.submitButtonText}>Send Reset Instructions</Text>
-                  <ArrowRight size={18} color="#FFFFFF" />
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
-        )}
+          <Text style={styles.successTitle}>Get a new password</Text>
+          <Text style={styles.successDesc}>
+            For your safety, passwords are reset by a person, not by email.{'\n\n'}
+            • Counter staff: ask your establishment owner to remove you and send a new code, or contact DocTimings.{'\n'}
+            • Owners and doctors: contact the DocTimings team. After we confirm it’s you by calling the number on record, we set a temporary password that you can change from More → Change password.
+          </Text>
+          <TouchableOpacity style={styles.backToLoginButton} onPress={() => router.replace('/(auth)/login')}>
+            <Text style={styles.backToLoginText}>Back to sign in</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-    </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

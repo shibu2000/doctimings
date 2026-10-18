@@ -1,94 +1,75 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Navigation, Search, Check, AlertCircle } from "lucide-react";
-import { BengalCity } from "@/types";
-import { BENGAL_CITIES, POPULAR_DISTRICTS, findNearestBengalCity } from "@/data/bengalLocations";
+import type { SearchLocation, Town } from "@/types";
+import { detectPosition, locationFromCoords, locationFromTown } from "@/lib/location";
 
 interface LocationModalProps {
   isOpen: boolean;
-  currentCity: BengalCity;
+  towns: Town[];
+  current: SearchLocation | null;
   onClose: () => void;
-  onSelectCity: (city: BengalCity) => void;
+  onSelect: (location: SearchLocation) => void;
 }
 
-export const LocationModal: React.FC<LocationModalProps> = ({
-  isOpen,
-  currentCity,
-  onClose,
-  onSelectCity,
-}) => {
+const DENIED_MESSAGE = "Location permission is blocked. Allow location for this site in your browser settings, or pick your town below.";
+
+export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, towns, current, onClose, onSelect }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
-  const [detectedNote, setDetectedNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const handleUseCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser.");
-      return;
-    }
-
-    setIsLocating(true);
+  const close = () => {
+    setSearchTerm("");
     setLocationError(null);
-    setDetectedNote(null);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const nearest = findNearestBengalCity(latitude, longitude);
-        setIsLocating(false);
-        setDetectedNote(`Detected your location near ${nearest.name} (${nearest.district})`);
-        setTimeout(() => {
-          onSelectCity({
-            ...nearest,
-            latitude,
-            longitude,
-          });
-          onClose();
-        }, 600);
-      },
-      (error) => {
-        setIsLocating(false);
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationError("Location permission denied. Please select your town or district manually below.");
-        } else {
-          setLocationError("Unable to retrieve your location. Please pick your town from the list.");
-        }
-      },
-      { timeout: 10000, enableHighAccuracy: true }
-    );
+    onClose();
   };
 
-  const filteredCities = BENGAL_CITIES.filter((city) => {
-    const q = searchTerm.toLowerCase().trim();
-    return (
-      city.name.toLowerCase().includes(q) ||
-      city.district.toLowerCase().includes(q)
-    );
-  });
+  const choose = (location: SearchLocation) => {
+    onSelect(location);
+    close();
+  };
 
-  const popularCities = BENGAL_CITIES.filter((c) => c.isPopular);
+  const handleUseCurrentLocation = async () => {
+    setIsLocating(true);
+    setLocationError(null);
+    const result = await detectPosition(10000);
+    setIsLocating(false);
+    if (result.ok) {
+      choose(locationFromCoords(towns, result.latitude, result.longitude));
+    } else if (result.reason === "denied") {
+      setLocationError(DENIED_MESSAGE);
+    } else if (result.reason === "unsupported") {
+      setLocationError("This browser cannot share your location. Please pick your town below.");
+    } else {
+      setLocationError("Could not find your location. Check that location is on, or pick your town below.");
+    }
+  };
+
+  const q = searchTerm.toLowerCase().trim();
+  const filtered = towns.filter((t) => !q || t.name.toLowerCase().includes(q) || t.district.toLowerCase().includes(q));
+  const districts = [...new Set(filtered.map((t) => t.district))];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
-      <div 
-        className="w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden"
-        role="dialog"
-        aria-modal="true"
-      >
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="absolute inset-0 bg-slate-900/60" onClick={close} />
+      <div className="relative w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden" role="dialog" aria-modal="true" aria-label="Choose your location">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Select Your Location</h2>
-            <p className="text-xs text-slate-500">Find doctors and chambers closest to your town</p>
+            <h2 className="text-lg font-bold text-slate-900">Where are you?</h2>
+            <p className="text-xs text-slate-500">We show doctors closest to you first</p>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-            aria-label="Close modal"
-          >
+          <button onClick={close} className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -97,18 +78,11 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           <button
             onClick={handleUseCurrentLocation}
             disabled={isLocating}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white font-semibold text-sm transition-all shadow-xs disabled:opacity-70 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-sm shadow-xs disabled:opacity-70 cursor-pointer"
           >
-            <Navigation className={`w-4 h-4 text-teal-200 ${isLocating ? "animate-spin" : ""}`} />
-            <span>{isLocating ? "Detecting GPS location..." : "Use My Current Location"}</span>
+            <Navigation className={`w-4 h-4 text-teal-200 ${isLocating ? "animate-pulse" : ""}`} />
+            <span>{isLocating ? "Finding your location…" : "Use my current location"}</span>
           </button>
-
-          {detectedNote && (
-            <div className="p-2.5 rounded-lg bg-teal-50 border border-teal-200 text-teal-800 text-xs flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600 shrink-0" />
-              <span>{detectedNote}</span>
-            </div>
-          )}
 
           {locationError && (
             <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2">
@@ -121,93 +95,53 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search town, block, or district (e.g. Kalna, Gopiballavpur)..."
+              placeholder="Search your town or district"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700/20 focus:border-teal-700"
+              aria-label="Search town"
             />
           </div>
         </div>
 
-        <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-5">
-          {!searchTerm && (
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5 block">
-                Popular Hubs in Bengal
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {popularCities.map((city) => {
-                  const isSelected = city.id === currentCity.id;
-                  return (
-                    <button
-                      key={city.id}
-                      onClick={() => {
-                        onSelectCity(city);
-                        onClose();
-                      }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
-                        isSelected
-                          ? "bg-teal-700 text-white"
-                          : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                      }`}
-                    >
-                      {city.name}
-                      {isSelected && <Check className="w-3 h-3 text-white" />}
-                    </button>
-                  );
-                })}
+        <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-4">
+          {towns.length === 0 ? (
+            <p className="text-center py-8 text-slate-500 text-sm">Town list could not be loaded. Use your current location instead.</p>
+          ) : filtered.length === 0 ? (
+            <p className="text-center py-8 text-slate-500 text-sm">
+              No doctors listed in &ldquo;{searchTerm}&rdquo; yet. Try a nearby town or use your current location.
+            </p>
+          ) : (
+            districts.map((district) => (
+              <div key={district} className="flex flex-col gap-1">
+                <span className="text-xs font-bold text-teal-900 bg-teal-50/70 px-2.5 py-1 rounded-md">{district}</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mt-1">
+                  {filtered
+                    .filter((t) => t.district === district)
+                    .map((town) => {
+                      const selected = current?.townId === town.id && current.source === "town";
+                      return (
+                        <button
+                          key={town.id}
+                          onClick={() => choose(locationFromTown(town))}
+                          className={`flex items-center justify-between p-2 rounded-lg text-left text-sm transition-colors cursor-pointer ${
+                            selected ? "bg-teal-100/70 text-teal-900 font-bold" : "hover:bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          <span>
+                            {town.name}
+                            <span className="block text-xs font-normal text-slate-500">
+                              {town.doctorCount} doctor{town.doctorCount === 1 ? "" : "s"}
+                            </span>
+                          </span>
+                          {selected && <Check className="w-4 h-4 text-teal-700" />}
+                        </button>
+                      );
+                    })}
+                </div>
               </div>
-            </div>
+            ))
           )}
-
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5 block">
-              {searchTerm ? "Search Results" : "Browse by District"}
-            </span>
-
-            {filteredCities.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 text-sm">
-                No location found matching &ldquo;{searchTerm}&rdquo;. Try another town or district.
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {POPULAR_DISTRICTS.map((dist) => {
-                  const distCities = filteredCities.filter((c) => c.district === dist);
-                  if (distCities.length === 0) return null;
-
-                  return (
-                    <div key={dist} className="flex flex-col gap-1">
-                      <span className="text-xs font-bold text-teal-900 bg-teal-50/70 px-2.5 py-1 rounded-md">
-                        {dist}
-                      </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mt-1">
-                        {distCities.map((city) => {
-                          const isSelected = city.id === currentCity.id;
-                          return (
-                            <button
-                              key={city.id}
-                              onClick={() => {
-                                onSelectCity(city);
-                                onClose();
-                              }}
-                              className={`flex items-center justify-between p-2 rounded-lg text-left text-xs font-medium transition-colors cursor-pointer ${
-                                isSelected
-                                  ? "bg-teal-100/70 text-teal-900 font-bold"
-                                  : "hover:bg-slate-100 text-slate-700"
-                              }`}
-                            >
-                              <span>{city.name}</span>
-                              {isSelected && <Check className="w-3.5 h-3.5 text-teal-700" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

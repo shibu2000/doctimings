@@ -13,18 +13,416 @@ import {
 
 export const SEED_USERS: UserRecord[] = [
   {
-    id: "USR-OWNER-SHIBU",
-    name: "Shibu Dhara",
-    email: "shibudhara147@gmail.com",
-    phone: "+91 74070 38247",
-    passwordHash: "$2a$10$wN1k6K.6Z6b2jW9fE12X.ezFjK9U8qY5Xq3wN1k6K.6Z6b2jW9fE1",
-    role: "Super Admin",
-    status: "Active",
-    lastActive: "Just now"
+    "id": "USR-OWNER-SHIBU",
+    "name": "Shibu Dhara",
+    "email": "shibudhara147@gmail.com",
+    "phone": "+91 74070 38247",
+    "passwordHash": "$2b$10$yeO2WuYUkO0wXARiGmbBfeZJ2Acrl0GAhO0q/1PeISan8/Yq8mCRe",
+    "role": "Super Admin",
+    "status": "Active",
+    "lastActive": "Just now"
   }
 ];
 
 export const SEED_DOCTORS: DoctorRecord[] = [
+  {
+    "id": "DOC-GHT-01",
+    "fullName": "Dr. Anjan Das",
+    "specialty": "ENT",
+    "registrationNumber": "WBMC-59841",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (ENT - IPGMER Kolkata)",
+    "experienceYears": 16,
+    "primaryPhone": "+91 92390 14445",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-GHT-09"
+    ]
+  },
+  {
+    "id": "DOC-KGP-01",
+    "fullName": "Dr. K. M. Rao",
+    "specialty": "Diabetology",
+    "registrationNumber": "WBMC-52190",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (Medicine), DNB (Diabetology)",
+    "experienceYears": 20,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "English",
+      "Hindi",
+      "Bengali",
+      "Telugu"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-02",
+    "fullName": "Dr. Debashis Dey Sarkar",
+    "specialty": "General Medicine",
+    "registrationNumber": "WBMC-60142",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (General Medicine - Ex-SSKM Hospital)",
+    "experienceYears": 17,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-03",
+    "fullName": "Dr. Abhishek Das",
+    "specialty": "General Medicine",
+    "registrationNumber": "WBMC-76512",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS (General Physician)",
+    "experienceYears": 7,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-04",
+    "fullName": "Dr. Ritwik Mukherjee",
+    "specialty": "Pediatrics",
+    "registrationNumber": "WBMC-68931",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (Paediatrics & Child Care)",
+    "experienceYears": 12,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-05",
+    "fullName": "Dr. Susovan Ghosh",
+    "specialty": "Gynecology & Obstetrics",
+    "registrationNumber": "WBMC-59283",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MRCOG (Ireland), DGO",
+    "experienceYears": 15,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-06",
+    "fullName": "Dr. Souvik Maity",
+    "specialty": "ENT",
+    "registrationNumber": "WBMC-72419",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (ENT - IPGMER & SSKM Hospital)",
+    "experienceYears": 10,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-07",
+    "fullName": "Dr. Partha Ranjan Das",
+    "specialty": "Gastroenterology",
+    "registrationNumber": "WBMC-51478",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD, DM (Gastroenterology - Apollo Gleneagles)",
+    "experienceYears": 21,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01"
+    ]
+  },
+  {
+    "id": "DOC-KGP-08",
+    "fullName": "Dr. Debjit Khanra",
+    "specialty": "General Medicine",
+    "registrationNumber": "WBMC-64821",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (General Medicine)",
+    "experienceYears": 14,
+    "primaryPhone": "+91 62978 38854",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-KGP-01",
+      "EST-KGP-02"
+    ]
+  },
+  {
+    "id": "DOC-MED-01",
+    "fullName": "Dr. Shobhik Chakraborty",
+    "specialty": "General Surgery",
+    "registrationNumber": "WBMC-68421",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (General Surgery), FMAS, FIAGES, FAIS",
+    "experienceYears": 14,
+    "primaryPhone": "+91 96418 06741",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-06"
+    ]
+  },
+  {
+    "id": "DOC-MED-02",
+    "fullName": "Dr. Sisir Sagen Murmu",
+    "specialty": "General Surgery",
+    "registrationNumber": "WBMC-71954",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (General Surgery - WBUHS)",
+    "experienceYears": 11,
+    "primaryPhone": "+91 76025 27559",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi",
+      "Santali"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-01"
+    ]
+  },
+  {
+    "id": "DOC-MED-03",
+    "fullName": "Dr. Tapas Chandra Das",
+    "specialty": "Endocrinology & Diabetology",
+    "registrationNumber": "WBMC-58210",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (General Medicine - SSKM), DM (Endocrinology - IPGMER)",
+    "experienceYears": 16,
+    "primaryPhone": "+91 76025 27559",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-01"
+    ]
+  },
+  {
+    "id": "DOC-MED-04",
+    "fullName": "Dr. Soumyajit Ghosh",
+    "specialty": "Cardiology",
+    "registrationNumber": "WBMC-54312",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (General Surgery), M.Ch (CTVS - Desun Hospital)",
+    "experienceYears": 18,
+    "primaryPhone": "+91 89273 93354",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-01"
+    ]
+  },
+  {
+    "id": "DOC-MED-05",
+    "fullName": "Dr. Apurba Samanta",
+    "specialty": "Ophthalmology",
+    "registrationNumber": "WBMC-49876",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (Ophthalmology)",
+    "experienceYears": 22,
+    "primaryPhone": "+91 95646 25636",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-03"
+    ]
+  },
+  {
+    "id": "DOC-MED-06",
+    "fullName": "Dr. Dibyajyoti De",
+    "specialty": "Pediatrics",
+    "registrationNumber": "WBMC-63102",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MD (Paediatrics), DNB, MRCPCH",
+    "experienceYears": 13,
+    "primaryPhone": "+91 95643 85432",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-05"
+    ]
+  },
+  {
+    "id": "DOC-MED-07",
+    "fullName": "Dr. Tanmoy Mondal",
+    "specialty": "Gynecology & Obstetrics",
+    "registrationNumber": "WBMC-61458",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (G&O), MRCS, M.Ch",
+    "experienceYears": 15,
+    "primaryPhone": "+91 95643 85432",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-05"
+    ]
+  },
+  {
+    "id": "DOC-MED-08",
+    "fullName": "Dr. Samarendra Nath Tripathi",
+    "specialty": "General Surgery",
+    "registrationNumber": "WBMC-46532",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS, MS (General Surgery - Kolkata), M.Ch",
+    "experienceYears": 25,
+    "primaryPhone": "+91 98322 04435",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English",
+      "Hindi"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-02"
+    ]
+  },
+  {
+    "id": "DOC-MED-09",
+    "fullName": "Dr. Saptarshi Mandal",
+    "specialty": "General Medicine",
+    "registrationNumber": "WBMC-74219",
+    "council": "West Bengal Medical Council",
+    "qualifications": "MBBS",
+    "experienceYears": 8,
+    "primaryPhone": "+91 98322 04435",
+    "email": null,
+    "languages": [
+      "Bengali",
+      "English"
+    ],
+    "photoUrl": null,
+    "verificationStatus": "Verified",
+    "isActive": true,
+    "affiliatedEstablishmentIds": [
+      "EST-MED-02"
+    ]
+  },
   {
     "id": "DOC-WB-01",
     "fullName": "Dr. Niranjan Kunti",
@@ -34,7 +432,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, DPH",
     "experienceYears": 16,
     "primaryPhone": "+91 94340 12851",
-    "email": "dr.nkunti@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English",
@@ -57,7 +455,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (General Medicine)",
     "experienceYears": 24,
     "primaryPhone": "+91 94342 51630",
-    "email": "dr.skroy@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -79,7 +477,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (Pediatrics), DCH",
     "experienceYears": 14,
     "primaryPhone": "+91 98321 44782",
-    "email": "dr.abhakta@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -90,7 +488,8 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "affiliatedEstablishmentIds": [
       "EST-GHT-01",
       "EST-GHT-07",
-      "EST-KHP-02"
+      "EST-KHP-02",
+      "EST-DSP-03"
     ]
   },
   {
@@ -102,7 +501,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MS (Orthopedics)",
     "experienceYears": 13,
     "primaryPhone": "+91 97330 65120",
-    "email": "dr.akarmakar@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English",
@@ -126,7 +525,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MS (G&O), DNB",
     "experienceYears": 19,
     "primaryPhone": "+91 94331 87201",
-    "email": "dr.pkkar@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -149,7 +548,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, DGO, MS (G&O)",
     "experienceYears": 11,
     "primaryPhone": "+91 98319 76421",
-    "email": "dr.rpal@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -171,7 +570,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (General Medicine)",
     "experienceYears": 15,
     "primaryPhone": "+91 94348 31920",
-    "email": "dr.akdhara@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -194,7 +593,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (Dermatology & VD)",
     "experienceYears": 12,
     "primaryPhone": "+91 98305 44109",
-    "email": "dr.kkpaul@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English",
@@ -218,7 +617,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, DCH (Pediatrics)",
     "experienceYears": 17,
     "primaryPhone": "+91 94334 98112",
-    "email": "dr.sali@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -240,7 +639,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MS (General Surgery)",
     "experienceYears": 25,
     "primaryPhone": "+91 94341 72054",
-    "email": "dr.jsasmal@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -262,7 +661,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (Medicine)",
     "experienceYears": 22,
     "primaryPhone": "+91 94343 66187",
-    "email": "dr.mbanerjee@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -284,7 +683,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MS (ENT)",
     "experienceYears": 13,
     "primaryPhone": "+91 98314 55902",
-    "email": "dr.adas@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -307,7 +706,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (Medicine), DM (Gastroenterology)",
     "experienceYears": 14,
     "primaryPhone": "+91 98302 77410",
-    "email": "dr.rbanerjee@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -329,7 +728,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, D-Ortho, MS (Orthopedics)",
     "experienceYears": 10,
     "primaryPhone": "+91 97321 89045",
-    "email": "dr.smondal@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English"
@@ -351,7 +750,7 @@ export const SEED_DOCTORS: DoctorRecord[] = [
     "qualifications": "MBBS, MD (Medicine), DNB (Cardiology)",
     "experienceYears": 18,
     "primaryPhone": "+91 98301 62399",
-    "email": "dr.schakraborty@docnear.in",
+    "email": null,
     "languages": [
       "Bengali",
       "English",
@@ -506,6 +905,23 @@ export const SEED_ESTABLISHMENTS: EstablishmentRecord[] = [
     "isActive": true
   },
   {
+    "id": "EST-DSP-03",
+    "name": "Sonakhali Rural Hospital",
+    "type": "Hospital",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Daspur II",
+    "address": "Sonakhali, Daspur II Block, Paschim Medinipur",
+    "pinCode": "721146",
+    "phone": "+91 3225 248308",
+    "proprietorName": "Dept of Health & Family Welfare, Govt of WB",
+    "licenseNumber": "WB-GOV-RH-005",
+    "latitude": 22.6105,
+    "longitude": 87.765,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
     "id": "EST-GHT-01",
     "name": "Ghatal Sub-Divisional Hospital",
     "type": "Hospital",
@@ -642,6 +1058,91 @@ export const SEED_ESTABLISHMENTS: EstablishmentRecord[] = [
     "isActive": true
   },
   {
+    "id": "EST-GHT-09",
+    "name": "Apollo Clinic Ghatal",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Ghatal",
+    "address": "Vill-Nandipur, PO & PS - Ghatal, Paschim Medinipur",
+    "pinCode": "721212",
+    "phone": "+91 92390 14445",
+    "proprietorName": "Apollo Health and Lifestyle Ltd",
+    "licenseNumber": "WB-GHT-CL-2022-0099",
+    "latitude": 22.6685,
+    "longitude": 87.721,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-KGP-01",
+    "name": "GB Wellness Clinic & Diagnostics",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Kharagpur I",
+    "address": "Lal Bunglow (Near Electric Office), Malancha Main Road, Ward 14, Kharagpur",
+    "pinCode": "721304",
+    "phone": "+91 62978 38854",
+    "proprietorName": "GB Healthcare Group",
+    "licenseNumber": "WB-KGP-CL-2022-0051",
+    "latitude": 22.3444,
+    "longitude": 87.2876,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-KGP-02",
+    "name": "Dolphin Clinic & Diagnostics",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Kharagpur I",
+    "address": "Inda Main Road, Kharagpur",
+    "pinCode": "721305",
+    "phone": "+91 94346 68878",
+    "proprietorName": "Dolphin Medical Services",
+    "licenseNumber": "WB-KGP-CL-2023-0088",
+    "latitude": 22.3552,
+    "longitude": 87.3189,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-KGP-03",
+    "name": "Spandan Hospital & Diagnostic Centre",
+    "type": "Hospital",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Kharagpur I",
+    "address": "Chhota Tengra, Opposite Sub-Divisional Hospital, Kharagpur",
+    "pinCode": "721301",
+    "phone": "+91 97327 02221",
+    "proprietorName": "Spandan Healthcare",
+    "licenseNumber": "WB-KGP-HSP-2021-0012",
+    "latitude": 22.3385,
+    "longitude": 87.3228,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-KGP-04",
+    "name": "Kharagpur Sub-Divisional Hospital",
+    "type": "Hospital",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Kharagpur I",
+    "address": "Chhota Tengra, Kharagpur Town",
+    "pinCode": "721301",
+    "phone": "+91 32222 25211",
+    "proprietorName": "Dept of Health & Family Welfare, Govt of WB",
+    "licenseNumber": "WB-GOV-SDH-002",
+    "latitude": 22.3392,
+    "longitude": 87.3235,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
     "id": "EST-KHP-01",
     "name": "Khirpai Rural Hospital",
     "type": "Hospital",
@@ -758,6 +1259,108 @@ export const SEED_ESTABLISHMENTS: EstablishmentRecord[] = [
     "longitude": 87.6211,
     "verificationStatus": "Verified",
     "accountStatus": "Platform Managed",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-01",
+    "name": "Kathamala Doctor's Chamber & Pharmacy",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Rabindra Nagar (Opp. VTT B.Ed College / CPI Office), Keranitola, Midnapore",
+    "pinCode": "721101",
+    "phone": "+91 76025 27559",
+    "proprietorName": "Kathamala Health Services",
+    "licenseNumber": "WB-MED-CL-2023-0101",
+    "latitude": 22.4237,
+    "longitude": 87.3164,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-02",
+    "name": "Peerless Doctors Chamber",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Alotika Apartment, 5/11, Rabindra Nagar, Midnapore",
+    "pinCode": "721101",
+    "phone": "+91 98322 04435",
+    "proprietorName": "Peerless Healthcare Unit",
+    "licenseNumber": "WB-MED-CL-2023-0102",
+    "latitude": 22.4229,
+    "longitude": 87.3196,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-03",
+    "name": "Dristilok Hospital",
+    "type": "Hospital",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Rabindra Nagar, Midnapore Town",
+    "pinCode": "721101",
+    "phone": "+91 95646 25636",
+    "proprietorName": "Dr. Apurba Samanta",
+    "licenseNumber": "WB-MED-HSP-2021-0045",
+    "latitude": 22.4225,
+    "longitude": 87.3188,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-04",
+    "name": "KG Advanced Medicare & Diabetes Institute",
+    "type": "Diagnostic Center",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Hospital Road, Battala Chowk (Harizan Dighi, Opp. MMCH), Midnapore",
+    "pinCode": "721101",
+    "phone": "+91 95478 72119",
+    "proprietorName": "KG Medicare Group",
+    "licenseNumber": "WB-MED-DC-2022-0089",
+    "latitude": 22.4275,
+    "longitude": 87.3208,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-05",
+    "name": "Mother Care Clinic & Chamber",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Beside Durga Mondap, Rabindra Nagar, Midnapore",
+    "pinCode": "721101",
+    "phone": "+91 95643 85432",
+    "proprietorName": "Dr. Dibyajyoti De",
+    "licenseNumber": "WB-MED-CL-2023-0103",
+    "latitude": 22.4231,
+    "longitude": 87.3192,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
+    "isActive": true
+  },
+  {
+    "id": "EST-MED-06",
+    "name": "Swarnamukur Medical Chambers",
+    "type": "Clinic",
+    "district": "Paschim Medinipur",
+    "subDistrict": "Medinipur Sadar",
+    "address": "Ground Floor, Swarnamukur Apartment, Rabindra Nagar, Midnapore",
+    "pinCode": "721101",
+    "phone": "+91 96418 06741",
+    "proprietorName": "Dr. Shobhik Chakraborty",
+    "licenseNumber": "WB-MED-CL-2023-0104",
+    "latitude": 22.4227,
+    "longitude": 87.3185,
+    "verificationStatus": "Verified",
+    "accountStatus": "Active",
     "isActive": true
   },
   {
@@ -879,6 +1482,14 @@ export const SEED_PRACTICE_LOCATIONS: PracticeLocationRecord[] = [
     "isActive": true
   },
   {
+    "id": "LOC-DSP-03",
+    "establishmentId": "EST-DSP-03",
+    "name": "OPD Clinic Room 1",
+    "roomDesignation": "Room 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
     "id": "LOC-GHT-01-A",
     "establishmentId": "EST-GHT-01",
     "name": "Specialist OPD Block",
@@ -959,6 +1570,54 @@ export const SEED_PRACTICE_LOCATIONS: PracticeLocationRecord[] = [
     "isActive": true
   },
   {
+    "id": "LOC-GHT-10",
+    "establishmentId": "EST-GHT-09",
+    "name": "Apollo Specialist Consultation Suite",
+    "roomDesignation": "Suite 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-KGP-01",
+    "establishmentId": "EST-KGP-01",
+    "name": "Consultation Chamber 1",
+    "roomDesignation": "Room 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-KGP-02",
+    "establishmentId": "EST-KGP-01",
+    "name": "Specialist Suite 2",
+    "roomDesignation": "Room 2",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-KGP-03",
+    "establishmentId": "EST-KGP-02",
+    "name": "General OPD & Diagnostic Room",
+    "roomDesignation": "Chamber 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-KGP-04",
+    "establishmentId": "EST-KGP-03",
+    "name": "Visiting Specialist Suite",
+    "roomDesignation": "Room 102",
+    "floor": "First Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-KGP-05",
+    "establishmentId": "EST-KGP-04",
+    "name": "General Medicine OPD",
+    "roomDesignation": "Room 3",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
     "id": "LOC-KHP-01-A",
     "establishmentId": "EST-KHP-01",
     "name": "General Outpatient Dept",
@@ -1019,6 +1678,62 @@ export const SEED_PRACTICE_LOCATIONS: PracticeLocationRecord[] = [
     "establishmentId": "EST-KHP-07",
     "name": "Physician Chamber",
     "roomDesignation": "Chamber 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-01",
+    "establishmentId": "EST-MED-01",
+    "name": "Chamber 1 (General & Surgery)",
+    "roomDesignation": "Chamber 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "name": "Chamber 2 (Endocrine & Cardiac)",
+    "roomDesignation": "Chamber 2",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-03",
+    "establishmentId": "EST-MED-02",
+    "name": "Consultation Suite A",
+    "roomDesignation": "Room A",
+    "floor": "First Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-04",
+    "establishmentId": "EST-MED-03",
+    "name": "Eye OPD & Laser Suite",
+    "roomDesignation": "OPD Room 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-05",
+    "establishmentId": "EST-MED-04",
+    "name": "Diabetes & Medicine Chamber",
+    "roomDesignation": "Chamber 101",
+    "floor": "First Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "name": "Mother & Child Care Chamber",
+    "roomDesignation": "Room 1",
+    "floor": "Ground Floor",
+    "isActive": true
+  },
+  {
+    "id": "LOC-MED-07",
+    "establishmentId": "EST-MED-06",
+    "name": "Surgical & Laparoscopy Chamber",
+    "roomDesignation": "Room 1",
     "floor": "Ground Floor",
     "isActive": true
   },
@@ -1608,11 +2323,752 @@ export const SEED_SCHEDULES: ScheduleRecord[] = [
     "tokenPolicy": "First Come First Served",
     "maxTokens": 20,
     "isActive": true
+  },
+  {
+    "id": "SCH-DSP-01",
+    "doctorId": "DOC-WB-04",
+    "establishmentId": "EST-DSP-03",
+    "practiceLocationId": "LOC-DSP-03",
+    "dayOfWeek": "Tuesday",
+    "startTime": "09:30",
+    "endTime": "13:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-DSP-02",
+    "doctorId": "DOC-WB-03",
+    "establishmentId": "EST-DSP-03",
+    "practiceLocationId": "LOC-DSP-03",
+    "dayOfWeek": "Friday",
+    "startTime": "10:00",
+    "endTime": "13:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-GHT-01",
+    "doctorId": "DOC-GHT-01",
+    "establishmentId": "EST-GHT-09",
+    "practiceLocationId": "LOC-GHT-10",
+    "dayOfWeek": "Saturday",
+    "startTime": "11:00",
+    "endTime": "14:00",
+    "shiftName": "Daytime OPD",
+    "roomNumber": "Suite 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-GHT-02",
+    "doctorId": "DOC-WB-08",
+    "establishmentId": "EST-GHT-09",
+    "practiceLocationId": "LOC-GHT-10",
+    "dayOfWeek": "Sunday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Suite 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-GHT-03",
+    "doctorId": "DOC-WB-05",
+    "establishmentId": "EST-GHT-09",
+    "practiceLocationId": "LOC-GHT-10",
+    "dayOfWeek": "Thursday",
+    "startTime": "16:00",
+    "endTime": "19:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Suite 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-01",
+    "doctorId": "DOC-KGP-01",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Saturday",
+    "startTime": "20:00",
+    "endTime": "22:00",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-02",
+    "doctorId": "DOC-KGP-02",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Monday",
+    "startTime": "20:00",
+    "endTime": "22:00",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-03",
+    "doctorId": "DOC-KGP-02",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Wednesday",
+    "startTime": "20:00",
+    "endTime": "22:00",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-04",
+    "doctorId": "DOC-KGP-02",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Friday",
+    "startTime": "20:00",
+    "endTime": "22:00",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-05",
+    "doctorId": "DOC-KGP-03",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Tuesday",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-06",
+    "doctorId": "DOC-KGP-03",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Thursday",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-07",
+    "doctorId": "DOC-KGP-03",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Saturday",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-08",
+    "doctorId": "DOC-KGP-04",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-02",
+    "dayOfWeek": "Saturday",
+    "startTime": "17:00",
+    "endTime": "20:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 2",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-09",
+    "doctorId": "DOC-KGP-05",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-02",
+    "dayOfWeek": "Thursday",
+    "startTime": "08:30",
+    "endTime": "11:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 2",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-10",
+    "doctorId": "DOC-KGP-06",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-02",
+    "dayOfWeek": "Sunday",
+    "startTime": "11:00",
+    "endTime": "14:00",
+    "shiftName": "Daytime OPD",
+    "roomNumber": "Room 2",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-11",
+    "doctorId": "DOC-KGP-07",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-02",
+    "dayOfWeek": "Tuesday",
+    "startTime": "16:00",
+    "endTime": "19:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 2",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-12",
+    "doctorId": "DOC-KGP-08",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Monday",
+    "startTime": "18:30",
+    "endTime": "20:30",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-13",
+    "doctorId": "DOC-KGP-08",
+    "establishmentId": "EST-KGP-01",
+    "practiceLocationId": "LOC-KGP-01",
+    "dayOfWeek": "Sunday",
+    "startTime": "13:00",
+    "endTime": "16:00",
+    "shiftName": "Afternoon OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-KGP-14",
+    "doctorId": "DOC-KGP-08",
+    "establishmentId": "EST-KGP-02",
+    "practiceLocationId": "LOC-KGP-03",
+    "dayOfWeek": "Wednesday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-01",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Monday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-02",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Tuesday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-03",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Wednesday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-04",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Thursday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-05",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Friday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-06",
+    "doctorId": "DOC-MED-01",
+    "establishmentId": "EST-MED-06",
+    "practiceLocationId": "LOC-MED-07",
+    "dayOfWeek": "Saturday",
+    "startTime": "08:30",
+    "endTime": "12:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-07",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Monday",
+    "startTime": "09:00",
+    "endTime": "13:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-08",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Monday",
+    "startTime": "17:00",
+    "endTime": "20:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-09",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Wednesday",
+    "startTime": "09:00",
+    "endTime": "13:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-10",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Wednesday",
+    "startTime": "17:00",
+    "endTime": "20:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-11",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Friday",
+    "startTime": "09:00",
+    "endTime": "13:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-12",
+    "doctorId": "DOC-MED-02",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-01",
+    "dayOfWeek": "Friday",
+    "startTime": "17:00",
+    "endTime": "20:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Chamber 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-13",
+    "doctorId": "DOC-MED-03",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-02",
+    "dayOfWeek": "Sunday",
+    "startTime": "10:00",
+    "endTime": "14:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Chamber 2",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-14",
+    "doctorId": "DOC-MED-04",
+    "establishmentId": "EST-MED-01",
+    "practiceLocationId": "LOC-MED-02",
+    "dayOfWeek": "Sunday",
+    "startTime": "11:00",
+    "endTime": "14:00",
+    "shiftName": "Daytime OPD",
+    "roomNumber": "Chamber 2",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-15",
+    "doctorId": "DOC-MED-05",
+    "establishmentId": "EST-MED-03",
+    "practiceLocationId": "LOC-MED-04",
+    "dayOfWeek": "Monday",
+    "startTime": "09:00",
+    "endTime": "14:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "OPD Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-16",
+    "doctorId": "DOC-MED-05",
+    "establishmentId": "EST-MED-03",
+    "practiceLocationId": "LOC-MED-04",
+    "dayOfWeek": "Wednesday",
+    "startTime": "09:00",
+    "endTime": "14:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "OPD Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-17",
+    "doctorId": "DOC-MED-05",
+    "establishmentId": "EST-MED-03",
+    "practiceLocationId": "LOC-MED-04",
+    "dayOfWeek": "Friday",
+    "startTime": "09:00",
+    "endTime": "14:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "OPD Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 30,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-18",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Monday",
+    "startTime": "10:00",
+    "endTime": "11:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 15,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-19",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Monday",
+    "startTime": "16:30",
+    "endTime": "19:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-20",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Wednesday",
+    "startTime": "10:00",
+    "endTime": "11:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 15,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-21",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Wednesday",
+    "startTime": "16:30",
+    "endTime": "19:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-22",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Friday",
+    "startTime": "10:00",
+    "endTime": "11:30",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 15,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-23",
+    "doctorId": "DOC-MED-06",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Friday",
+    "startTime": "16:30",
+    "endTime": "19:00",
+    "shiftName": "Evening OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "Advance Booking on Token",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-24",
+    "doctorId": "DOC-MED-07",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Tuesday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-25",
+    "doctorId": "DOC-MED-07",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Thursday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-26",
+    "doctorId": "DOC-MED-07",
+    "establishmentId": "EST-MED-05",
+    "practiceLocationId": "LOC-MED-06",
+    "dayOfWeek": "Saturday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room 1",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-27",
+    "doctorId": "DOC-MED-08",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Tuesday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-28",
+    "doctorId": "DOC-MED-08",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Thursday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-29",
+    "doctorId": "DOC-MED-08",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Saturday",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "shiftName": "Morning OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 25,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-30",
+    "doctorId": "DOC-MED-09",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Monday",
+    "startTime": "19:30",
+    "endTime": "21:30",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-31",
+    "doctorId": "DOC-MED-09",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Wednesday",
+    "startTime": "19:30",
+    "endTime": "21:30",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 20,
+    "isActive": true
+  },
+  {
+    "id": "SCH-MED-32",
+    "doctorId": "DOC-MED-09",
+    "establishmentId": "EST-MED-02",
+    "practiceLocationId": "LOC-MED-03",
+    "dayOfWeek": "Friday",
+    "startTime": "19:30",
+    "endTime": "21:30",
+    "shiftName": "Night OPD",
+    "roomNumber": "Room A",
+    "tokenPolicy": "First-come, first-served",
+    "maxTokens": 20,
+    "isActive": true
   }
 ];
 
-export const SEED_OVERRIDES: ScheduleOverrideRecord[] = [];
+export const SEED_SCHEDULE_OVERRIDES: ScheduleOverrideRecord[] = [];
+
 export const SEED_REPORTS: ReportRecord[] = [];
-export const SEED_AUDIT_LOGS: AuditLogRecord[] = [];
+
+export const SEED_AUDIT_LOGS: AuditLogRecord[] = [
+  {
+    "id": "LOG-INIT-DOC-15",
+    "timestamp": "2026-10-03T19:55:37.601Z",
+    "actorId": "USR-OWNER-SHIBU",
+    "actorName": "Shibu Dhara (Owner)",
+    "action": "INSERT_DOCTORS_AND_SCHEDULES",
+    "entityType": "Doctors & Schedules",
+    "entityId": "DOC-ALL-15",
+    "entityName": "15 Specialist Doctors & 40 Schedules",
+    "details": "Inserted 15 verified visiting specialist doctors and 40 weekly consultation schedules across Khirpai, Ghatal, Chandrakona, Ramjibanpur, and Daspur hubs."
+  },
+  {
+    "id": "LOG-INIT-EST-26",
+    "timestamp": "2026-10-03T19:46:47.390Z",
+    "actorId": "USR-OWNER-SHIBU",
+    "actorName": "Shibu Dhara",
+    "action": "Added Establishment",
+    "entityType": "Establishment",
+    "entityId": "EST-KHP-ALL",
+    "entityName": "Khirpai-Ghatal-Chandrakona Cluster",
+    "details": "Enrolled 26 real medical establishments within 25km radius of Khirpai (PIN 721232)"
+  }
+];
+
 export const SEED_HEALTH_TOPICS: HealthTopicRecord[] = [];
+
 export const SEED_HEALTH_ARTICLES: HealthArticleRecord[] = [];

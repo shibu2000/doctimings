@@ -28,7 +28,7 @@ import { usePartner } from '../store/PartnerContext';
 export default function MyProfileScreen() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const { currentEstablishment } = usePartner();
+  const { currentEstablishment, accessRole } = usePartner();
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure you want to end your active partner session?', [
@@ -54,12 +54,12 @@ export default function MyProfileScreen() {
           <View style={styles.profileRow}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>
-                {user?.name ? user.name.slice(0, 2).toUpperCase() : 'RD'}
+                {user?.name ? user.name.replace(/^dr\.?\s*/i, '').slice(0, 2).toUpperCase() : ''}
               </Text>
             </View>
             <View style={styles.profileInfo}>
-              <Text style={styles.userName}>{user?.name || 'Rakesh Das'}</Text>
-              <Text style={styles.userRole}>{user?.role || 'Establishment Admin'}</Text>
+              <Text style={styles.userName}>{user?.name}</Text>
+              <Text style={styles.userRole}>{accessRole === 'Owner' ? 'Owner' : accessRole === 'Staff' ? 'Counter staff' : accessRole === 'Doctor' ? 'Doctor' : ''}</Text>
             </View>
             <StatusBadge status="active" label="Active" />
           </View>
@@ -73,7 +73,7 @@ export default function MyProfileScreen() {
             <Mail size={18} color={Colors.primary} />
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Official Email</Text>
-              <Text style={styles.infoValue}>{user?.email || 'rakesh@example.com'}</Text>
+              <Text style={styles.infoValue}>{user?.email || '—'}</Text>
             </View>
           </View>
 
@@ -81,7 +81,7 @@ export default function MyProfileScreen() {
             <Phone size={18} color={Colors.primary} />
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Registered Mobile Phone</Text>
-              <Text style={styles.infoValue}>{user?.phone || '+91 98765 43210'}</Text>
+              <Text style={styles.infoValue}>{user?.phone || 'Not provided'}</Text>
             </View>
           </View>
 
@@ -90,7 +90,7 @@ export default function MyProfileScreen() {
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Access Role</Text>
               <Text style={styles.infoValue}>
-                {user?.role || 'Establishment Admin'} (Full Counter Access)
+                {accessRole === 'Owner' ? 'Owner (can manage counter staff)' : accessRole === 'Staff' ? 'Counter staff' : accessRole === 'Doctor' ? 'Doctor (own profile and timing)' : ''}
               </Text>
             </View>
           </View>
@@ -104,10 +104,10 @@ export default function MyProfileScreen() {
             <Building2 size={24} color={Colors.primary} />
             <View style={styles.facilityContent}>
               <Text style={styles.facilityName}>
-                {currentEstablishment?.name || 'Maa Medical Centre'}
+                {currentEstablishment?.name}
               </Text>
               <Text style={styles.facilitySub}>
-                {currentEstablishment?.address || 'Station Road, Gopiballavpur, Jhargram — 721506'}
+                {currentEstablishment?.address}
               </Text>
             </View>
           </View>

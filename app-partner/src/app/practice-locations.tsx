@@ -56,15 +56,14 @@ export default function PracticeLocationsScreen() {
       if (res.success) {
         Alert.alert('Room Added', `${roomName} is now ready for doctor assignments.`);
         await refreshLocations();
+        setRoomName('');
+        setRoomDesignation('');
         setIsModalOpen(false);
       } else {
-        Alert.alert('Notice', 'Room registered.');
-        await refreshLocations();
-        setIsModalOpen(false);
+        Alert.alert('Not saved', res.error?.message || 'Please try again.');
       }
     } catch {
-      Alert.alert('Notice', 'Room added.');
-      setIsModalOpen(false);
+      Alert.alert('Not saved', 'No internet connection. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -92,7 +91,7 @@ export default function PracticeLocationsScreen() {
         {/* Facility Context Card */}
         <View style={styles.contextCard}>
           <View style={styles.contextHeader}>
-            <Text style={styles.estName}>{currentEstablishment?.name || 'Maa Medical Centre'}</Text>
+            <Text style={styles.estName}>{currentEstablishment?.name}</Text>
             <StatusBadge status="active" label="Operational" />
           </View>
           <Text style={styles.contextDesc}>

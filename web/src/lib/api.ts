@@ -1,4 +1,4 @@
-import { Doctor, Establishment, SearchApiResponse } from "@/types";
+import { Doctor, Establishment, SearchApiResponse, Town } from "@/types";
 
 const getApiBaseUrl = (): string => {
   if (typeof window === "undefined") {
@@ -82,4 +82,12 @@ export async function fetchDoctorById(id: string): Promise<Doctor | null> {
 
   const json = await res.json();
   return json.data || null;
+}
+
+export async function fetchTowns(): Promise<{ data: Town[]; defaultLocation: (Omit<Town, "doctorCount" | "establishmentCount">) | null }> {
+  const res = await fetch(`${getApiBaseUrl()}/locations/towns`, { headers: { Accept: "application/json" } });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch towns: ${res.statusText}`);
+  }
+  return res.json();
 }

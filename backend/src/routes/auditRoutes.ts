@@ -5,4 +5,3 @@ import { authMiddleware, requireAdmin } from '../middleware/auth.js';
 export const auditRoutes = new Hono();
 
 auditRoutes.get('/', authMiddleware(), requireAdmin, auditController.getAuditLogs);
-auditRoutes.post('/', authMiddleware(), auditController.createAuditLog);

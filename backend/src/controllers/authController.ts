@@ -1,232 +1,171 @@
 import bcrypt from 'bcryptjs';
 import type { Context } from 'hono';
-import { db, getDb, memoryStore } from '../db/index.js';
+import { eq, sql } from 'drizzle-orm';
+import { getDb } from '../db/index.js';
 import * as schema from '../db/schema.js';
-import { eq } from 'drizzle-orm';
 import { signToken } from '../middleware/auth.js';
-import { LoginInput, RegisterInput } from '../validators/authValidator.js';
-import { JWTPayload } from '../types/index.js';
+import { LoginInput, RegisterInput, CreateUserInput, UpdateUserInput } from '../validators/authValidator.js';
+import { recordAudit } from '../lib/audit.js';
+import { currentUser, fail, newId, notFound, validBody } from '../lib/http.js';
+import type { UserRole } from '../types/index.js';
+import { revokeInvitesCreatedBy } from './accessController.js';
+
+type User = typeof schema.users.$inferSelect;
+
+const publicUser = (u: User) => ({
+  id: u.id,
+  name: u.name,
+  email: u.email,
+  phone: u.phone,
+  role: u.role,
+  status: u.status,
+  lastActive: u.lastActive
+});
+
+const findByEmail = async (email: string) => {
+  const [user] = await getDb()
+    .select()
+    .from(schema.users)
+    .where(sql`lower(${schema.users.email}) = ${email.toLowerCase()}`);
+  return user;
+};
+
+const issueToken = (u: User) => signToken({ sub: u.id, email: u.email, name: u.name, role: u.role as UserRole });
+
+let dummyHash: Promise<string> | null = null;
+const burnPasswordCheck = async (password: string) => {
+  dummyHash ??= bcrypt.hash('placeholder-password-never-used', 10);
+  await bcrypt.compare(password, await dummyHash).catch(() => false);
+};
+
+const invalidCredentials = (c: Context) => fail(c, 401, 'INVALID_CREDENTIALS', 'Invalid email address or password');
 
 export const authController = {
   login: async (c: Context) => {
-    const { email, password }: LoginInput = await c.req.json();
-    let user = memoryStore.users.find(u => u.email.toLowerCase() === email.toLowerCase());
-
-    const activeDb = getDb();
-    if (activeDb) {
-      try {
-        const rows = await activeDb.select().from(schema.users).where(eq(schema.users.email, email.toLowerCase()));
-        if (rows[0]) {
-          user = rows[0] as any;
-        }
-      } catch {}
-    }
-
+    const { email, password } = validBody<LoginInput>(c);
+    const db = getDb();
+    const user = await findByEmail(email);
     if (!user) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_CREDENTIALS',
-            message: 'Invalid email address or password'
-          }
-        },
-        401
-      );
+      await burnPasswordCheck(password);
+      return invalidCredentials(c);
     }
 
-    const isValidPassword =
-      password === 'admin123' ||
-      password === 'password123' ||
-      password === 'partner123' ||
-      password === 'HealthcareSecure2025' ||
-      (await bcrypt.compare(password, user.passwordHash).catch(() => false));
-
-    if (!isValidPassword) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_CREDENTIALS',
-            message: 'Invalid email address or password'
-          }
-        },
-        401
-      );
+    const valid = await bcrypt.compare(password, user.passwordHash).catch(() => false);
+    if (!valid) return invalidCredentials(c);
+    if (user.status !== 'Active') {
+      return fail(c, 403, 'ACCOUNT_SUSPENDED', 'This account has been suspended');
     }
 
-    const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role as any
-    };
-
-    const token = signToken(payload);
-
-    memoryStore.auditLogs.unshift({
-      id: `LOG-${Date.now().toString().slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      actorId: user.id,
-      actorName: user.name,
-      action: 'User Signed In',
+    const lastActive = new Date().toISOString();
+    await db.update(schema.users).set({ lastActive }).where(eq(schema.users.id, user.id));
+    await recordAudit(db, { sub: user.id, name: user.name }, {
+      action: 'Signed in',
       entityType: 'User',
       entityId: user.id,
-      entityName: user.name,
-      details: `Signed in as ${user.role}`
+      entityName: user.name
     });
 
-    return c.json({
-      success: true,
-      data: {
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-          status: user.status
-        }
-      }
-    });
+    return c.json({ success: true, data: { token: issueToken(user), user: publicUser({ ...user, lastActive }) } });
   },
 
   register: async (c: Context) => {
-    const data: RegisterInput = await c.req.json();
-    const existing = memoryStore.users.find(u => u.email.toLowerCase() === data.email.toLowerCase());
-
-    if (existing) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'EMAIL_ALREADY_EXISTS',
-            message: 'An account with this email address already exists'
-          }
-        },
-        409
-      );
+    const data = validBody<RegisterInput>(c);
+    if (await findByEmail(data.email)) {
+      return fail(c, 409, 'EMAIL_ALREADY_EXISTS', 'An account with this email address already exists');
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(data.password, salt);
+    const [user] = await getDb()
+      .insert(schema.users)
+      .values({
+        id: newId('USR'),
+        name: data.name,
+        email: data.email.toLowerCase(),
+        phone: data.phone,
+        passwordHash: await bcrypt.hash(data.password, 10),
+        role: 'Patient',
+        status: 'Active',
+        lastActive: new Date().toISOString()
+      })
+      .returning();
 
-    const newUser = {
-      id: `USR-${Date.now().toString().slice(-6)}`,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      passwordHash,
-      role: data.role,
-      status: 'Active',
-      lastActive: 'Just now'
-    };
-
-    memoryStore.users.unshift(newUser);
-
-    const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
-      sub: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      role: newUser.role as any
-    };
-
-    const token = signToken(payload);
-
-    return c.json(
-      {
-        success: true,
-        data: {
-          token,
-          user: {
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email,
-            phone: newUser.phone,
-            role: newUser.role,
-            status: newUser.status
-          }
-        }
-      },
-      201
-    );
+    return c.json({ success: true, data: { token: issueToken(user), user: publicUser(user) } }, 201);
   },
 
   me: async (c: Context) => {
-    const currentUser = c.get('user') as JWTPayload | undefined;
-    if (!currentUser) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'UNAUTHORIZED',
-            message: 'Authentication session required'
-          }
-        },
-        401
-      );
-    }
-
-    let user = memoryStore.users.find(u => u.id === currentUser.sub);
-    const activeDb = getDb();
-    if (activeDb) {
-      try {
-        const rows = await activeDb.select().from(schema.users).where(eq(schema.users.id, currentUser.sub));
-        if (rows[0]) {
-          user = rows[0] as any;
-        }
-      } catch {}
-    }
-
-    if (!user) {
-      return c.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: 'User account not found'
-          }
-        },
-        404
-      );
-    }
-
-    return c.json({
-      success: true,
-      data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        status: user.status,
-        lastActive: user.lastActive
-      }
-    });
+    const session = currentUser(c)!;
+    const [user] = await getDb().select().from(schema.users).where(eq(schema.users.id, session.sub));
+    if (!user) return notFound(c, 'User account not found');
+    return c.json({ success: true, data: publicUser(user) });
   },
 
   getUsers: async (c: Context) => {
-    let usersList = memoryStore.users;
-    const activeDb = getDb();
-    if (activeDb) {
-      try {
-        const rows = await activeDb.select().from(schema.users);
-        usersList = rows as any[];
-      } catch {}
+    const users = await getDb().select().from(schema.users).orderBy(schema.users.name);
+    return c.json({ success: true, data: users.map(publicUser) });
+  },
+
+  createUser: async (c: Context) => {
+    const data = validBody<CreateUserInput>(c);
+    const db = getDb();
+    if (await findByEmail(data.email)) {
+      return fail(c, 409, 'EMAIL_ALREADY_EXISTS', 'An account with this email address already exists');
     }
 
-    return c.json({
-      success: true,
-      data: usersList.map(u => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        phone: u.phone,
-        role: u.role,
-        status: u.status,
-        lastActive: u.lastActive
-      }))
+    const [user] = await db
+      .insert(schema.users)
+      .values({
+        id: newId('USR'),
+        name: data.name,
+        email: data.email.toLowerCase(),
+        phone: data.phone,
+        passwordHash: await bcrypt.hash(data.password, 10),
+        role: data.role,
+        status: 'Active'
+      })
+      .returning();
+
+    await recordAudit(db, currentUser(c), {
+      action: 'Added team member',
+      entityType: 'User',
+      entityId: user.id,
+      entityName: user.name,
+      details: user.role
     });
+
+    return c.json({ success: true, data: publicUser(user) }, 201);
+  },
+
+  updateUser: async (c: Context) => {
+    const id = c.req.param('id')!;
+    const { password, ...updates } = validBody<UpdateUserInput>(c);
+    const db = getDb();
+    const session = currentUser(c)!;
+
+    const [existing] = await db.select().from(schema.users).where(eq(schema.users.id, id));
+    if (!existing) return notFound(c, 'User account not found');
+    if (id === session.sub && (updates.status === 'Suspended' || (updates.role && updates.role !== existing.role))) {
+      return fail(c, 400, 'VALIDATION_ERROR', 'You cannot suspend or change the role of your own account');
+    }
+
+    const [user] = await db
+      .update(schema.users)
+      .set({
+        ...updates,
+        ...(password ? { passwordHash: await bcrypt.hash(password, 10) } : {}),
+        updatedAt: new Date()
+      })
+      .where(eq(schema.users.id, id))
+      .returning();
+
+    if (updates.status === 'Suspended') await revokeInvitesCreatedBy(id);
+
+    await recordAudit(db, session, {
+      action: 'Updated team member',
+      entityType: 'User',
+      entityId: id,
+      entityName: user.name,
+      details: [...Object.keys(updates), ...(password ? ['password'] : [])].join(', ')
+    });
+
+    return c.json({ success: true, data: publicUser(user) });
   }
 };

@@ -20,7 +20,10 @@ export const globalErrorHandler: ErrorHandler = (err, c) => {
   }
 
   const status = 'status' in err && typeof err.status === 'number' ? err.status : 500;
-  const message = err.message || 'Internal server error occurred';
+  if (status >= 500) {
+    console.error(err);
+  }
+  const message = status >= 500 ? 'Something went wrong on the server' : err.message;
 
   return c.json(
     {

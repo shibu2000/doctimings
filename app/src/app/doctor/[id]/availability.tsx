@@ -19,18 +19,18 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react-native';
-import { DOCTORS } from '../../../data/mockData';
+import { useDoctor } from '../../../hooks/useDoctors';
+import { LoadState } from '../../../components/common/LoadState';
+import { Doctor } from '../../../types';
 import { Colors } from '../../../constants/theme';
 import { useApp } from '../../../store/AppContext';
 import { StatusBadge } from '../../../components/common/StatusBadge';
 
-export default function DoctorAvailabilityScreen() {
+function DoctorAvailability({ doctor }: { doctor: Doctor }) {
   const router = useRouter();
   const { t } = useTranslation();
-  const { id } = useLocalSearchParams<{ id: string }>();
   const { language } = useApp();
 
-  const doctor = DOCTORS.find((d) => d.id === id) || DOCTORS[0];
 
   const daysOfWeek = [
     { dayNum: 1, nameEn: 'Monday', nameBn: 'সোমবার' },
@@ -367,3 +367,12 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
+
+export default function DoctorAvailabilityScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const query = useDoctor(id);
+  if (!query.data) {
+    return <LoadState loading={query.isPending && Boolean(id)} notFound={(query.error as { status?: number } | null)?.status === 404 || !id} onRetry={() => query.refetch()} />;
+  }
+  return <DoctorAvailability doctor={query.data} />;
+}

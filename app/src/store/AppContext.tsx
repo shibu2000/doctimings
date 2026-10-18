@@ -2,14 +2,20 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LocationItem, MyVisit, AppNotification, LanguageCode, ThemeMode } from '../types';
-import { LOCATIONS, INITIAL_VISITS, INITIAL_NOTIFICATIONS } from '../data/mockData';
+import { INITIAL_VISITS, INITIAL_NOTIFICATIONS } from '../data/mockData';
 import { loadStoredLanguage, setAppLanguage } from '../locales/i18n';
 import { ThemeColors, getThemeColors } from '../constants/theme';
-import { api } from '../services/api';
+import { api, Town } from '../services/api';
+import { detectCoords, locationFromCoords, MEDINIPUR } from '../services/location';
+
+export type LocationStatus = 'detecting' | 'ready' | 'denied' | 'off';
 
 interface AppContextType {
   currentLocation: LocationItem;
-  setCurrentLocation: (loc: LocationItem) => void;
+  setCurrentLocation: (loc: LocationItem) => Promise<void>;
+  locationStatus: LocationStatus;
+  detectLocation: () => Promise<LocationStatus>;
+  towns: Town[];
   searchRadius: number;
   setSearchRadius: (radius: number) => void;
   language: LanguageCode;
@@ -45,6 +51,7 @@ interface AppContextType {
 
 const STORAGE_KEYS = {
   LOCATION: 'user_selected_location',
+  TOWNS: 'cached_towns',
   RADIUS: 'user_search_radius',
   VISITS: 'user_saved_visits',
   NOTIFICATIONS: 'user_notifications',
@@ -56,7 +63,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
-  const [currentLocation, setCurrentLocationState] = useState<LocationItem>(LOCATIONS[0]);
+  const [currentLocation, setCurrentLocationState] = useState<LocationItem>(MEDINIPUR);
+  const [locationStatus, setLocationStatus] = useState<LocationStatus>('detecting');
+  const [towns, setTowns] = useState<Town[]>([]);
   const [searchRadius, setSearchRadiusState] = useState<number>(15);
   const [language, setLanguageState] = useState<LanguageCode>('en');
   const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
@@ -80,10 +89,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setThemeModeState(storedTheme as ThemeMode);
         }
 
-        const storedLoc = await AsyncStorage.getItem(STORAGE_KEYS.LOCATION);
-        if (storedLoc) {
-          setCurrentLocationState(JSON.parse(storedLoc));
-        }
 
         const storedRadius = await AsyncStorage.getItem(STORAGE_KEYS.RADIUS);
         if (storedRadius) {
@@ -106,6 +111,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       } catch {}
 
+      resolveLocation();
+
       api.checkHealth().then(healthy => {
         setIsOffline(!healthy);
         setLastSyncTime(healthy ? 'Just now' : 'Offline mode');
@@ -118,8 +125,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     initializeState();
   }, []);
 
+  const loadTowns = async (): Promise<{ towns: Town[]; fallback: LocationItem }> => {
+    try {
+      const result = await api.towns();
+      setTowns(result.towns);
+      AsyncStorage.setItem(STORAGE_KEYS.TOWNS, JSON.stringify(result)).catch(() => undefined);
+      return { towns: result.towns, fallback: { ...result.defaultLocation, nameBn: MEDINIPUR.nameBn, districtBn: MEDINIPUR.districtBn } };
+    } catch {
+      const cached = await AsyncStorage.getItem(STORAGE_KEYS.TOWNS).catch(() => null);
+      const parsed = cached ? (JSON.parse(cached) as { towns: Town[] }) : { towns: [] };
+      setTowns(parsed.towns);
+      return { towns: parsed.towns, fallback: MEDINIPUR };
+    }
+  };
+
+  const resolveLocation = async () => {
+    setLocationStatus('detecting');
+    const [{ towns: list, fallback }, position, saved] = await Promise.all([
+      loadTowns(),
+      detectCoords(),
+      AsyncStorage.getItem(STORAGE_KEYS.LOCATION).catch(() => null)
+    ]);
+    if (position.ok) {
+      setCurrentLocationState(locationFromCoords(list, position.latitude, position.longitude));
+      setLocationStatus('ready');
+      return;
+    }
+    const manual = saved ? (JSON.parse(saved) as LocationItem) : null;
+    setCurrentLocationState(manual && manual.id !== 'current-location' ? manual : fallback);
+    setLocationStatus(position.reason);
+  };
+
+  const detectLocation = async (): Promise<LocationStatus> => {
+    const position = await detectCoords();
+    if (!position.ok) return position.reason;
+    const list = towns.length ? towns : (await loadTowns()).towns;
+    setCurrentLocationState(locationFromCoords(list, position.latitude, position.longitude));
+    setLocationStatus('ready');
+    return 'ready';
+  };
+
   const setCurrentLocation = async (loc: LocationItem) => {
     setCurrentLocationState(loc);
+    setLocationStatus('ready');
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.LOCATION, JSON.stringify(loc));
     } catch {}
@@ -227,6 +275,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentLocation,
         setCurrentLocation,
+        locationStatus,
+        detectLocation,
+        towns,
         searchRadius,
         setSearchRadius,
         language,
