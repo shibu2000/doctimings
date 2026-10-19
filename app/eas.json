@@ -16,11 +16,17 @@
     "production": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://doctimings-api.docnear.workers.dev"
       }
     },
     "production-aab": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://doctimings-api.docnear.workers.dev"
       }
     }
   },
