@@ -27,6 +27,8 @@ import { SmartAppBanner } from "@/components/SmartAppBanner";
 import { AppDownloadModal } from "@/components/AppDownloadModal";
 import { Footer } from "@/components/Footer";
 
+const PAGE_SIZE = 20;
+
 export default function HomePage() {
   const { towns, location, locating, locationFailed, locationDenied, retryLocation, setLocation } = useSearchLocation();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -38,42 +40,87 @@ export default function HomePage() {
   const [availableOnly, setAvailableOnly] = useState(false);
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [meta, setMeta] = useState<{ total: number; town: SearchTown | null } | null>(null);
+  const [meta, setMeta] = useState<{ total: number; town: SearchTown | null; page: number; totalPages: number } | null>(null);
   const requestId = useRef(0);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSelectTown = (town: Town) => setLocation(locationFromTown(town));
 
   const placeName = location?.name ?? "your area";
 
-  const loadDoctors = useCallback(async () => {
-    const id = ++requestId.current;
-    setLoading(true);
-    setError(null);
-    try {
-      const response: SearchApiResponse = await fetchDoctors({
+  const fetchPage = useCallback(
+    (page: number): Promise<SearchApiResponse> =>
+      fetchDoctors({
         q: searchQuery.trim() || undefined,
         latitude: location?.latitude,
         longitude: location?.longitude,
         townId: location?.source === "town" ? location.townId : undefined,
         specialty: selectedSpecialty !== "All" ? selectedSpecialty : undefined,
         availableOnly,
-        limit: 50,
-      });
+        page,
+        limit: PAGE_SIZE,
+      }),
+    [location, searchQuery, selectedSpecialty, availableOnly]
+  );
+
+  const toMeta = (response: SearchApiResponse) => ({
+    total: response.pagination?.total ?? response.data.length,
+    town: response.searchMeta?.town ?? null,
+    page: response.pagination?.page ?? 1,
+    totalPages: response.pagination?.totalPages ?? 1,
+  });
+
+  const loadDoctors = useCallback(async () => {
+    const id = ++requestId.current;
+    setLoading(true);
+    setLoadingMore(false);
+    setError(null);
+    try {
+      const response = await fetchPage(1);
       if (id !== requestId.current) return;
       setDoctors(response.data || []);
-      setMeta({
-        total: response.pagination?.total ?? response.data.length,
-        town: response.searchMeta?.town ?? null,
-      });
+      setMeta(toMeta(response));
     } catch (err: unknown) {
       if (id !== requestId.current) return;
       setError(err instanceof Error ? err.message : "Failed to load doctors");
     } finally {
       if (id === requestId.current) setLoading(false);
     }
-  }, [location, searchQuery, selectedSpecialty, availableOnly]);
+  }, [fetchPage]);
+
+  const hasMore = Boolean(meta && meta.page < meta.totalPages);
+
+  const loadMore = useCallback(async () => {
+    if (!meta || loading || loadingMore || meta.page >= meta.totalPages) return;
+    const id = requestId.current;
+    setLoadingMore(true);
+    try {
+      const response = await fetchPage(meta.page + 1);
+      if (id !== requestId.current) return;
+      setDoctors((current) => {
+        const seen = new Set(current.map((d) => d.id));
+        return [...current, ...(response.data || []).filter((d) => !seen.has(d.id))];
+      });
+      setMeta(toMeta(response));
+    } catch (err: unknown) {
+      if (id === requestId.current) setError(err instanceof Error ? err.message : "Failed to load more doctors");
+    } finally {
+      if (id === requestId.current) setLoadingMore(false);
+    }
+  }, [meta, loading, loadingMore, fetchPage]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) loadMore();
+    }, { rootMargin: "600px 0px" });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
 
   useEffect(() => {
     if (locating) return;
@@ -322,6 +369,18 @@ export default function HomePage() {
             </div>
           ) : (
             renderGrid(doctors)
+          )}
+
+          {!loading && !locating && hasMore && (
+            <div ref={sentinelRef} className="flex justify-center py-4">
+              <button
+                onClick={loadMore}
+                disabled={loadingMore}
+                className="px-5 py-2.5 rounded-xl bg-white border border-teal-300 hover:bg-teal-50 text-teal-900 font-semibold text-sm transition-colors cursor-pointer disabled:cursor-wait disabled:opacity-70"
+              >
+                {loadingMore ? "Loading more doctors…" : "Load more doctors"}
+              </button>
+            </div>
           )}
 
           <div className="mt-4 p-5 rounded-2xl bg-teal-50/70 border border-teal-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

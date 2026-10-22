@@ -83,13 +83,25 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onSelect }) => {
 
             <div className="text-xs font-semibold text-teal-800 leading-tight mt-0.5">
               <span>{doctor.specialty}</span>
-              <span className="text-slate-300 font-normal mx-1">·</span>
-              <span className="text-slate-600 font-medium">{doctor.qualifications}</span>
+              {doctor.qualifications && (
+                <>
+                  <span className="text-slate-300 font-normal mx-1">·</span>
+                  <span className="text-slate-600 font-medium">{doctor.qualifications}</span>
+                </>
+              )}
             </div>
 
-            <div className="text-[11px] text-slate-500 mt-1">
-              {doctor.experienceYears} yrs exp
-            </div>
+            {doctor.experienceYears > 0 && (
+              <div className="text-[11px] text-slate-500 mt-1">
+                {doctor.experienceYears} yrs exp
+              </div>
+            )}
+
+            {doctor.verificationStatus !== "Verified" && (
+              <div className="text-[11px] font-semibold text-amber-700 mt-1">
+                {doctor.primaryPhone || primaryEst?.phone ? "Not verified yet · call before you go" : "Not verified yet"}
+              </div>
+            )}
           </div>
         </div>
 
@@ -106,7 +118,7 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onSelect }) => {
                 )}
               </div>
 
-              {doctor.distanceKm !== undefined && (
+              {doctor.distanceKm !== undefined && primaryEst.verificationStatus !== "Location Pending" && (
                 <span className="shrink-0 text-[11px] font-bold text-teal-800 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-100 flex items-center gap-0.5">
                   <MapPin className="w-3 h-3 text-teal-600" />
                   {doctor.distanceKm} km

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Doctor } from "@/types";
+import { Doctor, Schedule } from "@/types";
 import { formatTo12Hour, formatShiftString } from "@/lib/formatTime";
 import { 
   X, 
@@ -21,6 +21,23 @@ interface DoctorDetailsModalProps {
   onClose: () => void;
   onOpenAppModal: () => void;
 }
+
+const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+const groupSchedules = (schedules: Schedule[]) => {
+  const sorted = [...schedules].sort(
+    (a, b) =>
+      DAY_ORDER.indexOf(a.dayOfWeek) - DAY_ORDER.indexOf(b.dayOfWeek) ||
+      a.establishmentId.localeCompare(b.establishmentId) ||
+      a.startTime.localeCompare(b.startTime)
+  );
+  return sorted.reduce<Schedule[][]>((groups, sch) => {
+    const last = groups[groups.length - 1];
+    if (last && last[0].dayOfWeek === sch.dayOfWeek && last[0].establishmentId === sch.establishmentId) last.push(sch);
+    else groups.push([sch]);
+    return groups;
+  }, []);
+};
 
 export const DoctorDetailsModal: React.FC<DoctorDetailsModalProps> = ({
   doctor,
@@ -141,25 +158,27 @@ export const DoctorDetailsModal: React.FC<DoctorDetailsModalProps> = ({
               </div>
             ) : (
               <div className="flex flex-col gap-2.5">
-                {doctor.schedules.map((sch) => {
+                {groupSchedules(doctor.schedules).map((day) => {
+                  const sch = day[0];
                   const est = doctor.affiliatedEstablishments.find((e) => e.id === sch.establishmentId);
                   return (
                     <div
                       key={sch.id}
                       className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col gap-2"
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-start justify-between gap-3">
                         <span className="text-xs font-bold uppercase tracking-wider text-teal-900 bg-teal-100/70 px-2 py-0.5 rounded-md">
                           {sch.dayOfWeek}
                         </span>
-                        <div className="flex items-center gap-1 text-xs font-bold text-slate-900">
-                          <Clock className="w-3.5 h-3.5 text-teal-700" />
-                          <span>{formatTo12Hour(sch.startTime)} – {formatTo12Hour(sch.endTime)}</span>
+                        <div className="flex flex-col items-end gap-1">
+                          {day.map((session) => (
+                            <div key={session.id} className="flex items-center gap-1 text-xs font-bold text-slate-900">
+                              <Clock className="w-3.5 h-3.5 text-teal-700" />
+                              <span>{formatTo12Hour(session.startTime)} – {formatTo12Hour(session.endTime)}</span>
+                              <span className="font-medium text-slate-500">({session.shiftName})</span>
+                            </div>
+                          ))}
                         </div>
-                      </div>
-
-                      <div className="text-xs text-slate-700 font-medium">
-                        {sch.shiftName}
                       </div>
 
                       <div className="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-200/60">
