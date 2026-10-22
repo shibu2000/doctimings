@@ -5,6 +5,8 @@ import type { SearchLocation, Town } from "@/types";
 import { fetchTowns } from "@/lib/api";
 import { detectPosition, locationFromCoords, readSavedLocation, saveLocation, type DetectResult } from "@/lib/location";
 
+const GPS_TIMEOUT_MS = 20000;
+
 const MEDINIPUR: SearchLocation = {
   name: "Medinipur",
   district: "Paschim Medinipur",
@@ -31,20 +33,19 @@ export const useSearchLocation = () => {
     const resolve = async () => {
       const [townResult, position] = await Promise.all([
         fetchTowns().catch(() => ({ data: [] as Town[], defaultLocation: null })),
-        detectPosition(10000),
+        detectPosition(GPS_TIMEOUT_MS),
       ]);
       if (cancelled) return;
       setTowns(townResult.data);
       if (position.ok) {
         setLocation(locationFromCoords(townResult.data, position.latitude, position.longitude));
-        setLastDetect(position);
       } else {
         const fallback = townResult.defaultLocation
           ? { ...townResult.defaultLocation, townId: townResult.defaultLocation.id, source: "town" as const }
           : MEDINIPUR;
         setLocationState(readSavedLocation() ?? fallback);
-        setLastDetect(position);
       }
+      setLastDetect(position);
       setLocating(false);
     };
     resolve();
@@ -53,5 +54,23 @@ export const useSearchLocation = () => {
     };
   }, [setLocation]);
 
-  return { towns, location, locating, locationDenied: lastDetect?.ok === false && lastDetect.reason === "denied", setLocation };
+  const retryLocation = useCallback(async () => {
+    setLocating(true);
+    const position = await detectPosition(GPS_TIMEOUT_MS);
+    if (position.ok) setLocation(locationFromCoords(towns, position.latitude, position.longitude));
+    setLastDetect(position);
+    setLocating(false);
+  }, [setLocation, towns]);
+
+  const locationFailed = lastDetect?.ok === false && location?.source !== "gps";
+
+  return {
+    towns,
+    location,
+    locating,
+    locationFailed,
+    locationDenied: locationFailed && lastDetect?.ok === false && lastDetect.reason === "denied",
+    retryLocation,
+    setLocation,
+  };
 };

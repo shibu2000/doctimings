@@ -8,8 +8,7 @@ import {
   Building2, 
   Clock, 
   MapPin, 
-  Phone, 
-  ShieldCheck, 
+  Phone,  
   ChevronRight,
   User,
   Calendar
@@ -88,13 +87,8 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onSelect }) => {
               <span className="text-slate-600 font-medium">{doctor.qualifications}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1">
-              <span>{doctor.experienceYears} yrs exp</span>
-              <span className="text-slate-300">·</span>
-              <span className="inline-flex items-center gap-0.5 font-mono text-slate-600">
-                <ShieldCheck className="w-3 h-3 text-teal-600 shrink-0" />
-                {doctor.registrationNumber}
-              </span>
+            <div className="text-[11px] text-slate-500 mt-1">
+              {doctor.experienceYears} yrs exp
             </div>
           </div>
         </div>

@@ -10,11 +10,13 @@ import {
   CheckCircle2, 
   AlertCircle,
   Building,
-  Users
+  Users,
+  Navigation,
+  MapPinOff
 } from "lucide-react";
-import type { Doctor, SearchApiResponse, Town } from "@/types";
+import type { Doctor, SearchApiResponse, SearchTown, Town } from "@/types";
 import { fetchDoctors } from "@/lib/api";
-import { distanceKm, locationFromTown } from "@/lib/location";
+import { locationFromTown } from "@/lib/location";
 import { useSearchLocation } from "@/hooks/useSearchLocation";
 import { Header } from "@/components/Header";
 import { LocationModal } from "@/components/LocationModal";
@@ -25,10 +27,8 @@ import { SmartAppBanner } from "@/components/SmartAppBanner";
 import { AppDownloadModal } from "@/components/AppDownloadModal";
 import { Footer } from "@/components/Footer";
 
-const RADIUS_OPTIONS = [15, 25, 50, 100];
-
 export default function HomePage() {
-  const { towns, location, locating, locationDenied, setLocation } = useSearchLocation();
+  const { towns, location, locating, locationFailed, locationDenied, retryLocation, setLocation } = useSearchLocation();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -36,10 +36,9 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All");
   const [availableOnly, setAvailableOnly] = useState(false);
-  const [radiusKm, setRadiusKm] = useState(25);
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [meta, setMeta] = useState<{ total: number; radiusKm: number; expanded: boolean } | null>(null);
+  const [meta, setMeta] = useState<{ total: number; town: SearchTown | null } | null>(null);
   const requestId = useRef(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +56,7 @@ export default function HomePage() {
         q: searchQuery.trim() || undefined,
         latitude: location?.latitude,
         longitude: location?.longitude,
-        radiusKm,
+        townId: location?.source === "town" ? location.townId : undefined,
         specialty: selectedSpecialty !== "All" ? selectedSpecialty : undefined,
         availableOnly,
         limit: 50,
@@ -66,8 +65,7 @@ export default function HomePage() {
       setDoctors(response.data || []);
       setMeta({
         total: response.pagination?.total ?? response.data.length,
-        radiusKm: response.searchMeta?.appliedRadiusKm ?? radiusKm,
-        expanded: Boolean(response.searchMeta?.autoExpandedRadius),
+        town: response.searchMeta?.town ?? null,
       });
     } catch (err: unknown) {
       if (id !== requestId.current) return;
@@ -75,7 +73,7 @@ export default function HomePage() {
     } finally {
       if (id === requestId.current) setLoading(false);
     }
-  }, [location, searchQuery, selectedSpecialty, availableOnly, radiusKm]);
+  }, [location, searchQuery, selectedSpecialty, availableOnly]);
 
   useEffect(() => {
     if (locating) return;
@@ -83,20 +81,30 @@ export default function HomePage() {
     return () => clearTimeout(timer);
   }, [loadDoctors, locating]);
 
-  const nearbyTowns = location
-    ? towns
-        .filter((t) => t.doctorCount > 0 && t.id !== location.townId)
-        .map((t) => ({ town: t, km: distanceKm(location.latitude, location.longitude, t.latitude, t.longitude) }))
-        .sort((a, b) => a.km - b.km)
-        .slice(0, 3)
-    : [];
-
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedSpecialty("All");
     setAvailableOnly(false);
-    setRadiusKm(25);
   };
+
+  const town = meta?.town ?? null;
+  const inTown = town ? doctors.filter((d) => d.inTown) : [];
+  const outside = town ? doctors.filter((d) => !d.inTown) : doctors;
+
+  const renderGrid = (list: Doctor[]) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
+      {list.map((doctor) => (
+        <DoctorCard key={doctor.id} doctor={doctor} onSelect={setSelectedDoctor} />
+      ))}
+    </div>
+  );
+
+  const renderSectionLabel = (label: string, inside: boolean) => (
+    <h3 className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider ${inside ? "text-teal-800" : "text-slate-500"}`}>
+      {inside ? <MapPin className="w-3.5 h-3.5" /> : <Navigation className="w-3.5 h-3.5" />}
+      {label}
+    </h3>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -152,7 +160,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between text-xs text-teal-200/90 px-1 pt-1">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-teal-300" />
-                  <span>{locating ? "Detecting your location…" : locationDenied && location?.source !== "gps" ? `Location is off · showing ${placeName}` : `Searching around ${placeName}`}</span>
+                  <span>{locating ? "Detecting your location…" : `Searching around ${placeName}`}</span>
                 </span>
                 <button
                   onClick={() => setIsLocationModalOpen(true)}
@@ -189,23 +197,7 @@ export default function HomePage() {
                   {availableOnly && <CheckCircle2 className="w-3.5 h-3.5" />}
                 </button>
 
-                <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                  <span className="text-slate-400">Radius:</span>
-                  <select
-                    value={radiusKm}
-                    onChange={(e) => setRadiusKm(Number(e.target.value))}
-                    aria-label="Search radius in kilometers"
-                    className="bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-teal-700 cursor-pointer"
-                  >
-                    {RADIUS_OPTIONS.map((r) => (
-                      <option key={r} value={r}>
-                        Within {r} km
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {(searchQuery || selectedSpecialty !== "All" || availableOnly || radiusKm !== 25) && (
+                {(searchQuery || selectedSpecialty !== "All" || availableOnly) && (
                   <button
                     onClick={handleResetFilters}
                     className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
@@ -229,14 +221,39 @@ export default function HomePage() {
                 Verified Doctor Chambers
               </h2>
               <span className="text-xs text-slate-500 font-medium">
-                {!loading && meta && `(${meta.total} ${meta.total === 1 ? "doctor" : "doctors"} within ${meta.radiusKm} km)`}
+                {!loading && meta && `(${meta.total} ${meta.total === 1 ? "doctor" : "doctors"})`}
               </span>
             </div>
 
             <span className="text-xs text-teal-800 font-semibold bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 hidden sm:inline-block">
-              {meta?.expanded ? `Nothing within ${radiusKm} km · widened to ${meta.radiusKm} km` : `Radius: ${radiusKm} km`}
+              {town && town.doctorCount > 0 ? `${town.name} first · then nearest` : "Nearest first"}
             </span>
           </div>
+
+          {!locating && locationFailed && (
+            <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <MapPinOff className="w-4 h-4 shrink-0 text-amber-600" />
+                <span>
+                  {locationDenied ? "Location access is blocked" : "Couldn't get your location"} · showing doctors for {placeName}.
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={retryLocation}
+                  className="px-3 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded-md font-semibold text-xs cursor-pointer"
+                >
+                  Try again
+                </button>
+                <button
+                  onClick={() => setIsLocationModalOpen(true)}
+                  className="px-3 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-md font-semibold text-xs cursor-pointer"
+                >
+                  Choose town
+                </button>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center justify-between gap-3">
@@ -278,51 +295,33 @@ export default function HomePage() {
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                No doctors found near {placeName}
+                No matching doctors found
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 max-w-md">
-                {nearbyTowns.length
-                  ? "Try a wider radius, clear the filters, or look in a nearby town:"
-                  : "Try a wider radius or clear the filters."}
+                Try a different name or specialty, or clear the filters.
               </p>
-              {nearbyTowns.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2">
-                  {nearbyTowns.map(({ town, km }) => (
-                    <button
-                      key={town.id}
-                      onClick={() => handleSelectTown(town)}
-                      className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-900 text-xs font-semibold cursor-pointer"
-                    >
-                      {town.name} · {town.doctorCount} doctors · {Math.round(km)} km
-                    </button>
-                  ))}
+              <button
+                onClick={handleResetFilters}
+                className="mt-2 px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs transition-colors cursor-pointer"
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : town ? (
+            <div className="flex flex-col gap-4">
+              {town.doctorCount === 0 && (
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
+                  No doctors listed in {town.name} yet. Showing the nearest doctors.
                 </div>
               )}
-              <div className="flex items-center gap-2 mt-2">
-                <button
-                  onClick={() => setRadiusKm(50)}
-                  className="px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs transition-colors cursor-pointer"
-                >
-                  Expand Radius to 50 km
-                </button>
-                <button
-                  onClick={() => setIsLocationModalOpen(true)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
-                >
-                  Change Location
-                </button>
-              </div>
+              {inTown.length > 0 && renderSectionLabel(`Doctors in ${town.name}`, true)}
+              {inTown.length > 0 && renderGrid(inTown)}
+              {outside.length > 0 &&
+                renderSectionLabel(town.doctorCount === 0 ? "Nearest doctors first" : `Outside ${town.name} · nearest first`, false)}
+              {outside.length > 0 && renderGrid(outside)}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
-              {doctors.map((doctor) => (
-                <DoctorCard
-                  key={doctor.id}
-                  doctor={doctor}
-                  onSelect={setSelectedDoctor}
-                />
-              ))}
-            </div>
+            renderGrid(doctors)
           )}
 
           <div className="mt-4 p-5 rounded-2xl bg-teal-50/70 border border-teal-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -8,8 +8,7 @@ import {
   X, 
   Building2, 
   Clock, 
-  Phone, 
-  ShieldCheck, 
+  Phone,  
   Calendar,
   Ticket,
   Smartphone,
@@ -77,10 +76,6 @@ export const DoctorDetailsModal: React.FC<DoctorDetailsModalProps> = ({
               <p className="text-xs text-slate-600 mt-1">
                 {doctor.qualifications}
               </p>
-              <div className="flex items-center gap-1.5 text-xs text-teal-800 font-medium mt-1.5">
-                <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
-                <span>Registration: {doctor.registrationNumber} ({doctor.council})</span>
-              </div>
               {doctor.languages?.length > 0 && (
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
                   <Languages className="w-3.5 h-3.5 shrink-0" />

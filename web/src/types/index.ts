@@ -64,6 +64,7 @@ export interface Doctor {
   isActive: boolean;
   affiliatedEstablishmentIds: string[];
   distanceKm?: number;
+  inTown?: boolean;
   primaryEstablishment?: Establishment | null;
   affiliatedEstablishments: Establishment[];
   schedules: Schedule[];
@@ -82,10 +83,16 @@ export interface SearchApiResponse {
     query: string | null;
     specialty: string | null;
     coordinates: { latitude: number; longitude: number } | null;
-    appliedRadiusKm: number;
-    autoExpandedRadius: boolean;
+    town: SearchTown | null;
     targetDay: string;
   };
+}
+
+export interface SearchTown {
+  id: string;
+  name: string;
+  district: string;
+  doctorCount: number;
 }
 
 export interface Town {

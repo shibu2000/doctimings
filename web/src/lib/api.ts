@@ -11,7 +11,7 @@ export interface FetchDoctorsParams {
   q?: string;
   latitude?: number;
   longitude?: number;
-  radiusKm?: number;
+  townId?: string;
   specialty?: string;
   dayOfWeek?: string;
   availableOnly?: boolean;
@@ -25,7 +25,7 @@ export async function fetchDoctors(params: FetchDoctorsParams = {}): Promise<Sea
   if (params.q) url.searchParams.set("q", params.q);
   if (params.latitude !== undefined) url.searchParams.set("latitude", params.latitude.toString());
   if (params.longitude !== undefined) url.searchParams.set("longitude", params.longitude.toString());
-  if (params.radiusKm !== undefined) url.searchParams.set("radiusKm", params.radiusKm.toString());
+  if (params.townId) url.searchParams.set("townId", params.townId);
   if (params.specialty && params.specialty !== "All") url.searchParams.set("specialty", params.specialty);
   if (params.dayOfWeek) url.searchParams.set("dayOfWeek", params.dayOfWeek);
   if (params.availableOnly) url.searchParams.set("availableOnly", "true");
