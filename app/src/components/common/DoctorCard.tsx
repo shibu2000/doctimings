@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Share } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Phone, Navigation, Clock, CalendarPlus, Share2, Ticket } from 'lucide-react-native';
@@ -7,13 +7,14 @@ import { Doctor } from '../../types';
 import { useApp } from '../../store/AppContext';
 import { StatusBadge } from './StatusBadge';
 import { VerifiedBadge } from './VerifiedBadge';
+import { shareDoctor } from '../../services/share';
 
 interface DoctorCardProps {
   doctor: Doctor;
   onPress?: () => void;
 }
 
-export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
+const DoctorCardView: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
   const router = useRouter();
   const { t } = useTranslation();
   const { language, theme, isDark } = useApp();
@@ -26,11 +27,10 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
     ? doctor.specialtiesBn[0]
     : doctor.specialties[0];
 
+  const callNumber = primaryPractice?.phone || doctor.phone;
+
   const handleCall = () => {
-    const phoneNumber = primaryPractice?.phone || doctor.phone;
-    if (phoneNumber) {
-      Linking.openURL(`tel:${phoneNumber.replace(/\s+/g, '')}`);
-    }
+    if (callNumber) Linking.openURL(`tel:${callNumber.replace(/\s+/g, '')}`);
   };
 
   const handleDirections = () => {
@@ -38,18 +38,6 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${primaryPractice.latitude},${primaryPractice.longitude}`;
       Linking.openURL(url);
     }
-  };
-
-  const handleShare = async () => {
-    try {
-      const chamberName = primaryPractice?.establishmentName || 'Local Chamber';
-      const schedule = primarySchedule
-        ? `${language === 'bn' ? primarySchedule.dayNameBn : primarySchedule.dayName} (${primarySchedule.startTime}-${primarySchedule.endTime})`
-        : '';
-      const phone = primaryPractice?.phone || '';
-      const text = `🩺 ${doctorName} (${specialty})\n📍 ${chamberName}\n⏰ ${schedule}\n📞 Counter Phone: ${phone}\nShared via DocTimings`;
-      await Share.share({ message: text });
-    } catch {}
   };
 
   const handleCardPress = () => {
@@ -111,7 +99,7 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
             <TouchableOpacity
               style={styles.shareBtn}
               activeOpacity={0.7}
-              onPress={handleShare}
+              onPress={() => shareDoctor(doctor, language)}
             >
               <Share2 size={15} color={theme.textMuted} />
             </TouchableOpacity>
@@ -133,6 +121,8 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
         <VerifiedBadge
           date={doctor.lastVerifiedAt}
           isStale={doctor.verificationStatus === 'unverified'}
+          isPending={doctor.verificationStatus === 'pending'}
+          canCall={Boolean(callNumber)}
         />
       </View>
 
@@ -202,44 +192,53 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onPress }) => {
           onPress={handlePlanVisit}
         >
           <CalendarPlus size={15} color={theme.textSecondary} />
-          <Text style={[styles.planButtonText, { color: theme.textSecondary }]}>
+          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={[styles.planButtonText, { color: theme.textSecondary }]}>
             {t('common.planVisit')}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.directionsButton,
-            {
-              backgroundColor: theme.primaryLight,
-              borderColor: theme.primary,
-            },
-          ]}
-          activeOpacity={0.7}
-          onPress={handleDirections}
-        >
-          <Navigation size={14} color={theme.primaryDark} />
-          <Text
-            style={[styles.directionsButtonText, { color: theme.primaryDark }]}
+        {primaryPractice?.hasExactLocation ? (
+          <TouchableOpacity
+            style={[
+              styles.directionsButton,
+              {
+                backgroundColor: theme.primaryLight,
+                borderColor: theme.primary,
+              },
+            ]}
+            activeOpacity={0.7}
+            onPress={handleDirections}
           >
-            {t('common.directions')}
-          </Text>
-        </TouchableOpacity>
+            <Navigation size={14} color={theme.primaryDark} />
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              style={[styles.directionsButtonText, { color: theme.primaryDark }]}
+            >
+              {t('common.directions')}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
 
-        <TouchableOpacity
-          style={[styles.callButton, { backgroundColor: theme.primary }]}
-          activeOpacity={0.8}
-          onPress={handleCall}
-        >
-          <Phone size={14} color={theme.textInverse} />
-          <Text style={[styles.callButtonText, { color: theme.textInverse }]}>
-            {t('common.call')}
-          </Text>
-        </TouchableOpacity>
+        {callNumber ? (
+          <TouchableOpacity
+            style={[styles.callButton, { backgroundColor: theme.primary }]}
+            activeOpacity={0.8}
+            onPress={handleCall}
+          >
+            <Phone size={14} color={theme.textInverse} />
+            <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={[styles.callButtonText, { color: theme.textInverse }]}>
+              {t('common.call')}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
 };
+
+export const DoctorCard = React.memo(DoctorCardView);
 
 const styles = StyleSheet.create({
   card: {
@@ -346,35 +345,39 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   planButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5,
-    paddingVertical: 9,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     borderRadius: 8,
     borderWidth: 1,
   },
   planButtonText: {
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
   },
   directionsButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5,
-    paddingVertical: 9,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     borderRadius: 8,
     borderWidth: 1,
   },
   directionsButtonText: {
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
   },
   callButton: {
-    flex: 1,
+    flex: 1.15,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -384,6 +387,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   callButtonText: {
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '700',
   },

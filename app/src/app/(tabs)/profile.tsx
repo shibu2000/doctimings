@@ -5,15 +5,18 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+import Constants from 'expo-constants';
 import {
   Globe,
   MapPin,
   Bell,
-  Sliders,
+  BellRing,
   HelpCircle,
   RefreshCw,
   ChevronRight,
@@ -22,59 +25,96 @@ import {
   UserRound,
   Sun,
   Moon,
+  Trash2,
+  ShieldCheck,
+  FileText,
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
 import { useApp } from '../../store/AppContext';
-import { ConfirmationModal } from '../../components/common/ConfirmationModal';
+import { ConfirmationModal, ConfirmationModalProps } from '../../components/common/ConfirmationModal';
 import { GlowingIcon } from '../../components/common/GlowingIcon';
+
+type ModalState = Omit<ConfirmationModalProps, 'onCancel'>;
+
+interface MenuItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value?: string;
+  highlightValue?: boolean;
+  onPress?: () => void;
+  trailing?: React.ReactNode;
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ icon, label, value, highlightValue, onPress, trailing }) => {
+  const { theme, isDark } = useApp();
+  return (
+    <TouchableOpacity
+      style={[styles.menuItem, { backgroundColor: theme.surface, borderColor: theme.border }]}
+      activeOpacity={0.7}
+      disabled={!onPress}
+      onPress={onPress}
+    >
+      <View style={[styles.menuIconCircle, { backgroundColor: isDark ? theme.surfaceVariant : theme.background }]}>
+        {icon}
+      </View>
+      <View style={styles.menuContent}>
+        <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>{label}</Text>
+        {value ? (
+          <Text style={[styles.menuValue, { color: highlightValue ? theme.primaryDark : theme.textSecondary }]}>
+            {value}
+          </Text>
+        ) : null}
+      </View>
+      {trailing ?? <ChevronRight size={18} color={theme.textMuted} />}
+    </TouchableOpacity>
+  );
+};
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const {
     currentLocation,
     language,
     changeLanguage,
     lastSyncTime,
     refreshSync,
-    themeMode,
     setThemeMode,
+    notificationsEnabled,
+    setNotificationsEnabled,
+    clearLocalData,
     theme,
     isDark,
     profile,
   } = useApp();
 
-  const [confirmModal, setConfirmModal] = useState<{
-    visible: boolean;
-    title: string;
-    message: string;
-    variant: 'primary' | 'danger' | 'success' | 'warning' | 'info';
-  }>({
-    visible: false,
-    title: '',
-    message: '',
-    variant: 'primary',
-  });
+  const [modal, setModal] = useState<ModalState>({ visible: false, title: '', message: '', onConfirm: () => {} });
 
-  const handleToggleLanguage = () => {
-    const nextLang = language === 'en' ? 'bn' : 'en';
-    changeLanguage(nextLang);
+  const closeModal = () => setModal((prev) => ({ ...prev, visible: false }));
+
+  const showInfo = (title: string, message: string, variant: ModalState['variant'] = 'info') =>
+    setModal({ visible: true, title, message, variant, singleAction: true, confirmText: t('common.done'), onConfirm: closeModal });
+
+  const handleSyncData = async () => {
+    const online = await refreshSync();
+    if (online) await queryClient.invalidateQueries();
+    showInfo(t('settings.offlineData'), online ? t('settings.syncedSuccess') : t('settings.syncFailed'), online ? 'success' : 'warning');
   };
 
-  const handleToggleTheme = () => {
-    const nextMode = isDark ? 'light' : 'dark';
-    setThemeMode(nextMode);
-  };
-
-  const handleSyncData = () => {
-    refreshSync();
-    setConfirmModal({
+  const handleClearData = () =>
+    setModal({
       visible: true,
-      title: t('settings.offlineData'),
-      message: 'Chamber schedules and doctor listings synced successfully for offline use.',
-      variant: 'success',
+      title: t('settings.clearDataPrompt'),
+      message: t('settings.clearDataConfirm'),
+      variant: 'danger',
+      confirmText: t('settings.clearDataPrompt'),
+      cancelText: t('common.cancel'),
+      onConfirm: async () => {
+        await clearLocalData();
+        showInfo(t('settings.clearDataPrompt'), t('settings.clearDataSuccess'), 'success');
+      },
     });
-  };
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
   const initials = profile
@@ -178,238 +218,97 @@ export default function ProfileScreen() {
           <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
             {t('settings.subtitle')}
           </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={handleToggleLanguage}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <Globe size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('settings.appLanguage')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.primaryDark }]}>
-                {language === 'en' ? 'English (En)' : 'বাংলা (Bangla)'}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={handleToggleTheme}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              {isDark ? (
-                <Sun size={18} color={theme.warning} />
-              ) : (
-                <Moon size={18} color={theme.primary} />
-              )}
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('settings.themeTitle')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.primaryDark }]}>
-                {isDark ? t('settings.themeDark') : t('settings.themeLight')}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
+          <MenuItem
+            icon={<Globe size={18} color={theme.primary} />}
+            label={t('settings.appLanguage')}
+            value={language === 'en' ? 'English (En)' : 'বাংলা (Bangla)'}
+            highlightValue
+            onPress={() => changeLanguage(language === 'en' ? 'bn' : 'en')}
+          />
+          <MenuItem
+            icon={isDark ? <Sun size={18} color={theme.warning} /> : <Moon size={18} color={theme.primary} />}
+            label={t('settings.themeTitle')}
+            value={isDark ? t('settings.themeDark') : t('settings.themeLight')}
+            highlightValue
+            onPress={() => setThemeMode(isDark ? 'light' : 'dark')}
+          />
+          <MenuItem
+            icon={<MapPin size={18} color={theme.primary} />}
+            label={t('settings.searchLocation')}
+            value={locationName}
+            highlightValue
             onPress={() => router.push('/location-select')}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <MapPin size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('settings.searchLocation')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.primaryDark }]}>
-                {locationName}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
+          />
+          <MenuItem
+            icon={<Bell size={18} color={theme.primary} />}
+            label={t('notifications.title')}
+            value={t('notifications.subtitle')}
             onPress={() => router.push('/notifications')}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <Bell size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('notifications.title')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.textSecondary }]}>
-                {t('notifications.subtitle')}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
+          />
+          <MenuItem
+            icon={<BellRing size={18} color={theme.primary} />}
+            label={t('settings.visitReminders')}
+            value={t('settings.visitRemindersDesc')}
+            trailing={
+              <Switch
+                value={notificationsEnabled}
+                onValueChange={async (enabled) => {
+                  if (!(await setNotificationsEnabled(enabled))) {
+                    showInfo(t('reminders.permissionTitle'), t('reminders.permissionDenied'), 'warning');
+                  }
+                }}
+                trackColor={{ false: theme.border, true: theme.primary }}
+                thumbColor={theme.surface}
+              />
+            }
+          />
         </View>
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-            {t('settings.offlineData')}
+            {t('settings.privacySection')}
           </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
+          <MenuItem
+            icon={<RefreshCw size={18} color={theme.primary} />}
+            label={t('settings.syncNow')}
+            value={t('settings.lastUpdated', { time: lastSyncTime })}
             onPress={handleSyncData}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <RefreshCw size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('settings.syncNow')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.textSecondary }]}>
-                Last updated: {lastSyncTime}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
+          />
+          <MenuItem
+            icon={<Trash2 size={18} color={theme.error} />}
+            label={t('settings.dataStorage')}
+            value={t('settings.dataStorageDesc')}
+            onPress={handleClearData}
+          />
         </View>
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-            Support & Community
+            {t('settings.supportSection')}
           </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
+          <MenuItem
+            icon={<HelpCircle size={18} color={theme.warning} />}
+            label={t('report.title')}
+            value={t('report.subtitle')}
             onPress={() => router.push('/report')}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <HelpCircle size={18} color={theme.warning} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('report.title')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.textSecondary }]}>
-                {t('report.subtitle')}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => router.push('/settings')}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <Sliders size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('settings.title')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.textSecondary }]}>
-                All system preferences & about
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
+          />
+          <MenuItem
+            icon={<ShieldCheck size={18} color={theme.primary} />}
+            label={t('settings.privacyPolicy')}
+            value={t('settings.privacyPolicyDesc')}
+            onPress={() => showInfo(t('settings.privacyPolicy'), t('settings.privacyPolicyBody'))}
+          />
+          <MenuItem
+            icon={<FileText size={18} color={theme.primary} />}
+            label={t('settings.termsOfUse')}
+            value={t('settings.termsOfUseDesc')}
+            onPress={() => showInfo(t('settings.termsOfUse'), t('settings.termsOfUseBody'))}
+          />
         </View>
 
         <View style={styles.footer}>
           <Text style={[styles.versionText, { color: theme.textMuted }]}>
-            {t('settings.version')}
+            {t('common.appName')} v{Constants.expoConfig?.version}
           </Text>
           <Text style={[styles.footerNote, { color: theme.textMuted }]}>
             {t('common.verifiedDirectory')}
@@ -417,16 +316,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
 
-      <ConfirmationModal
-        visible={confirmModal.visible}
-        title={confirmModal.title}
-        message={confirmModal.message}
-        variant={confirmModal.variant}
-        singleAction
-        confirmText={t('common.done')}
-        onConfirm={() => setConfirmModal((prev) => ({ ...prev, visible: false }))}
-        onCancel={() => setConfirmModal((prev) => ({ ...prev, visible: false }))}
-      />
+      <ConfirmationModal {...modal} onCancel={closeModal} />
     </SafeAreaView>
   );
 }

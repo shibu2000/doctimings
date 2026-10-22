@@ -18,7 +18,7 @@ import {
 } from 'lucide-react-native';
 import { useApp } from '../store/AppContext';
 import { DoctorCard } from '../components/common/DoctorCard';
-import { useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import type { SearchResult } from '../services/api';
 import { ConfirmationModal } from '../components/common/ConfirmationModal';
 import { GlowingIcon } from '../components/common/GlowingIcon';
@@ -26,18 +26,16 @@ import { GlowingIcon } from '../components/common/GlowingIcon';
 export default function OfflineScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { lastSyncTime, refreshSync, setIsOffline, theme, isDark } = useApp();
+  const { lastSyncTime, refreshSync, theme, isDark } = useApp();
   const [reconnectModalVisible, setReconnectModalVisible] = useState(false);
   const client = useQueryClient();
   const cachedDoctors = client
-    .getQueriesData<SearchResult>({ queryKey: ['search'] })
-    .map(([, data]) => data?.doctors ?? [])
+    .getQueriesData<InfiniteData<SearchResult>>({ queryKey: ['search'] })
+    .map(([, data]) => data?.pages.flatMap((page) => page.doctors) ?? [])
     .find((list) => list.length > 0) ?? [];
 
-  const handleReconnect = () => {
-    refreshSync();
-    setIsOffline(false);
-    setReconnectModalVisible(true);
+  const handleReconnect = async () => {
+    if (await refreshSync()) setReconnectModalVisible(true);
   };
 
   const handleModalDone = () => {
@@ -149,7 +147,7 @@ export default function OfflineScreen() {
             <Text
               style={[styles.cachedTitle, { color: theme.textPrimary }]}
             >
-              Available in Phone Cache
+              {t('offline.cachedLabel')}
             </Text>
           </View>
 
@@ -164,8 +162,8 @@ export default function OfflineScreen() {
 
       <ConfirmationModal
         visible={reconnectModalVisible}
-        title="Reconnected"
-        message="Live directory updates and search connectivity resumed."
+        title={t('offline.reconnectedTitle')}
+        message={t('offline.reconnectedBody')}
         variant="success"
         singleAction
         confirmText={t('common.done')}

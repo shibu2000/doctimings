@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Bell, Globe, ChevronDown, WifiOff, Sun, Moon } from 'lucide-react-native';
+import { MapPin, Bell, Globe, ChevronDown, WifiOff } from 'lucide-react-native';
 import { useApp } from '../../store/AppContext';
 import { BrandLogo } from './BrandLogo';
 import { GlowingIcon } from './GlowingIcon';
@@ -17,19 +17,11 @@ export const Header: React.FC = () => {
     unreadNotificationsCount,
     isOffline,
     theme,
-    isDark,
-    themeMode,
-    setThemeMode,
   } = useApp();
 
   const toggleLanguage = () => {
     const nextLang = language === 'en' ? 'bn' : 'en';
     changeLanguage(nextLang);
-  };
-
-  const toggleTheme = () => {
-    const nextMode = isDark ? 'light' : 'dark';
-    setThemeMode(nextMode);
   };
 
   const displayName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
@@ -67,7 +59,7 @@ export const Header: React.FC = () => {
             activeOpacity={0.8}
             onPress={() => router.push('/(tabs)')}
           >
-            <GlowingIcon glowColor={theme.glowPrimary} size={38} pulse>
+            <GlowingIcon glowColor={theme.glowPrimary} size={38} pulse={false}>
               <BrandLogo size={32} />
             </GlowingIcon>
             <View style={styles.titleCol}>
@@ -86,35 +78,13 @@ export const Header: React.FC = () => {
                 >
                   {displayName}
                 </Text>
-                <Text style={[styles.changeText, { color: theme.primary }]}>
-                  {t('common.change')}
-                </Text>
-                <ChevronDown size={12} color={theme.primary} />
+                <ChevronDown size={14} color={theme.primary} />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </View>
 
         <View style={styles.right}>
-          <TouchableOpacity
-            style={[
-              styles.themeToggleBtn,
-              {
-                backgroundColor: isDark
-                  ? theme.surfaceVariant
-                  : theme.primaryMuted,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={toggleTheme}
-          >
-            {isDark ? (
-              <Sun size={15} color={theme.warning} />
-            ) : (
-              <Moon size={15} color={theme.primaryDark} />
-            )}
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={[
               styles.langButton,
@@ -202,26 +172,15 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   locationText: {
+    flexShrink: 1,
     fontSize: 13,
+    lineHeight: 18,
     fontWeight: '600',
-    maxWidth: 125,
-  },
-  changeText: {
-    fontSize: 11,
-    fontWeight: '500',
-    textDecorationLine: 'underline',
   },
   right: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  themeToggleBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   langButton: {
     flexDirection: 'row',

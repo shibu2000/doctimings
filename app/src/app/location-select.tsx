@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -26,14 +26,15 @@ import {
   Building2,
 } from 'lucide-react-native';
 import { locationFromCoords, detectCoords } from '../services/location';
-import { Colors } from '../constants/theme';
+import { ThemeColors } from '../constants/theme';
 import { useApp } from '../store/AppContext';
 import { LocationItem } from '../types';
 
 export default function LocationSelectScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { currentLocation, setCurrentLocation, language, towns, locationStatus } = useApp();
+  const { currentLocation, setCurrentLocation, language, towns, locationStatus, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   const [selectedLoc, setSelectedLoc] = useState<LocationItem>(currentLocation);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -86,7 +87,7 @@ export default function LocationSelectScreen() {
           activeOpacity={0.7}
           onPress={() => router.back()}
         >
-          <X size={20} color={Colors.textPrimary} />
+          <X size={20} color={theme.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -106,9 +107,9 @@ export default function LocationSelectScreen() {
           <View style={styles.gpsLeft}>
             <View style={styles.gpsIconCircle}>
               {isDetecting ? (
-                <ActivityIndicator size="small" color={Colors.surface} />
+                <ActivityIndicator size="small" color={theme.surface} />
               ) : (
-                <Crosshair size={22} color={Colors.surface} />
+                <Crosshair size={22} color={theme.surface} />
               )}
             </View>
             <View style={styles.gpsTextCol}>
@@ -117,22 +118,22 @@ export default function LocationSelectScreen() {
                 <View style={styles.liveDot} />
               </View>
               <Text style={styles.gpsSubtitle}>
-                Use your device location to find doctors nearby
+                {t('location.gpsSubtitle')}
               </Text>
             </View>
           </View>
           <View style={styles.detectBadge}>
-            <Text style={styles.detectBadgeText}>Detect</Text>
+            <Text style={styles.detectBadgeText}>{t('location.detect')}</Text>
           </View>
         </TouchableOpacity>
 
         {systemState === 'denied' && (
           <View style={styles.fallbackBox}>
-            <AlertTriangle size={20} color={Colors.warning} />
+            <AlertTriangle size={20} color={theme.warning} />
             <View style={styles.fallbackContent}>
-              <Text style={styles.fallbackTitle}>Location access is turned off</Text>
+              <Text style={styles.fallbackTitle}>{t('location.deniedTitle')}</Text>
               <Text style={styles.fallbackText}>
-                You can choose your town manually below without GPS.
+                {t('location.deniedText')}
               </Text>
             </View>
           </View>
@@ -140,30 +141,30 @@ export default function LocationSelectScreen() {
 
         {systemState === 'gps-off' && (
           <View style={styles.fallbackBox}>
-            <RefreshCw size={18} color={Colors.primary} />
+            <RefreshCw size={18} color={theme.primary} />
             <View style={styles.fallbackContent}>
-              <Text style={styles.fallbackTitle}>Could not obtain GPS</Text>
+              <Text style={styles.fallbackTitle}>{t('location.gpsFailTitle')}</Text>
               <Text style={styles.fallbackText}>
-                Please check location toggle or choose your town below.
+                {t('location.gpsFailText')}
               </Text>
             </View>
           </View>
         )}
 
         <View style={styles.searchSection}>
-          <Text style={styles.searchLabel}>Search for a place</Text>
+          <Text style={styles.searchLabel}>{t('location.searchLabel')}</Text>
           <View style={styles.searchBar}>
-            <Search size={18} color={Colors.textSecondary} />
+            <Search size={18} color={theme.textSecondary} />
             <TextInput
               style={styles.searchInput}
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholder="Search city, town, village or PIN (e.g. 721503)"
-              placeholderTextColor={Colors.textMuted}
+              placeholder={t('location.searchPlace')}
+              placeholderTextColor={theme.textMuted}
             />
             {searchQuery.length > 0 && (
               <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <X size={16} color={Colors.textSecondary} />
+                <X size={16} color={theme.textSecondary} />
               </TouchableOpacity>
             )}
           </View>
@@ -171,8 +172,8 @@ export default function LocationSelectScreen() {
 
         <View style={styles.matchingSection}>
           <View style={styles.matchingHeader}>
-            <Text style={styles.matchingTitle}>Matching places</Text>
-            <Text style={styles.matchingCount}>{filteredLocations.length} found</Text>
+            <Text style={styles.matchingTitle}>{t('location.matchingPlaces')}</Text>
+            <Text style={styles.matchingCount}>{t('location.foundCount', { count: filteredLocations.length })}</Text>
           </View>
 
           <View style={styles.placesList}>
@@ -197,7 +198,7 @@ export default function LocationSelectScreen() {
                     >
                       <MapPin
                         size={18}
-                        color={isSelected ? Colors.surface : Colors.textSecondary}
+                        color={isSelected ? theme.surface : theme.textSecondary}
                       />
                     </View>
                     <View style={styles.placeInfo}>
@@ -212,7 +213,7 @@ export default function LocationSelectScreen() {
                         </Text>
                         {isSelected && (
                           <View style={styles.currentMatchBadge}>
-                            <Text style={styles.currentMatchText}>Current match</Text>
+                            <Text style={styles.currentMatchText}>{t('location.currentMatch')}</Text>
                           </View>
                         )}
                       </View>
@@ -229,9 +230,9 @@ export default function LocationSelectScreen() {
                     ]}
                   >
                     {isSelected ? (
-                      <Check size={14} color={Colors.surface} strokeWidth={3} />
+                      <Check size={14} color={theme.surface} strokeWidth={3} />
                     ) : (
-                      <ChevronRight size={14} color={Colors.textMuted} />
+                      <ChevronRight size={14} color={theme.textMuted} />
                     )}
                   </View>
                 </TouchableOpacity>
@@ -242,17 +243,17 @@ export default function LocationSelectScreen() {
 
         <View style={styles.confirmationCard}>
           <View style={styles.confTop}>
-            <Text style={styles.confBadge}>Your search location</Text>
-            <ShieldCheck size={16} color={Colors.primary} />
+            <Text style={styles.confBadge}>{t('location.yourSearchLocation')}</Text>
+            <ShieldCheck size={16} color={theme.primary} />
           </View>
           <View style={styles.confLocationRow}>
-            <MapPin size={18} color={Colors.primary} />
+            <MapPin size={18} color={theme.primary} />
             <Text style={styles.confLocationText}>
               {displayName}
             </Text>
           </View>
           <Text style={styles.confSubtitle}>
-            Doctors, clinics, and chemist timings will be shown based on this location.
+            {t('location.confirmSubtitle')}
           </Text>
         </View>
       </ScrollView>
@@ -263,8 +264,8 @@ export default function LocationSelectScreen() {
           activeOpacity={0.8}
           onPress={handleConfirmLocation}
         >
-          <CheckCircle2 size={18} color={Colors.textInverse} strokeWidth={2.2} />
-          <Text style={styles.confirmBtnText}>Use this location</Text>
+          <CheckCircle2 size={18} color={theme.textInverse} strokeWidth={2.2} />
+          <Text style={styles.confirmBtnText}>{t('location.useThisLocation')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -279,10 +280,11 @@ export default function LocationSelectScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   sheetHandle: {
     alignItems: 'center',
@@ -292,7 +294,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 5,
     borderRadius: 3,
-    backgroundColor: Colors.border,
+    backgroundColor: theme.border,
   },
   header: {
     flexDirection: 'row',
@@ -301,12 +303,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   closeBtn: {
     width: 36,
@@ -317,7 +319,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   scrollContent: {
     padding: 16,
@@ -325,18 +327,18 @@ const styles = StyleSheet.create({
   },
   introText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginBottom: 12,
   },
   gpsCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     padding: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.primary,
+    borderColor: theme.primary,
     marginBottom: 14,
   },
   gpsLeft: {
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -364,37 +366,37 @@ const styles = StyleSheet.create({
   gpsTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   liveDot: {
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: Colors.success,
+    backgroundColor: theme.success,
   },
   gpsSubtitle: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 2,
   },
   detectBadge: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 9999,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   detectBadgeText: {
     fontSize: 12,
     fontWeight: '700',
-    color: Colors.primary,
+    color: theme.primary,
   },
   fallbackBox: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: Colors.warningLight,
+    backgroundColor: theme.warningLight,
     padding: 12,
     borderRadius: 10,
     marginBottom: 14,
@@ -405,11 +407,11 @@ const styles = StyleSheet.create({
   fallbackTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: Colors.warningText,
+    color: theme.warningText,
   },
   fallbackText: {
     fontSize: 11,
-    color: Colors.warningText,
+    color: theme.warningText,
     marginTop: 1,
   },
   searchSection: {
@@ -418,15 +420,15 @@ const styles = StyleSheet.create({
   searchLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginBottom: 6,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 10,
     paddingHorizontal: 12,
     height: 48,
@@ -435,7 +437,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 13,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   matchingSection: {
     marginBottom: 16,
@@ -449,11 +451,11 @@ const styles = StyleSheet.create({
   matchingTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   matchingCount: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   placesList: {
     gap: 8,
@@ -462,15 +464,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   placeCardSelected: {
-    backgroundColor: Colors.primaryLight,
-    borderColor: Colors.primary,
+    backgroundColor: theme.primaryLight,
+    borderColor: theme.primary,
   },
   placeLeft: {
     flexDirection: 'row',
@@ -482,12 +484,12 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   placeIconCircleSelected: {
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
   },
   placeInfo: {
     flex: 1,
@@ -500,47 +502,47 @@ const styles = StyleSheet.create({
   placeName: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   placeNameSelected: {
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   currentMatchBadge: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: Colors.primary,
+    borderColor: theme.primary,
   },
   currentMatchText: {
     fontSize: 9,
     fontWeight: '700',
-    color: Colors.primary,
+    color: theme.primary,
   },
   placeDistrict: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 2,
   },
   checkCircle: {
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkCircleSelected: {
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
   },
   confirmationCard: {
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     padding: 14,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     marginTop: 6,
   },
   confTop: {
@@ -551,7 +553,7 @@ const styles = StyleSheet.create({
   confBadge: {
     fontSize: 10,
     fontWeight: '700',
-    color: Colors.primary,
+    color: theme.primary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -564,20 +566,20 @@ const styles = StyleSheet.create({
   confLocationText: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   confSubtitle: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 4,
     lineHeight: 16,
   },
   bottomBar: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
     gap: 6,
   },
   confirmBtn: {
@@ -585,14 +587,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 12,
     borderRadius: 10,
   },
   confirmBtnText: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.textInverse,
+    color: theme.textInverse,
   },
   cancelBtn: {
     alignItems: 'center',
@@ -601,6 +603,6 @@ const styles = StyleSheet.create({
   cancelBtnText: {
     fontSize: 13,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
 });

@@ -2,9 +2,13 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { enableFreeze } from 'react-native-screens';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppProvider, useApp } from '../store/AppContext';
+import { SplashOverlay } from '../components/common/SplashOverlay';
 import '../locales/i18n';
+
+enableFreeze(true);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,9 +30,9 @@ function RootNavigator() {
           headerShown: false,
           contentStyle: { backgroundColor: theme.background },
           animation: 'slide_from_right',
+          freezeOnBlur: true,
         }}
       >
-        <Stack.Screen name="splash" options={{ headerShown: false, animation: 'fade' }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="doctor/[id]"
@@ -106,13 +110,6 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
-          name="settings"
-          options={{
-            headerShown: false,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
           name="offline"
           options={{
             headerShown: false,
@@ -120,6 +117,7 @@ function RootNavigator() {
           }}
         />
       </Stack>
+      <SplashOverlay />
     </>
   );
 }

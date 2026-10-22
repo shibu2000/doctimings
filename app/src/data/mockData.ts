@@ -373,6 +373,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-1',
         establishmentId: 'est-1',
+        hasExactLocation: true,
         establishmentName: 'Maa Medical Store',
         establishmentType: 'pharmacy',
         addressLine: 'Main Road, Gopiballavpur',
@@ -405,6 +406,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-2',
         establishmentId: 'est-2',
+        hasExactLocation: true,
         establishmentName: 'Life Care Polyclinic',
         establishmentType: 'clinic',
         addressLine: 'Hospital Road, Ward No 4',
@@ -458,6 +460,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-3',
         establishmentId: 'est-3',
+        hasExactLocation: true,
         establishmentName: 'Belda Medicare Center',
         establishmentType: 'clinic',
         addressLine: 'Near Central Bus Stand, NH-60',
@@ -522,6 +525,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-4',
         establishmentId: 'est-1',
+        hasExactLocation: true,
         establishmentName: 'Maa Medical Store',
         establishmentType: 'pharmacy',
         addressLine: 'Main Road, Gopiballavpur',
@@ -587,6 +591,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-5',
         establishmentId: 'est-2',
+        hasExactLocation: true,
         establishmentName: 'Life Care Polyclinic',
         establishmentType: 'clinic',
         addressLine: 'Hospital Road, Ward No 4',
@@ -640,6 +645,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-6',
         establishmentId: 'est-1',
+        hasExactLocation: true,
         establishmentName: 'Maa Medical Store',
         establishmentType: 'pharmacy',
         addressLine: 'Main Road, Gopiballavpur',
@@ -693,6 +699,7 @@ export const DOCTORS: Doctor[] = [
       {
         id: 'pl-7',
         establishmentId: 'est-2',
+        hasExactLocation: true,
         establishmentName: 'Life Care Polyclinic',
         establishmentType: 'clinic',
         addressLine: 'Hospital Road, Ward No 4',

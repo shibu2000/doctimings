@@ -67,7 +67,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
   return (
     <View style={[styles.badge, { backgroundColor: bgColor }, size === 'sm' && styles.badgeSm]}>
       {isGlowing ? (
-        <GlowingIcon glowColor={glowColor} size={iconSize + 4} pulse>
+        <GlowingIcon glowColor={glowColor} size={iconSize + 4} pulse={false}>
           <Icon size={iconSize} color={iconColor} strokeWidth={2.5} />
         </GlowingIcon>
       ) : (

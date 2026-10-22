@@ -123,7 +123,7 @@ export default function ReportIssueScreen() {
             <Text
               style={[styles.heroBannerTitle, { color: theme.primaryDark }]}
             >
-              Community Verified Health Network
+              {t('report.networkBadge')}
             </Text>
             <Text
               style={[styles.heroBannerBody, { color: theme.textSecondary }]}
@@ -143,7 +143,7 @@ export default function ReportIssueScreen() {
           ]}
         >
           <Text style={[styles.targetLabel, { color: theme.textMuted }]}>
-            Reporting info for:
+            {t('report.reportingFor')}
           </Text>
           <Text style={[styles.targetDoctor, { color: theme.textPrimary }]}>
             {doctor?.name ?? t('report.generalIssue')}

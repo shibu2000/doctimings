@@ -38,6 +38,7 @@ export interface PracticeLocation {
   phone: string;
   secondaryPhone?: string;
   distanceKm?: number;
+  hasExactLocation: boolean;
   consultationFee?: number;
   notes?: string;
   notesBn?: string;
@@ -136,10 +137,13 @@ export interface MyVisit {
   visitDate: string;
   visitTime: string;
   reminderEnabled: boolean;
+  reminderIds?: string[];
   notes?: string;
   status: 'planned' | 'completed' | 'cancelled';
   createdAt: string;
 }
+
+export type ReminderOutcome = 'scheduled' | 'off' | 'none';
 
 export interface AppNotification {
   id: string;

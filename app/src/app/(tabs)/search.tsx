@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
@@ -19,17 +18,18 @@ import {
   CheckCircle2,
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
-import { DoctorResults } from '../../components/common/DoctorResults';
+import { DoctorList } from '../../components/common/DoctorList';
 import { LocationNotice } from '../../components/common/LocationNotice';
 import { useDoctorSearch } from '../../hooks/useDoctors';
-import { Colors } from '../../constants/theme';
+import { ThemeColors } from '../../constants/theme';
 import { useApp } from '../../store/AppContext';
 
 export default function SearchScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ q?: string; specialty?: string }>();
-  const { currentLocation, language } = useApp();
+  const { currentLocation, language, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   const [query, setQuery] = useState<string>(params.q || params.specialty || '');
   const [onlyAvailableToday, setOnlyAvailableToday] = useState<boolean>(false);
@@ -51,6 +51,7 @@ export default function SearchScreen() {
   const search = useDoctorSearch(debounced, onlyAvailableToday);
   const matchedDoctors = search.data?.doctors ?? [];
   const isLoading = !search.data && (search.isPending || search.isFetching);
+  const showResults = !isLoading && !(search.isError && !search.data);
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
 
@@ -66,18 +67,18 @@ export default function SearchScreen() {
       <Header />
       <View style={styles.searchBoxWrapper}>
         <View style={styles.inputContainer}>
-          <SearchIcon size={18} color={Colors.primary} strokeWidth={2.2} />
+          <SearchIcon size={18} color={theme.primary} strokeWidth={2.2} />
           <TextInput
             style={styles.input}
             value={query}
             onChangeText={setQuery}
             placeholder={t('home.searchPlaceholder')}
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={theme.textMuted}
             returnKeyType="search"
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery('')} hitSlop={10}>
-              <X size={18} color={Colors.textSecondary} />
+              <X size={18} color={theme.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -90,7 +91,7 @@ export default function SearchScreen() {
           >
             <CheckCircle2
               size={13}
-              color={onlyAvailableToday ? Colors.primaryDark : Colors.success}
+              color={onlyAvailableToday ? theme.primaryDark : theme.success}
             />
             <Text style={[styles.controlPillText, onlyAvailableToday && styles.controlPillTextActive]}>
               {t('search.availableTodayOnly')}
@@ -99,94 +100,103 @@ export default function SearchScreen() {
         </View>
       </View>
 
-      <ScrollView
+      <DoctorList
+        hasMore={Boolean(search.hasNextPage)}
+        loadingMore={search.isFetchingNextPage}
+        onLoadMore={() => search.fetchNextPage()}
+        doctors={showResults ? matchedDoctors : []}
+        town={search.data?.town ?? null}
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.resultsHeader}>
-          <Text style={styles.resultsCount}>
-            {isLoading ? t('common.loading') : t('search.foundCount', { count: search.data?.total ?? 0 })}
-          </Text>
-          <View style={styles.locationBadge}>
-            <MapPin size={12} color={Colors.primaryDark} />
-            <Text style={styles.locationBadgeText}>{locationName}</Text>
-          </View>
-        </View>
-
-        <LocationNotice />
-
-        {isLoading ? (
-          <View style={styles.loadingBox}>
-            <ActivityIndicator color={Colors.primary} />
-          </View>
-        ) : search.isError && !search.data ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>{t('search.loadFailed')}</Text>
-            <TouchableOpacity style={styles.expandButton} activeOpacity={0.8} onPress={() => search.refetch()}>
-              <Text style={styles.expandButtonText}>{t('common.retry')}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : matchedDoctors.length > 0 ? (
-          <DoctorResults doctors={matchedDoctors} town={search.data?.town ?? null} />
-        ) : (
-          <View style={styles.emptyContainer}>
-            <View style={styles.emptyIconCircle}>
-              <Compass size={36} color={Colors.primary} strokeWidth={1.8} />
-            </View>
-            <Text style={styles.emptyTitle}>{t('search.emptyTitle')}</Text>
-            <Text style={styles.emptySubtitle}>
-              {t('search.emptySubtitle')}
-            </Text>
-
-            <View style={styles.emptyAdviceCard}>
-              <Text style={styles.emptyAdviceText}>{t('search.emptyAdvice')}</Text>
-            </View>
-
-            <View style={styles.suggestionsSection}>
-              <Text style={styles.suggestionsHeader}>{t('search.tryCategories')}</Text>
-              <View style={styles.suggestionsGrid}>
-                {quickSuggestions.map((item, idx) => (
-                  <TouchableOpacity
-                    key={idx}
-                    style={styles.suggestionChip}
-                    onPress={() => setQuery(item.value)}
-                  >
-                    <Text style={styles.suggestionChipText}>{item.label}</Text>
-                  </TouchableOpacity>
-                ))}
+        header={
+          <>
+            <View style={styles.resultsHeader}>
+              <Text style={styles.resultsCount}>
+                {isLoading ? t('common.loading') : t('search.foundCount', { count: search.data?.total ?? 0 })}
+              </Text>
+              <View style={styles.locationBadge}>
+                <MapPin size={12} color={theme.primaryDark} />
+                <Text style={styles.locationBadgeText}>{locationName}</Text>
               </View>
             </View>
-          </View>
-        )}
-      </ScrollView>
+            <View style={styles.noticeWrap}>
+              <LocationNotice />
+            </View>
+            {isLoading ? (
+              <View style={styles.loadingBox}>
+                <ActivityIndicator color={theme.primary} />
+              </View>
+            ) : !showResults ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyTitle}>{t('search.loadFailed')}</Text>
+                <TouchableOpacity style={styles.expandButton} activeOpacity={0.8} onPress={() => search.refetch()}>
+                  <Text style={styles.expandButtonText}>{t('common.retry')}</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+          </>
+        }
+        empty={
+          showResults ? (
+            <View style={styles.emptyContainer}>
+              <View style={styles.emptyIconCircle}>
+                <Compass size={36} color={theme.primary} strokeWidth={1.8} />
+              </View>
+              <Text style={styles.emptyTitle}>{t('search.emptyTitle')}</Text>
+              <Text style={styles.emptySubtitle}>
+                {t('search.emptySubtitle')}
+              </Text>
+
+              <View style={styles.emptyAdviceCard}>
+                <Text style={styles.emptyAdviceText}>{t('search.emptyAdvice')}</Text>
+              </View>
+
+              <View style={styles.suggestionsSection}>
+                <Text style={styles.suggestionsHeader}>{t('search.tryCategories')}</Text>
+                <View style={styles.suggestionsGrid}>
+                  {quickSuggestions.map((item, idx) => (
+                    <TouchableOpacity
+                      key={idx}
+                      style={styles.suggestionChip}
+                      onPress={() => setQuery(item.value)}
+                    >
+                      <Text style={styles.suggestionChipText}>{item.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </View>
+          ) : null
+        }
+      />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   loadingBox: {
     paddingVertical: 48,
     alignItems: 'center',
   },
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   searchBoxWrapper: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 10,
     paddingHorizontal: 12,
     height: 46,
@@ -195,7 +205,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   controlsRow: {
     flexDirection: 'row',
@@ -209,29 +219,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   controlPillActive: {
-    backgroundColor: Colors.primaryLight,
-    borderColor: Colors.primary,
+    backgroundColor: theme.primaryLight,
+    borderColor: theme.primary,
   },
   controlPillText: {
     fontSize: 12,
     fontWeight: '500',
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   controlPillTextActive: {
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
     fontWeight: '700',
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     paddingBottom: 30,
+  },
+  noticeWrap: {
+    paddingHorizontal: 16,
   },
   resultsHeader: {
     flexDirection: 'row',
@@ -244,13 +257,13 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 15,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   locationBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -258,7 +271,7 @@ const styles = StyleSheet.create({
   locationBadgeText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   emptyContainer: {
     paddingHorizontal: 20,
@@ -269,7 +282,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -277,28 +290,28 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 18,
   },
   emptyAdviceCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 12,
     marginTop: 16,
     width: '100%',
   },
   emptyAdviceText: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     lineHeight: 18,
     textAlign: 'center',
   },
@@ -307,7 +320,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -317,7 +330,7 @@ const styles = StyleSheet.create({
   expandButtonText: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.textInverse,
+    color: theme.textInverse,
   },
   suggestionsSection: {
     marginTop: 24,
@@ -326,7 +339,7 @@ const styles = StyleSheet.create({
   suggestionsHeader: {
     fontSize: 13,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -340,13 +353,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
     borderRadius: 9999,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   suggestionChipText: {
     fontSize: 12,
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
     fontWeight: '600',
   },
 });

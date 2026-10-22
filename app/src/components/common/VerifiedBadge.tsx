@@ -1,23 +1,41 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Check, AlertTriangle } from 'lucide-react-native';
 import { useApp } from '../../store/AppContext';
-import { GlowingIcon } from './GlowingIcon';
+
+const formatVerifiedDate = (value: Date, locale: string) => {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: '2-digit' })
+      .formatToParts(value)
+      .map((part) => [part.type, part.value])
+  );
+  return `${parts.day} ${parts.month}, ${parts.year}`;
+};
 
 interface VerifiedBadgeProps {
   date?: string;
   isStale?: boolean;
+  isPending?: boolean;
+  canCall?: boolean;
 }
 
-export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({ date, isStale = false }) => {
-  const { theme } = useApp();
+export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({ date, isStale = false, isPending = false, canCall = false }) => {
+  const { t } = useTranslation();
+  const { theme, language } = useApp();
 
-  if (isStale) {
+  const verifiedLabel = () => {
+    const verified = date ? new Date(date) : null;
+    if (!verified || Number.isNaN(verified.getTime())) return t('common.verifiedRecently');
+    return t('common.verifiedOn', { date: formatVerifiedDate(verified, language === 'bn' ? 'bn-IN' : 'en-IN') });
+  };
+
+  if (isStale || isPending) {
     return (
       <View style={[styles.staleContainer, { backgroundColor: theme.warningLight }]}>
         <AlertTriangle size={12} color={theme.warning} strokeWidth={2.5} />
         <Text style={[styles.staleText, { color: theme.warningText }]}>
-          Schedule may have changed · Call counter
+          {isPending ? t(canCall ? 'common.notVerifiedCall' : 'common.notVerified') : t('common.verifiedStale')}
         </Text>
       </View>
     );
@@ -25,13 +43,11 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({ date, isStale = fa
 
   return (
     <View style={styles.container}>
-      <GlowingIcon glowColor={theme.glowPrimary} size={18} pulse>
-        <View style={[styles.checkCircle, { backgroundColor: theme.primary }]}>
-          <Check size={10} color={theme.textInverse} strokeWidth={3} />
-        </View>
-      </GlowingIcon>
+      <View style={[styles.checkCircle, { backgroundColor: theme.primary }]}>
+        <Check size={10} color={theme.textInverse} strokeWidth={3} />
+      </View>
       <Text style={[styles.text, { color: theme.primaryDark }]}>
-        Verified recently{date ? ` · ${date}` : ''}
+        {verifiedLabel()}
       </Text>
     </View>
   );

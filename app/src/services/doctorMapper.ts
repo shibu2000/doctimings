@@ -11,6 +11,7 @@ export interface ApiEstablishment {
   phone: string;
   latitude: number;
   longitude: number;
+  verificationStatus?: string;
   updatedAt?: string;
 }
 
@@ -168,6 +169,7 @@ export const mapDoctor = (api: ApiDoctor, origin?: Origin): Doctor => {
       const sessions = activeSchedules.filter(s => s.establishmentId === est.id);
       const estOverrides = overrides.filter(o => o.establishmentId === est.id);
       const todayNote = estOverrides.find(o => o.date === today.date)?.publicReason;
+      const hasExactLocation = est.verificationStatus !== 'Location Pending';
       const schedules: ScheduleItem[] = sessions
         .map(s => {
           const index = DAY_NAMES.indexOf(s.dayOfWeek);
@@ -197,7 +199,8 @@ export const mapDoctor = (api: ApiDoctor, origin?: Origin): Doctor => {
         latitude: est.latitude,
         longitude: est.longitude,
         phone: est.phone,
-        distanceKm: origin ? distanceKm(origin, est) : undefined,
+        distanceKm: origin && hasExactLocation ? distanceKm(origin, est) : undefined,
+        hasExactLocation,
         notes: todayNote,
         notesBn: todayNote,
         schedules,

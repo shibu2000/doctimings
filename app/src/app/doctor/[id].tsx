@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Linking,
-  Share,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -14,894 +13,615 @@ import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft,
   Share2,
-  Calendar,
-  Clock,
-  Building2,
   Phone,
   Navigation,
-  CheckCircle2,
   Award,
-  Globe,
+  Languages,
   IndianRupee,
-  ChevronRight,
   HelpCircle,
   CalendarPlus,
-  Ticket,
+  AlertTriangle,
+  MapPin,
 } from 'lucide-react-native';
 import { useDoctor } from '../../hooks/useDoctors';
 import { LoadState } from '../../components/common/LoadState';
-import { Doctor } from '../../types';
+import { Doctor, PracticeLocation, ScheduleItem } from '../../types';
 import { useApp } from '../../store/AppContext';
-import { StatusBadge } from '../../components/common/StatusBadge';
 import { VerifiedBadge } from '../../components/common/VerifiedBadge';
-import { GlowingIcon } from '../../components/common/GlowingIcon';
+import { ThemeColors } from '../../constants/theme';
+import { getSpecialtyInfo } from '../../data/specialties';
+import { findNextSitting } from '../../services/sittings';
+import { shareDoctor } from '../../services/share';
+
+const LANGUAGE_BN: Record<string, string> = {
+  Bengali: 'বাংলা',
+  English: 'ইংরেজি',
+  Hindi: 'হিন্দি',
+  Santali: 'সাঁওতালি',
+  Odia: 'ওড়িয়া',
+  Urdu: 'উর্দু',
+};
+
+const groupByDay = (schedules: ScheduleItem[]) =>
+  schedules.reduce<ScheduleItem[][]>((days, schedule) => {
+    const last = days[days.length - 1];
+    if (last && last[0].dayOfWeek === schedule.dayOfWeek) last.push(schedule);
+    else days.push([schedule]);
+    return days;
+  }, []);
+
+const fullAddress = (practice: PracticeLocation) => {
+  const address = practice.addressLine.toLowerCase();
+  const extra = practice.locality.split(',').map((part) => part.trim()).filter((part) => part && !address.includes(part.toLowerCase()));
+  return [practice.addressLine, ...extra].filter(Boolean).join(', ');
+};
+
+const dial = (phone?: string) => {
+  if (phone) Linking.openURL(`tel:${phone.replace(/\s+/g, '')}`);
+};
+
+const openDirections = (practice: PracticeLocation) =>
+  Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${practice.latitude},${practice.longitude}`);
 
 function DoctorProfile({ doctor }: { doctor: Doctor }) {
   const router = useRouter();
   const { t } = useTranslation();
   const { language, theme, isDark } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+  const bn = language === 'bn';
 
+  const doctorName = bn && doctor.nameBn ? doctor.nameBn : doctor.name;
+  const specialty = bn && doctor.specialtiesBn.length ? doctor.specialtiesBn[0] : doctor.specialties[0];
+  const info = getSpecialtyInfo(doctor.specialties[0]);
+  const next = findNextSitting(doctor.practices);
+  const callTarget = next?.practice ?? doctor.practices.find((p) => p.phone) ?? null;
+  const callNumber = callTarget?.phone || doctor.phone;
+  const accentText = isDark ? theme.primary : theme.primaryDark;
 
-  const doctorName = language === 'bn' && doctor.nameBn ? doctor.nameBn : doctor.name;
-  const specialty = language === 'bn' && doctor.specialtiesBn.length > 0
-    ? doctor.specialtiesBn[0]
-    : doctor.specialties[0];
-  const bio = language === 'bn' && doctor.bioBn ? doctor.bioBn : doctor.bio;
-
-  const handleShare = async () => {
-    try {
-      const primaryPractice = doctor.practices[0];
-      const chamber = primaryPractice?.establishmentName || 'Chamber';
-      const schedule = primaryPractice?.schedules[0]
-        ? `${language === 'bn' ? primaryPractice.schedules[0].dayNameBn : primaryPractice.schedules[0].dayName} (${primaryPractice.schedules[0].startTime}-${primaryPractice.schedules[0].endTime})`
-        : '';
-      const phone = primaryPractice?.phone || '';
-      const message = `🩺 ${doctorName} (${specialty})\n📍 ${chamber}\n⏰ ${schedule}\n📞 Counter Phone: ${phone}\nShared via DocTimings`;
-      await Share.share({ message });
-    } catch {}
+  const dayLabel = () => {
+    if (!next) return '';
+    if (next.isOngoing) return t('doctor.sittingNow');
+    if (next.dayOffset === 0) return t('doctor.today');
+    if (next.dayOffset === 1) return t('doctor.tomorrow');
+    return new Date(`${next.date}T00:00:00Z`).toLocaleDateString(bn ? 'bn-IN' : 'en-IN', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'UTC',
+    });
   };
 
-  const handleCall = (phone?: string) => {
-    const targetPhone = phone || doctor.practices[0]?.phone || doctor.phone;
-    if (targetPhone) {
-      Linking.openURL(`tel:${targetPhone.replace(/\s+/g, '')}`);
-    }
-  };
+  const slot = (schedule: { slotLabel: string; slotLabelBn: string }) => (bn ? schedule.slotLabelBn : schedule.slotLabel);
 
-  const handleDirections = (lat: number, lng: number) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    Linking.openURL(url);
-  };
-
-  const daysOfWeek = [
-    { key: 1, name: 'Mon', nameBn: 'সোম' },
-    { key: 2, name: 'Tue', nameBn: 'মঙ্গল' },
-    { key: 3, name: 'Wed', nameBn: 'বুধ' },
-    { key: 4, name: 'Thu', nameBn: 'বৃহঃ' },
-    { key: 5, name: 'Fri', nameBn: 'শুক্র' },
-    { key: 6, name: 'Sat', nameBn: 'শনি' },
-    { key: 7, name: 'Sun', nameBn: 'রবি' },
-  ];
-
-  const getDayPractice = (dayNum: number) => {
-    for (const p of doctor.practices) {
-      const match = p.schedules.find((s) => s.dayOfWeek === dayNum);
-      if (match) {
-        return {
-          chamber: p.establishmentName.split(' ')[0],
-          time: match.slotLabel,
-        };
-      }
-    }
-    return null;
-  };
+  const facts = [
+    doctor.experienceYears > 0 && { key: 'exp', Icon: Award, label: t('doctor.yearsExperience', { count: doctor.experienceYears }) },
+    doctor.languages.length > 0 && { key: 'lang', Icon: Languages, label: doctor.languages.map((l) => (bn ? LANGUAGE_BN[l] ?? l : l)).join(', ') },
+    {
+      key: 'fee',
+      Icon: IndianRupee,
+      label: doctor.consultationFee ? t('doctor.feeAmount', { amount: doctor.consultationFee }) : t('doctor.feeAtCounter'),
+    },
+  ].filter(Boolean) as { key: string; Icon: typeof Award; label: string }[];
 
   return (
-    <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: theme.surface }]}
-      edges={['top', 'bottom']}
-    >
-      <View
-        style={[
-          styles.header,
-          {
-            backgroundColor: theme.surface,
-            borderBottomColor: theme.border,
-          },
-        ]}
-      >
-        <TouchableOpacity
-          style={styles.backButton}
-          activeOpacity={0.7}
-          onPress={() => router.back()}
-        >
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => router.back()} hitSlop={8}>
           <ArrowLeft size={20} color={theme.textPrimary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>
-          Doctor Profile
-        </Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity
-            style={styles.iconBtn}
-            activeOpacity={0.7}
-            onPress={handleShare}
-          >
-            <Share2 size={18} color={theme.textPrimary} />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerTitle}>{t('doctor.screenTitle')}</Text>
+        <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => shareDoctor(doctor, language)} hitSlop={8}>
+          <Share2 size={18} color={theme.textPrimary} />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView
-        style={[styles.scroll, { backgroundColor: theme.background }]}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View
-          style={[
-            styles.heroCard,
-            {
-              backgroundColor: theme.surface,
-              borderColor: theme.border,
-            },
-          ]}
-        >
-          <View style={styles.avatarRow}>
-            <GlowingIcon glowColor={theme.glowPrimary} size={64} pulse>
-              <View
-                style={[
-                  styles.avatar,
-                  {
-                    backgroundColor: isDark
-                      ? theme.surfaceVariant
-                      : theme.primaryLight,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.avatarText,
-                    { color: isDark ? theme.primary : theme.primaryDark },
-                  ]}
-                >
-                  {doctor.name.replace('Dr. ', '').slice(0, 2).toUpperCase()}
-                </Text>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.identity}>
+          <Text style={styles.plainSpecialty}>{info ? (bn ? info.plain.bn : info.plain.en) : specialty}</Text>
+          <Text style={styles.doctorName}>{doctorName}</Text>
+          {info ? <Text style={styles.specialty}>{specialty}</Text> : null}
+          {doctor.qualifications ? <Text style={styles.qualifications}>{doctor.qualifications}</Text> : null}
+
+          <View style={styles.facts}>
+            {facts.map(({ key, Icon, label }) => (
+              <View key={key} style={styles.fact}>
+                <Icon size={14} color={theme.textSecondary} />
+                <Text style={styles.factText}>{label}</Text>
               </View>
-            </GlowingIcon>
-            <View style={styles.heroInfo}>
-              <Text
-                style={[styles.doctorName, { color: theme.textPrimary }]}
-              >
-                {doctorName}
-              </Text>
-              <Text style={[styles.specialtyText, { color: theme.primary }]}>
-                {specialty}
-              </Text>
-              <Text
-                style={[styles.qualText, { color: theme.textSecondary }]}
-              >
-                {doctor.qualifications}
-              </Text>
-            </View>
+            ))}
           </View>
 
-          <View style={styles.statusSection}>
-            <StatusBadge status={doctor.todayAvailability} size="md" />
-            <VerifiedBadge
-              date={doctor.lastVerifiedAt}
-              isStale={doctor.verificationStatus === 'unverified'}
-            />
-          </View>
-
-          <View
-            style={[
-              styles.statsGrid,
-              {
-                backgroundColor: isDark
-                  ? theme.surfaceVariant
-                  : theme.background,
-                borderColor: theme.border,
-              },
-            ]}
-          >
-            <View style={styles.statItem}>
-              <Award size={16} color={theme.primary} />
-              <Text
-                style={[styles.statValue, { color: theme.textPrimary }]}
-              >
-                {doctor.experienceYears}+ Yrs
-              </Text>
-              <Text
-                style={[styles.statLabel, { color: theme.textSecondary }]}
-              >
-                Experience
-              </Text>
-            </View>
-
-            <View style={styles.statDivider} />
-
-            <View style={styles.statItem}>
-              <IndianRupee size={16} color={theme.primary} />
-              <Text
-                style={[styles.statValue, { color: theme.textPrimary }]}
-              >
-                {doctor.consultationFee ? `₹${doctor.consultationFee}` : t('doctor.askAtCounter')}
-              </Text>
-              <Text
-                style={[styles.statLabel, { color: theme.textSecondary }]}
-              >
-                {t('doctor.fee')}
-              </Text>
-            </View>
-
-            <View style={styles.statDivider} />
-
-            <View style={styles.statItem}>
-              <Globe size={16} color={theme.primary} />
-              <Text
-                style={[styles.statValue, { color: theme.textPrimary }]}
-              >
-                {doctor.languages.slice(0, 2).join(', ')}
-              </Text>
-              <Text
-                style={[styles.statLabel, { color: theme.textSecondary }]}
-              >
-                Languages
-              </Text>
-            </View>
-          </View>
+          <VerifiedBadge
+            date={doctor.lastVerifiedAt}
+            isStale={doctor.verificationStatus === 'unverified'}
+            isPending={doctor.verificationStatus === 'pending'}
+            canCall={Boolean(callNumber)}
+          />
         </View>
 
-        <View
-          style={[
-            styles.itineraryCard,
-            {
-              backgroundColor: theme.surface,
-              borderColor: theme.border,
-            },
-          ]}
-        >
-          <Text
-            style={[styles.itineraryTitle, { color: theme.textPrimary }]}
-          >
-            {language === 'bn'
-              ? 'সাপ্তাহিক চেম্বার রুটিন (কোথায় কোন দিন?)'
-              : 'Weekly Visiting Roster'}
-          </Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.itineraryTrack}
-          >
-            {daysOfWeek.map((d) => {
-              const sitting = getDayPractice(d.key);
-              return (
-                <View
-                  key={d.key}
-                  style={[
-                    styles.dayPill,
-                    {
-                      backgroundColor: sitting
-                        ? isDark
-                          ? theme.surfaceVariant
-                          : theme.primaryLight
-                        : isDark
-                        ? theme.background
-                        : '#F1F5F9',
-                      borderColor: sitting ? theme.primary : theme.border,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.dayPillHeader,
-                      { color: sitting ? theme.primaryDark : theme.textMuted },
-                    ]}
-                  >
-                    {language === 'bn' ? d.nameBn : d.name}
-                  </Text>
-                  {sitting ? (
-                    <>
-                      <Text
-                        style={[
-                          styles.dayPillChamber,
-                          { color: theme.textPrimary },
-                        ]}
-                        numberOfLines={1}
-                      >
-                        {sitting.chamber}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.dayPillTime,
-                          { color: theme.primaryDark },
-                        ]}
-                        numberOfLines={1}
-                      >
-                        {sitting.time.split('–')[0]}
-                      </Text>
-                    </>
-                  ) : (
-                    <Text
-                      style={[styles.dayPillEmpty, { color: theme.textMuted }]}
-                    >
-                      {language === 'bn' ? 'বন্ধ' : 'Off'}
-                    </Text>
-                  )}
-                </View>
-              );
-            })}
-          </ScrollView>
-        </View>
-
-        <View style={styles.section}>
-          <Text
-            style={[styles.sectionTitle, { color: theme.textSecondary }]}
-          >
-            {t('doctor.practices')} ({doctor.practices.length})
-          </Text>
-
-          {doctor.practices.map((practice) => (
-            <View
-              key={practice.id}
-              style={[
-                styles.practiceCard,
-                {
-                  backgroundColor: theme.surface,
-                  borderColor: theme.border,
-                },
-              ]}
-            >
-              <View style={styles.practiceHeader}>
-                <Building2 size={16} color={theme.primary} />
-                <View style={styles.practiceHeaderInfo}>
-                  <Text
-                    style={[
-                      styles.practiceName,
-                      { color: theme.textPrimary },
-                    ]}
-                  >
-                    {practice.establishmentName}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.practiceAddress,
-                      { color: theme.textSecondary },
-                    ]}
-                  >
-                    {practice.addressLine}, {practice.locality}
-                  </Text>
-                </View>
-                {practice.distanceKm !== undefined && (
-                  <Text
-                    style={[
-                      styles.practiceDistance,
-                      {
-                        backgroundColor: theme.primaryLight,
-                        color: theme.primaryDark,
-                      },
-                    ]}
-                  >
-                    {practice.distanceKm} km
-                  </Text>
+        <View style={styles.nextPanel}>
+          <Text style={styles.nextLabel}>{t('doctor.nextSitting')}</Text>
+          {next ? (
+            <>
+              <Text style={styles.nextDay}>{dayLabel()}</Text>
+              <Text style={styles.nextTime}>
+                {next.isOngoing
+                  ? t('doctor.untilTime', { time: slot(next.schedule).split('–')[1]?.trim() })
+                  : slot(next.schedule)}
+              </Text>
+              <View style={styles.nextPlaceRow}>
+                <MapPin size={14} color={theme.textInverse} />
+                <Text style={styles.nextPlace} numberOfLines={2}>
+                  {next.practice.establishmentName}
+                </Text>
+                {next.practice.distanceKm !== undefined && (
+                  <Text style={styles.nextDistance}>{next.practice.distanceKm} km</Text>
                 )}
               </View>
+              {next.practice.locality ? <Text style={styles.nextLocality}>{next.practice.locality}</Text> : null}
+              {next.dayOffset === 0 && next.practice.notes ? (
+                <View style={styles.nextNote}>
+                  <AlertTriangle size={13} color={theme.textInverse} />
+                  <Text style={styles.nextNoteText}>
+                    {bn && next.practice.notesBn ? next.practice.notesBn : next.practice.notes}
+                  </Text>
+                </View>
+              ) : null}
+            </>
+          ) : (
+            <Text style={styles.nextEmpty}>
+              {!doctor.practices.some((p) => p.schedules.length)
+                ? t('doctor.noTimingsYet')
+                : callNumber
+                  ? t('doctor.noUpcoming')
+                  : t('doctor.noUpcomingNoPhone')}
+            </Text>
+          )}
+        </View>
 
-              <View
-                style={[
-                  styles.schedulesBox,
-                  {
-                    backgroundColor: isDark
-                      ? theme.surfaceVariant
-                      : theme.background,
-                    borderColor: theme.border,
-                  },
-                ]}
-              >
-                {practice.schedules.map((schedule) => (
-                  <View key={schedule.id} style={styles.scheduleRow}>
-                    <Clock size={13} color={theme.textSecondary} />
-                    <Text
-                      style={[
-                        styles.scheduleDay,
-                        { color: theme.textPrimary },
-                      ]}
-                    >
-                      {language === 'bn' ? schedule.dayNameBn : schedule.dayName}:
-                    </Text>
-                    <Text
-                      style={[
-                        styles.scheduleHours,
-                        { color: theme.textSecondary },
-                      ]}
-                    >
-                      {language === 'bn' ? schedule.slotLabelBn : schedule.slotLabel}
-                    </Text>
-                  </View>
-                ))}
+        {info ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('doctor.visitFor')}</Text>
+            <View style={styles.conditions}>
+              {info.conditions.map((condition) => (
+                <View key={condition.en} style={styles.condition}>
+                  <Text style={[styles.conditionText, { color: accentText }]}>{bn ? condition.bn : condition.en}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={styles.footnote}>{t('doctor.conditionsNote')}</Text>
+          </View>
+        ) : null}
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {t('doctor.practices')} ({doctor.practices.length})
+          </Text>
+          {doctor.practices.map((practice) => (
+            <View key={practice.id} style={styles.chamber}>
+              <View style={styles.chamberHead}>
+                <View style={styles.chamberTitleCol}>
+                  <Text style={styles.chamberName}>{practice.establishmentName}</Text>
+                  <Text style={styles.chamberAddress}>{fullAddress(practice)}</Text>
+                </View>
+                {practice.distanceKm !== undefined && <Text style={styles.distance}>{practice.distanceKm} km</Text>}
               </View>
 
-              {practice.notes && (
-                <Text
-                  style={[styles.practiceNotes, { color: theme.textMuted }]}
-                >
-                  {language === 'bn' && practice.notesBn ? practice.notesBn : practice.notes}
-                </Text>
-              )}
+              <Text style={styles.timingsLabel}>{t('doctor.weeklyTimings')}</Text>
+              {groupByDay(practice.schedules).map((day) => {
+                const isToday = day[0].isToday;
+                return (
+                  <View key={day[0].id} style={[styles.timingRow, isToday && styles.timingRowToday]}>
+                    <Text style={[styles.timingDay, isToday && styles.timingToday]}>
+                      {bn ? day[0].dayNameBn : day[0].dayName}
+                    </Text>
+                    <View style={styles.timingSlots}>
+                      {day.map((schedule) => (
+                        <Text key={schedule.id} style={[styles.timingSlot, isToday && styles.timingToday]}>
+                          {slot(schedule)}
+                        </Text>
+                      ))}
+                    </View>
+                  </View>
+                );
+              })}
 
-              <View style={styles.practiceActions}>
-                <TouchableOpacity
-                  style={[
-                    styles.planBtn,
-                    {
-                      backgroundColor: isDark
-                        ? theme.surfaceVariant
-                        : theme.background,
-                      borderColor: theme.border,
-                    },
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() =>
-                    router.push({
-                      pathname: '/plan-visit',
-                      params: {
-                        doctorId: doctor.id,
-                        establishmentId: practice.establishmentId,
-                      },
-                    })
-                  }
-                >
-                  <CalendarPlus size={14} color={theme.textSecondary} />
-                  <Text
-                    style={[
-                      styles.planBtnText,
-                      { color: theme.textSecondary },
-                    ]}
-                  >
-                    {t('common.planVisit')}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[
-                    styles.dirBtn,
-                    {
-                      backgroundColor: theme.primaryLight,
-                      borderColor: theme.primary,
-                    },
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() =>
-                    handleDirections(practice.latitude, practice.longitude)
-                  }
-                >
-                  <Navigation size={13} color={theme.primaryDark} />
-                  <Text
-                    style={[
-                      styles.dirBtnText,
-                      { color: theme.primaryDark },
-                    ]}
-                  >
-                    {t('common.directions')}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.callBtn, { backgroundColor: theme.primary }]}
-                  activeOpacity={0.8}
-                  onPress={() => handleCall(practice.phone)}
-                >
-                  <Phone size={13} color={theme.textInverse} />
-                  <Text
-                    style={[styles.callBtnText, { color: theme.textInverse }]}
-                  >
-                    {t('common.call')}
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.chamberActions}>
+                {practice.hasExactLocation ? (
+                  <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.7} onPress={() => openDirections(practice)}>
+                    <Navigation size={14} color={accentText} />
+                    <Text style={[styles.secondaryBtnText, { color: accentText }]}>{t('common.directions')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {practice.phone && practice.id !== callTarget?.id ? (
+                  <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.7} onPress={() => dial(practice.phone)}>
+                    <Phone size={14} color={accentText} />
+                    <Text style={[styles.secondaryBtnText, { color: accentText }]}>{t('doctor.callCounter')}</Text>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             </View>
           ))}
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.reportBtn,
-            {
-              backgroundColor: theme.surface,
-              borderColor: theme.border,
-            },
-          ]}
+          style={styles.reportLink}
           activeOpacity={0.7}
-          onPress={() =>
-            router.push({
-              pathname: '/report',
-              params: { doctorId: doctor.id },
-            })
-          }
+          onPress={() => router.push({ pathname: '/report', params: { doctorId: doctor.id } })}
         >
-          <HelpCircle size={15} color={theme.warning} />
-          <Text style={[styles.reportText, { color: theme.textSecondary }]}>
-            {t('doctor.reportIncorrect')}
-          </Text>
+          <HelpCircle size={15} color={theme.textMuted} />
+          <Text style={styles.reportText}>{t('doctor.reportIncorrect')}</Text>
         </TouchableOpacity>
       </ScrollView>
 
-      <View
-        style={[
-          styles.bottomBar,
-          {
-            backgroundColor: theme.surface,
-            borderTopColor: theme.border,
-          },
-        ]}
-      >
+      <View style={styles.bottomBar}>
         <TouchableOpacity
-          style={[
-            styles.bottomPlanBtn,
-            {
-              backgroundColor: isDark
-                ? theme.surfaceVariant
-                : theme.background,
-              borderColor: theme.border,
-            },
-          ]}
+          style={styles.planBtn}
           activeOpacity={0.8}
           onPress={() =>
             router.push({
               pathname: '/plan-visit',
-              params: { doctorId: doctor.id },
+              params: { doctorId: doctor.id, establishmentId: next?.practice.establishmentId },
             })
           }
         >
-          <CalendarPlus size={16} color={theme.textSecondary} />
-          <Text
-            style={[
-              styles.bottomPlanBtnText,
-              { color: theme.textSecondary },
-            ]}
-          >
+          <CalendarPlus size={18} color={accentText} />
+          <Text style={[styles.planBtnText, { color: accentText }]} numberOfLines={1}>
             {t('common.planVisit')}
           </Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.bottomCallBtn, { backgroundColor: theme.primary }]}
-          activeOpacity={0.8}
-          onPress={() => handleCall()}
-        >
-          <Phone size={16} color={theme.textInverse} />
-          <Text
-            style={[
-              styles.bottomCallBtnText,
-              { color: theme.textInverse },
-            ]}
-          >
-            {t('common.call')}
-          </Text>
-        </TouchableOpacity>
+        {callNumber ? (
+          <TouchableOpacity style={styles.callBtn} activeOpacity={0.85} onPress={() => dial(callNumber)}>
+            <Phone size={18} color={theme.textInverse} />
+            <Text style={styles.callBtnText} numberOfLines={1}>
+              {doctor.practices.length > 1 && callTarget
+                ? t('doctor.callChamber', { name: callTarget.establishmentName })
+                : t('doctor.callCounter')}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  headerActions: {
-    flexDirection: 'row',
-  },
-  iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 30,
-  },
-  heroCard: {
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    marginBottom: 16,
-  },
-  avatarRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  avatar: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  heroInfo: {
-    flex: 1,
-  },
-  doctorName: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  specialtyText: {
-    fontSize: 13,
-    fontWeight: '600',
-    marginTop: 2,
-  },
-  qualText: {
-    fontSize: 12,
-    marginTop: 2,
-  },
-  statusSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 14,
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    marginTop: 14,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  statItem: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 2,
-  },
-  statDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: '#CBD5E1',
-  },
-  statValue: {
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  statLabel: {
-    fontSize: 10,
-    fontWeight: '500',
-  },
-  itineraryCard: {
-    borderRadius: 14,
-    padding: 14,
-    borderWidth: 1,
-    marginBottom: 16,
-  },
-  itineraryTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    marginBottom: 10,
-  },
-  itineraryTrack: {
-    gap: 8,
-  },
-  dayPill: {
-    width: 72,
-    borderRadius: 10,
-    borderWidth: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    alignItems: 'center',
-  },
-  dayPillHeader: {
-    fontSize: 11,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-  dayPillChamber: {
-    fontSize: 11,
-    fontWeight: '600',
-    marginTop: 4,
-  },
-  dayPillTime: {
-    fontSize: 9,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-  dayPillEmpty: {
-    fontSize: 11,
-    marginTop: 4,
-  },
-  section: {
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    marginBottom: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  practiceCard: {
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    marginBottom: 12,
-  },
-  practiceHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  practiceHeaderInfo: {
-    flex: 1,
-  },
-  practiceName: {
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  practiceAddress: {
-    fontSize: 12,
-    marginTop: 1,
-  },
-  practiceDistance: {
-    fontSize: 11,
-    fontWeight: '600',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  schedulesBox: {
-    borderRadius: 8,
-    borderWidth: 1,
-    padding: 10,
-    marginTop: 10,
-    gap: 6,
-  },
-  scheduleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  scheduleDay: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  scheduleHours: {
-    fontSize: 12,
-  },
-  practiceNotes: {
-    fontSize: 11,
-    fontStyle: 'italic',
-    marginTop: 6,
-  },
-  practiceActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 12,
-  },
-  planBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  planBtnText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  dirBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  dirBtnText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  callBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  callBtnText: {
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  reportBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginBottom: 16,
-  },
-  reportText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  bottomBar: {
-    flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-  },
-  bottomPlanBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    borderWidth: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  bottomPlanBtnText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  bottomCallBtn: {
-    flex: 1.2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  bottomCallBtnText: {
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});
-
 export default function DoctorProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const query = useDoctor(id);
   if (!query.data) {
-    return <LoadState loading={query.isPending && Boolean(id)} notFound={(query.error as { status?: number } | null)?.status === 404 || !id} onRetry={() => query.refetch()} />;
+    return (
+      <LoadState
+        loading={query.isPending && Boolean(id)}
+        notFound={(query.error as { status?: number } | null)?.status === 404 || !id}
+        onRetry={() => query.refetch()}
+      />
+    );
   }
   return <DoctorProfile doctor={query.data} />;
 }
+
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.surface,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+      backgroundColor: theme.surface,
+    },
+    headerBtn: {
+      width: 40,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: theme.textPrimary,
+    },
+    scroll: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    scrollContent: {
+      paddingBottom: 24,
+    },
+    identity: {
+      backgroundColor: theme.surface,
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 18,
+      gap: 4,
+    },
+    plainSpecialty: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: theme.primary,
+    },
+    doctorName: {
+      fontSize: 24,
+      lineHeight: 30,
+      fontWeight: '800',
+      color: theme.textPrimary,
+    },
+    specialty: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: theme.textSecondary,
+    },
+    qualifications: {
+      fontSize: 13,
+      lineHeight: 18,
+      color: theme.textMuted,
+    },
+    facts: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+      marginTop: 10,
+      marginBottom: 8,
+    },
+    fact: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 8,
+      backgroundColor: theme.surfaceVariant,
+    },
+    factText: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: theme.textPrimary,
+    },
+    nextPanel: {
+      marginHorizontal: 16,
+      marginTop: 16,
+      padding: 18,
+      borderRadius: 16,
+      backgroundColor: theme.primary,
+    },
+    nextLabel: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: theme.textInverse,
+      opacity: 0.8,
+    },
+    nextDay: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: theme.textInverse,
+      marginTop: 6,
+    },
+    nextTime: {
+      fontSize: 28,
+      lineHeight: 34,
+      fontWeight: '800',
+      color: theme.textInverse,
+    },
+    nextPlaceRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginTop: 12,
+    },
+    nextPlace: {
+      flex: 1,
+      fontSize: 15,
+      fontWeight: '700',
+      color: theme.textInverse,
+    },
+    nextDistance: {
+      fontSize: 13,
+      fontWeight: '700',
+      color: theme.textInverse,
+    },
+    nextLocality: {
+      fontSize: 13,
+      color: theme.textInverse,
+      opacity: 0.85,
+      marginLeft: 20,
+      marginTop: 2,
+    },
+    nextNote: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 6,
+      marginTop: 12,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: 'rgba(0,0,0,0.15)',
+    },
+    nextNoteText: {
+      flex: 1,
+      fontSize: 13,
+      lineHeight: 18,
+      color: theme.textInverse,
+    },
+    nextEmpty: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '600',
+      color: theme.textInverse,
+      marginTop: 6,
+    },
+    section: {
+      paddingHorizontal: 16,
+      marginTop: 24,
+    },
+    sectionTitle: {
+      fontSize: 17,
+      fontWeight: '700',
+      color: theme.textPrimary,
+      marginBottom: 10,
+    },
+    conditions: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    condition: {
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 18,
+      backgroundColor: theme.primaryMuted,
+    },
+    conditionText: {
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    footnote: {
+      fontSize: 12,
+      color: theme.textMuted,
+      marginTop: 10,
+    },
+    chamber: {
+      backgroundColor: theme.surface,
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 14,
+      padding: 16,
+      marginBottom: 12,
+    },
+    chamberHead: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 10,
+    },
+    chamberTitleCol: {
+      flex: 1,
+      gap: 2,
+    },
+    chamberName: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: theme.textPrimary,
+    },
+    chamberAddress: {
+      fontSize: 13,
+      lineHeight: 18,
+      color: theme.textSecondary,
+    },
+    distance: {
+      fontSize: 13,
+      fontWeight: '700',
+      color: theme.textSecondary,
+    },
+    timingsLabel: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: theme.textMuted,
+      marginTop: 14,
+      marginBottom: 4,
+    },
+    timingRow: {
+      flexDirection: 'row',
+      paddingVertical: 7,
+      paddingHorizontal: 8,
+      borderRadius: 8,
+    },
+    timingRowToday: {
+      backgroundColor: theme.primaryMuted,
+    },
+    timingDay: {
+      width: 110,
+      fontSize: 14,
+      color: theme.textSecondary,
+    },
+    timingSlots: {
+      flex: 1,
+      gap: 2,
+    },
+    timingSlot: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: theme.textPrimary,
+    },
+    timingToday: {
+      color: theme.primary,
+      fontWeight: '700',
+    },
+    chamberActions: {
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 14,
+    },
+    secondaryBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    secondaryBtnText: {
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    reportLink: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+      paddingVertical: 16,
+      marginTop: 4,
+    },
+    reportText: {
+      fontSize: 13,
+      color: theme.textMuted,
+      textDecorationLine: 'underline',
+    },
+    bottomBar: {
+      flexDirection: 'row',
+      gap: 10,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderTopWidth: 1,
+      borderTopColor: theme.border,
+      backgroundColor: theme.surface,
+    },
+    planBtn: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 14,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: theme.border,
+    },
+    planBtnText: {
+      flexShrink: 1,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    callBtn: {
+      flex: 1.6,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 14,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      backgroundColor: theme.primary,
+    },
+    callBtnText: {
+      flexShrink: 1,
+      fontSize: 15,
+      fontWeight: '700',
+      color: theme.textInverse,
+    },
+  });

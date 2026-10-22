@@ -1,5 +1,5 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '../services/api';
+import { InfiniteData, keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { api, SearchResult } from '../services/api';
 import { useApp } from '../store/AppContext';
 import { CURRENT_LOCATION_ID } from '../services/location';
 
@@ -28,19 +28,27 @@ export const useDoctorSearch = (text: string, availableOnly = false) => {
   const client = useQueryClient();
   const interpreted = interpretQuery(text);
   const townId = currentLocation.id === CURRENT_LOCATION_ID ? undefined : currentLocation.id;
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['search', currentLocation.latitude, currentLocation.longitude, townId, interpreted, availableOnly],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       const result = await api.searchDoctors({
         ...interpreted,
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude,
         townId,
-        availableOnly
+        availableOnly,
+        page: pageParam
       });
       result.doctors.forEach(d => client.setQueryData(['doctor', d.id], d));
       return result;
     },
+    initialPageParam: 1,
+    getNextPageParam: (last: SearchResult) => (last.page < last.totalPages ? last.page + 1 : undefined),
+    select: (data: InfiniteData<SearchResult>) => ({
+      doctors: data.pages.flatMap(page => page.doctors),
+      total: data.pages[0]?.total ?? 0,
+      town: data.pages[0]?.town ?? null
+    }),
     enabled: locationStatus !== 'detecting',
     placeholderData: keepPreviousData,
     staleTime: 60_000

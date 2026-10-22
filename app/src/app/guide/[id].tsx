@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -22,14 +22,15 @@ import {
   ArrowRight,
 } from 'lucide-react-native';
 import { HEALTH_TOPICS } from '../../data/mockData';
-import { Colors } from '../../constants/theme';
+import { ThemeColors } from '../../constants/theme';
 import { useApp } from '../../store/AppContext';
 
 export default function HealthArticleScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { language } = useApp();
+  const { language, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   const topic = HEALTH_TOPICS.find((tItem) => tItem.id === id) || HEALTH_TOPICS[0];
 
@@ -60,11 +61,11 @@ export default function HealthArticleScreen() {
           activeOpacity={0.7}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={20} color={Colors.textPrimary} />
+          <ArrowLeft size={20} color={theme.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('nav.guide')}</Text>
         <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7} onPress={handleShare}>
-          <Share2 size={18} color={Colors.textPrimary} />
+          <Share2 size={18} color={theme.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -79,7 +80,7 @@ export default function HealthArticleScreen() {
               <Text style={styles.categoryText}>{category}</Text>
             </View>
             <View style={styles.reviewedBadge}>
-              <ShieldCheck size={11} color={Colors.primaryDark} />
+              <ShieldCheck size={11} color={theme.primaryDark} />
               <Text style={styles.reviewedText}>
                 {t('guide.readTime', { min: topic.readTimeMinutes })}
               </Text>
@@ -92,7 +93,7 @@ export default function HealthArticleScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <HelpCircle size={16} color={Colors.primary} />
+            <HelpCircle size={16} color={theme.primary} />
             <Text style={styles.sectionTitle}>{t('guide.whatIsIt')}</Text>
           </View>
           <View style={styles.contentCard}>
@@ -102,7 +103,7 @@ export default function HealthArticleScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <CheckCircle2 size={16} color={Colors.primary} />
+            <CheckCircle2 size={16} color={theme.primary} />
             <Text style={styles.sectionTitle}>{t('guide.commonSymptoms')}</Text>
           </View>
           <View style={styles.contentCard}>
@@ -119,13 +120,13 @@ export default function HealthArticleScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <HeartHandshake size={16} color={Colors.primary} />
+            <HeartHandshake size={16} color={theme.primary} />
             <Text style={styles.sectionTitle}>{t('guide.selfCareTips')}</Text>
           </View>
           <View style={styles.contentCard}>
             {topic.selfCareTips.map((tip, idx) => (
               <View key={idx} style={styles.bulletRow}>
-                <View style={[styles.bulletDot, { backgroundColor: Colors.primary }]} />
+                <View style={[styles.bulletDot, { backgroundColor: theme.primary }]} />
                 <Text style={styles.bulletText}>
                   {language === 'bn' ? tip.bn : tip.en}
                 </Text>
@@ -137,7 +138,7 @@ export default function HealthArticleScreen() {
         <View style={styles.section}>
           <View style={styles.warningBox}>
             <View style={styles.warningHeader}>
-              <AlertTriangle size={18} color={Colors.warning} />
+              <AlertTriangle size={18} color={theme.warning} />
               <Text style={styles.warningTitle}>{t('guide.whenToSeeDoctor')}</Text>
             </View>
             <Text style={styles.warningSubtitle}>{t('guide.warningSigns')}</Text>
@@ -162,19 +163,20 @@ export default function HealthArticleScreen() {
           activeOpacity={0.8}
           onPress={handleFindDoctor}
         >
-          <Stethoscope size={18} color={Colors.textInverse} />
+          <Stethoscope size={18} color={theme.textInverse} />
           <Text style={styles.findDoctorBtnText}>{t('guide.findDoctorCta')}</Text>
-          <ArrowRight size={18} color={Colors.textInverse} />
+          <ArrowRight size={18} color={theme.textInverse} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   header: {
     flexDirection: 'row',
@@ -183,8 +185,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderBottomColor: theme.border,
+    backgroundColor: theme.surface,
   },
   backButton: {
     width: 36,
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   iconBtn: {
     width: 36,
@@ -207,16 +209,16 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     paddingBottom: 40,
   },
   articleHero: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   badgeRow: {
     flexDirection: 'row',
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   categoryPill: {
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 11,
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
     textTransform: 'uppercase',
   },
   reviewedBadge: {
@@ -243,16 +245,16 @@ const styles = StyleSheet.create({
   },
   reviewedText: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: theme.textMuted,
   },
   articleTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   leadText: {
     fontSize: 14,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 6,
     lineHeight: 20,
   },
@@ -269,19 +271,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   contentCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 14,
     gap: 8,
   },
   bodyText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     lineHeight: 20,
   },
   bulletRow: {
@@ -293,20 +295,20 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.textSecondary,
+    backgroundColor: theme.textSecondary,
     marginTop: 7,
   },
   bulletText: {
     flex: 1,
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     lineHeight: 18,
   },
   warningBox: {
-    backgroundColor: Colors.warningLight,
+    backgroundColor: theme.warningLight,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.warning,
+    borderColor: theme.warning,
     padding: 14,
   },
   warningHeader: {
@@ -317,11 +319,11 @@ const styles = StyleSheet.create({
   warningTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.warningText,
+    color: theme.warningText,
   },
   warningSubtitle: {
     fontSize: 12,
-    color: Colors.warningText,
+    color: theme.warningText,
     marginTop: 4,
     fontWeight: '500',
   },
@@ -336,35 +338,35 @@ const styles = StyleSheet.create({
   },
   warningBullet: {
     fontSize: 10,
-    color: Colors.warningText,
+    color: theme.warningText,
     marginTop: 2,
   },
   warningText: {
     flex: 1,
     fontSize: 12,
-    color: Colors.warningText,
+    color: theme.warningText,
     lineHeight: 16,
     fontWeight: '500',
   },
   bottomBar: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
   },
   findDoctorBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 12,
     borderRadius: 8,
   },
   findDoctorBtnText: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.textInverse,
+    color: theme.textInverse,
   },
 });

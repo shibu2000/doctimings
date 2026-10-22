@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   X,
@@ -66,7 +66,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
     initialPractice?.schedules.find((s) => s.dayOfWeek === initialDate?.dayOfWeek)?.slotLabel ?? ''
   );
   const [notes, setNotes] = useState<string>('');
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const currentPractice = selectedDoctor.practices.find((p) => p.id === selectedPracticeId) || selectedDoctor.practices[0];
   const upcomingDates = sessionDates(currentPractice, locale);
@@ -87,7 +87,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
 
   const handleSave = async () => {
     if (!currentPractice || !selectedDate || !selectedSlot) return;
-    await addVisit({
+    const outcome = await addVisit({
       doctorId: selectedDoctor.id,
       doctorName: selectedDoctor.name,
       doctorSpecialty: selectedDoctor.specialties[0],
@@ -102,11 +102,17 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
       status: 'planned',
     });
 
-    setSuccessModalVisible(true);
+    setSuccessMessage(
+      outcome === 'scheduled'
+        ? t('plan.successScheduled')
+        : outcome === 'off'
+          ? t('plan.successRemindersOff')
+          : t('plan.successMsg')
+    );
   };
 
   const handleModalDone = () => {
-    setSuccessModalVisible(false);
+    setSuccessMessage(null);
     router.back();
   };
 
@@ -155,12 +161,12 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
             <Text
               style={[styles.disclaimerTitle, { color: theme.warningText }]}
             >
-              {t('common.disclaimerTitle')} (Not a Booking)
+              {t('plan.notBooking')}
             </Text>
             <Text
               style={[styles.disclaimerText, { color: theme.warningText }]}
             >
-              This sets a reminder on your phone. Doctors travel on designated days. Always call the counter before starting your journey to confirm doctor arrival.
+              {t('plan.disclaimerBody')}
             </Text>
           </View>
         </View>
@@ -191,7 +197,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
               {selectedDoctor.name}
             </Text>
             <Text style={[styles.doctorSpecialty, { color: theme.primary }]}>
-              {selectedDoctor.specialties[0]}
+              {language === 'bn' ? selectedDoctor.specialtiesBn[0] : selectedDoctor.specialties[0]}
             </Text>
             <Text style={[styles.doctorQual, { color: theme.textSecondary }]}>
               {selectedDoctor.qualifications}
@@ -266,7 +272,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
                         { color: theme.primaryDark },
                       ]}
                     >
-                      {practice.distanceKm} km away
+                      {t('plan.kmAway', { km: practice.distanceKm })}
                     </Text>
                   )}
                 </View>
@@ -360,7 +366,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
                       },
                     ]}
                   >
-                    {sch.slotLabel}
+                    {language === 'bn' ? sch.slotLabelBn : sch.slotLabel}
                   </Text>
                 </TouchableOpacity>
               );
@@ -370,7 +376,7 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-            Visit Notes (Optional)
+            {t('plan.notesLabel')}
           </Text>
           <TextInput
             style={[
@@ -414,9 +420,9 @@ function PlanVisit({ doctor: selectedDoctor, establishmentId }: { doctor: Doctor
       </View>
 
       <ConfirmationModal
-        visible={successModalVisible}
+        visible={successMessage !== null}
         title={t('plan.title')}
-        message={t('plan.successMsg')}
+        message={successMessage ?? ''}
         variant="success"
         singleAction
         confirmText={t('common.done')}
@@ -617,8 +623,9 @@ const styles = StyleSheet.create({
 export default function PlanVisitScreen() {
   const params = useLocalSearchParams<{ doctorId?: string; establishmentId?: string }>();
   const query = useDoctor(params.doctorId);
+  if (!params.doctorId) return <Redirect href="/(tabs)/search" />;
   if (!query.data) {
-    return <LoadState loading={query.isPending && Boolean(params.doctorId)} notFound={!params.doctorId || (query.error as { status?: number } | null)?.status === 404} onRetry={() => query.refetch()} />;
+    return <LoadState loading={query.isPending} notFound={(query.error as { status?: number } | null)?.status === 404} onRetry={() => query.refetch()} />;
   }
   return <PlanVisit doctor={query.data} establishmentId={params.establishmentId} />;
 }

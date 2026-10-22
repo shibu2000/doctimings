@@ -48,6 +48,8 @@ export default function VisitsScreen() {
     }
   };
 
+  const handlePlanNew = () => router.push('/(tabs)/search');
+
   const handleCancelPress = (visit: MyVisit) => {
     setCancelModal({
       visible: true,
@@ -91,16 +93,18 @@ export default function VisitsScreen() {
                 {t('visits.subtitle')}
               </Text>
             </View>
-            <TouchableOpacity
-              style={[styles.addButton, { backgroundColor: theme.primary }]}
-              activeOpacity={0.8}
-              onPress={() => router.push('/plan-visit')}
-            >
-              <Plus size={16} color={theme.textInverse} strokeWidth={2.5} />
-              <Text style={[styles.addButtonText, { color: theme.textInverse }]}>
-                {t('visits.planNewVisit')}
-              </Text>
-            </TouchableOpacity>
+            {activeVisits.length > 0 && (
+              <TouchableOpacity
+                style={[styles.addButton, { backgroundColor: theme.primary }]}
+                activeOpacity={0.8}
+                onPress={handlePlanNew}
+              >
+                <Plus size={16} color={theme.textInverse} strokeWidth={2.5} />
+                <Text style={[styles.addButtonText, { color: theme.textInverse }]}>
+                  {t('visits.planNewVisit')}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -155,7 +159,7 @@ export default function VisitsScreen() {
                         {visit.doctorSpecialty}
                       </Text>
                     </View>
-                    <GlowingIcon glowColor={theme.glowPrimary} size={28} pulse>
+                    <GlowingIcon glowColor={theme.glowPrimary} size={28} pulse={false}>
                       <View
                         style={[
                           styles.activePill,
@@ -228,24 +232,26 @@ export default function VisitsScreen() {
                   </View>
 
                   <View style={styles.cardActions}>
-                    <TouchableOpacity
-                      style={[
-                        styles.actionCall,
-                        { backgroundColor: theme.primary },
-                      ]}
-                      activeOpacity={0.8}
-                      onPress={() => handleCall(visit.establishmentPhone)}
-                    >
-                      <Phone size={13} color={theme.textInverse} />
-                      <Text
+                    {visit.establishmentPhone ? (
+                      <TouchableOpacity
                         style={[
-                          styles.actionCallText,
-                          { color: theme.textInverse },
+                          styles.actionCall,
+                          { backgroundColor: theme.primary },
                         ]}
+                        activeOpacity={0.8}
+                        onPress={() => handleCall(visit.establishmentPhone)}
                       >
-                        {t('common.call')} ({visit.establishmentPhone})
-                      </Text>
-                    </TouchableOpacity>
+                        <Phone size={13} color={theme.textInverse} />
+                        <Text
+                          style={[
+                            styles.actionCallText,
+                            { color: theme.textInverse },
+                          ]}
+                        >
+                          {t('common.call')} ({visit.establishmentPhone})
+                        </Text>
+                      </TouchableOpacity>
+                    ) : null}
 
                     <TouchableOpacity
                       style={[
@@ -304,7 +310,7 @@ export default function VisitsScreen() {
                   { backgroundColor: theme.primary },
                 ]}
                 activeOpacity={0.8}
-                onPress={() => router.push('/plan-visit')}
+                onPress={handlePlanNew}
               >
                 <Plus size={16} color={theme.textInverse} strokeWidth={2.5} />
                 <Text

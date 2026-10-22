@@ -22,7 +22,7 @@ import {
   Mic,
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
-import { DoctorResults } from '../../components/common/DoctorResults';
+import { DoctorList } from '../../components/common/DoctorList';
 import { LocationNotice } from '../../components/common/LocationNotice';
 import { CategoryChip } from '../../components/common/CategoryChip';
 import { useDoctorSearch } from '../../hooks/useDoctors';
@@ -82,6 +82,8 @@ export default function HomeScreen() {
   });
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
+  const loadingNearby = locationStatus === 'detecting' || (!nearby.data && nearby.isFetching);
+  const showNearby = !loadingNearby && !(nearby.isError && !nearby.data);
 
   return (
     <SafeAreaView
@@ -89,314 +91,326 @@ export default function HomeScreen() {
       edges={['top']}
     >
       <Header />
-      <ScrollView
+      <DoctorList
+        hasMore={Boolean(nearby.hasNextPage)}
+        loadingMore={nearby.isFetchingNextPage}
+        onLoadMore={() => nearby.fetchNextPage()}
+        doctors={showNearby ? filteredDoctors : []}
+        town={nearby.data?.town ?? null}
         style={[styles.scroll, { backgroundColor: theme.background }]}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View
-          style={[
-            styles.heroSection,
-            {
-              backgroundColor: theme.surface,
-              borderBottomColor: theme.border,
-            },
-          ]}
-        >
-          <Text style={[styles.heroTitle, { color: theme.textPrimary }]}>
-            {t('home.lookingForDoctor')}
-          </Text>
-          <Text style={[styles.heroSubtitle, { color: theme.textSecondary }]}>
-            {t('home.heroSubtitle')}
-          </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.searchBar,
-              {
-                backgroundColor: isDark
-                  ? theme.surfaceVariant
-                  : theme.background,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.8}
-            onPress={() => router.push('/(tabs)/search')}
-          >
-            <Search size={18} color={theme.primary} strokeWidth={2.2} />
-            <Text
-              style={[styles.searchPlaceholder, { color: theme.textSecondary }]}
+        header={
+          <>
+            <View
+              style={[
+                styles.heroSection,
+                {
+                  backgroundColor: theme.surface,
+                  borderBottomColor: theme.border,
+                },
+              ]}
             >
-              {t('home.searchPlaceholder')}
-            </Text>
-            <GlowingIcon glowColor={theme.glowPrimary} size={28} pulse>
-              <View
+              <Text style={[styles.heroTitle, { color: theme.textPrimary }]}>
+                {t('home.lookingForDoctor')}
+              </Text>
+              <Text style={[styles.heroSubtitle, { color: theme.textSecondary }]}>
+                {t('home.heroSubtitle')}
+              </Text>
+
+              <TouchableOpacity
                 style={[
-                  styles.micCircle,
-                  { backgroundColor: theme.primaryLight },
+                  styles.searchBar,
+                  {
+                    backgroundColor: isDark
+                      ? theme.surfaceVariant
+                      : theme.background,
+                    borderColor: theme.border,
+                  },
                 ]}
+                activeOpacity={0.8}
+                onPress={() => router.push('/(tabs)/search')}
               >
-                <Mic size={14} color={theme.primaryDark} strokeWidth={2.5} />
+                <Search size={18} color={theme.primary} strokeWidth={2.2} />
+                <Text
+                  style={[styles.searchPlaceholder, { color: theme.textSecondary }]}
+                >
+                  {t('home.searchPlaceholder')}
+                </Text>
+                <GlowingIcon glowColor={theme.glowPrimary} size={28} pulse={false}>
+                  <View
+                    style={[
+                      styles.micCircle,
+                      { backgroundColor: theme.primaryLight },
+                    ]}
+                  >
+                    <Mic size={14} color={theme.primaryDark} strokeWidth={2.5} />
+                  </View>
+                </GlowingIcon>
+              </TouchableOpacity>
+
+              <View style={styles.hintRow}>
+                <Sparkles size={13} color={theme.warning} />
+                <Text style={[styles.hintText, { color: theme.textMuted }]}>
+                  {t('home.searchHints')}
+                </Text>
               </View>
-            </GlowingIcon>
-          </TouchableOpacity>
+            </View>
 
-          <View style={styles.hintRow}>
-            <Sparkles size={13} color={theme.warning} />
-            <Text style={[styles.hintText, { color: theme.textMuted }]}>
-              {t('home.searchHints')}
-            </Text>
-          </View>
-        </View>
+            <View style={styles.categoriesSection}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoriesTrack}
+              >
+                {categories.map((cat) => (
+                  <CategoryChip
+                    key={cat.id}
+                    label={cat.label}
+                    onPress={() => handleCategoryPress(cat.query)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
 
-        <View style={styles.categoriesSection}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoriesTrack}
-          >
-            {categories.map((cat) => (
-              <CategoryChip
-                key={cat.id}
-                label={cat.label}
-                onPress={() => handleCategoryPress(cat.query)}
-              />
-            ))}
-          </ScrollView>
-        </View>
+            <View style={styles.sectionHeader}>
+              <View>
+                <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+                  {t('home.doctorsNearYou')}
+                </Text>
+                <Text
+                  style={[styles.sectionSubtitle, { color: theme.textSecondary }]}
+                >
+                  {t('home.showingChambers')} {locationName}
+                </Text>
+              </View>
+            </View>
 
-        <View style={styles.sectionHeader}>
-          <View>
-            <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
-              {t('home.doctorsNearYou')}
-            </Text>
-            <Text
-              style={[styles.sectionSubtitle, { color: theme.textSecondary }]}
-            >
-              {t('home.showingChambers')} {locationName}
-            </Text>
-          </View>
-        </View>
+            <View style={styles.filterTrack}>
+              <TouchableOpacity
+                style={[
+                  styles.filterPill,
+                  {
+                    backgroundColor:
+                      activeFilter === 'all' ? theme.primaryLight : theme.surface,
+                    borderColor:
+                      activeFilter === 'all' ? theme.primary : theme.border,
+                  },
+                ]}
+                activeOpacity={0.7}
+                onPress={() => setActiveFilter('all')}
+              >
+                <Text
+                  style={[
+                    styles.filterPillText,
+                    {
+                      color:
+                        activeFilter === 'all'
+                          ? theme.primaryDark
+                          : theme.textPrimary,
+                      fontWeight: activeFilter === 'all' ? '700' : '500',
+                    },
+                  ]}
+                >
+                  {t('search.allSittings')}
+                </Text>
+              </TouchableOpacity>
 
-        <View style={styles.filterTrack}>
-          <TouchableOpacity
-            style={[
-              styles.filterPill,
-              {
-                backgroundColor:
-                  activeFilter === 'all' ? theme.primaryLight : theme.surface,
-                borderColor:
-                  activeFilter === 'all' ? theme.primary : theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => setActiveFilter('all')}
-          >
-            <Text
-              style={[
-                styles.filterPillText,
-                {
-                  color:
-                    activeFilter === 'all'
-                      ? theme.primaryDark
-                      : theme.textPrimary,
-                  fontWeight: activeFilter === 'all' ? '700' : '500',
-                },
-              ]}
-            >
-              {t('search.allSittings')}
-            </Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.filterPill,
+                  {
+                    backgroundColor:
+                      activeFilter === 'today' ? theme.primaryLight : theme.surface,
+                    borderColor:
+                      activeFilter === 'today' ? theme.primary : theme.border,
+                  },
+                ]}
+                activeOpacity={0.7}
+                onPress={() => setActiveFilter('today')}
+              >
+                <CheckCircle2
+                  size={12}
+                  color={activeFilter === 'today' ? theme.primaryDark : theme.success}
+                />
+                <Text
+                  style={[
+                    styles.filterPillText,
+                    {
+                      color:
+                        activeFilter === 'today'
+                          ? theme.primaryDark
+                          : theme.textPrimary,
+                      fontWeight: activeFilter === 'today' ? '700' : '500',
+                    },
+                  ]}
+                >
+                  {t('search.availableTodayOnly')}
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.filterPill,
-              {
-                backgroundColor:
-                  activeFilter === 'today' ? theme.primaryLight : theme.surface,
-                borderColor:
-                  activeFilter === 'today' ? theme.primary : theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => setActiveFilter('today')}
-          >
-            <CheckCircle2
-              size={12}
-              color={activeFilter === 'today' ? theme.primaryDark : theme.success}
-            />
-            <Text
-              style={[
-                styles.filterPillText,
-                {
-                  color:
-                    activeFilter === 'today'
-                      ? theme.primaryDark
-                      : theme.textPrimary,
-                  fontWeight: activeFilter === 'today' ? '700' : '500',
-                },
-              ]}
-            >
-              {t('search.availableTodayOnly')}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.filterPill,
-              {
-                backgroundColor:
-                  activeFilter === 'evening' ? theme.primaryLight : theme.surface,
-                borderColor:
-                  activeFilter === 'evening' ? theme.primary : theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => setActiveFilter('evening')}
-          >
-            <Clock
-              size={12}
-              color={
-                activeFilter === 'evening'
-                  ? theme.primaryDark
-                  : theme.textSecondary
-              }
-            />
-            <Text
-              style={[
-                styles.filterPillText,
-                {
-                  color:
+              <TouchableOpacity
+                style={[
+                  styles.filterPill,
+                  {
+                    backgroundColor:
+                      activeFilter === 'evening' ? theme.primaryLight : theme.surface,
+                    borderColor:
+                      activeFilter === 'evening' ? theme.primary : theme.border,
+                  },
+                ]}
+                activeOpacity={0.7}
+                onPress={() => setActiveFilter('evening')}
+              >
+                <Clock
+                  size={12}
+                  color={
                     activeFilter === 'evening'
                       ? theme.primaryDark
-                      : theme.textPrimary,
-                  fontWeight: activeFilter === 'evening' ? '700' : '500',
-                },
-              ]}
-            >
-              {t('search.eveningSittings')}
-            </Text>
-          </TouchableOpacity>
+                      : theme.textSecondary
+                  }
+                />
+                <Text
+                  style={[
+                    styles.filterPillText,
+                    {
+                      color:
+                        activeFilter === 'evening'
+                          ? theme.primaryDark
+                          : theme.textPrimary,
+                      fontWeight: activeFilter === 'evening' ? '700' : '500',
+                    },
+                  ]}
+                >
+                  {t('search.eveningSittings')}
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.filterPill,
-              {
-                backgroundColor:
-                  activeFilter === 'nearest' ? theme.primaryLight : theme.surface,
-                borderColor:
-                  activeFilter === 'nearest' ? theme.primary : theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => setActiveFilter('nearest')}
-          >
-            <Navigation
-              size={12}
-              color={
-                activeFilter === 'nearest'
-                  ? theme.primaryDark
-                  : theme.textSecondary
-              }
-            />
-            <Text
-              style={[
-                styles.filterPillText,
-                {
-                  color:
+              <TouchableOpacity
+                style={[
+                  styles.filterPill,
+                  {
+                    backgroundColor:
+                      activeFilter === 'nearest' ? theme.primaryLight : theme.surface,
+                    borderColor:
+                      activeFilter === 'nearest' ? theme.primary : theme.border,
+                  },
+                ]}
+                activeOpacity={0.7}
+                onPress={() => setActiveFilter('nearest')}
+              >
+                <Navigation
+                  size={12}
+                  color={
                     activeFilter === 'nearest'
                       ? theme.primaryDark
-                      : theme.textPrimary,
-                  fontWeight: activeFilter === 'nearest' ? '700' : '500',
-                },
-              ]}
-            >
-              Within 5 km
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.doctorList}>
-          <LocationNotice />
-          {locationStatus === 'detecting' || (!nearby.data && nearby.isFetching) ? (
-            <View style={styles.listState}>
-              <ActivityIndicator color={theme.primary} />
-              <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
-                {locationStatus === 'detecting' ? t('location.detecting') : t('common.loading')}
-              </Text>
+                      : theme.textSecondary
+                  }
+                />
+                <Text
+                  style={[
+                    styles.filterPillText,
+                    {
+                      color:
+                        activeFilter === 'nearest'
+                          ? theme.primaryDark
+                          : theme.textPrimary,
+                      fontWeight: activeFilter === 'nearest' ? '700' : '500',
+                    },
+                  ]}
+                >
+                  {t('search.withinFiveKm')}
+                </Text>
+              </TouchableOpacity>
             </View>
-          ) : nearby.isError && !nearby.data ? (
-            <TouchableOpacity style={styles.listState} onPress={() => nearby.refetch()}>
-              <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.loadFailed')}</Text>
-              <Text style={[styles.listStateText, { color: theme.primary, fontWeight: '700' }]}>{t('common.retry')}</Text>
-            </TouchableOpacity>
-          ) : filteredDoctors.length === 0 ? (
+
+            <View style={styles.doctorList}>
+              <LocationNotice />
+              {loadingNearby ? (
+                <View style={styles.listState}>
+                  <ActivityIndicator color={theme.primary} />
+                  <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
+                    {locationStatus === 'detecting' ? t('location.detecting') : t('common.loading')}
+                  </Text>
+                </View>
+              ) : !showNearby ? (
+                <TouchableOpacity style={styles.listState} onPress={() => nearby.refetch()}>
+                  <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.loadFailed')}</Text>
+                  <Text style={[styles.listStateText, { color: theme.primary, fontWeight: '700' }]}>{t('common.retry')}</Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
+          </>
+        }
+        empty={
+          showNearby ? (
             <View style={styles.listState}>
               <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.emptyTitle')}</Text>
             </View>
-          ) : (
-            <DoctorResults doctors={filteredDoctors} town={nearby.data?.town ?? null} />
-          )}
-        </View>
+          ) : null
+        }
+        footer={
+          <>
 
-        <TouchableOpacity
-          style={[
-            styles.guideBanner,
-            {
-              backgroundColor: isDark
-                ? theme.surfaceVariant
-                : theme.primaryLight,
-              borderColor: theme.border,
-            },
-          ]}
-          activeOpacity={0.8}
-          onPress={() => router.push('/(tabs)/guide')}
-        >
-          <View
-            style={[
-              styles.guideIcon,
-              { backgroundColor: isDark ? theme.surface : '#FFFFFF' },
-            ]}
-          >
-            <BookOpen size={20} color={theme.primary} />
-          </View>
-          <View style={styles.guideContent}>
-            <Text style={[styles.guideTitle, { color: theme.primaryDark }]}>
-              {t('home.exploreGuide')}
-            </Text>
-            <Text
-              style={[styles.guideSubtitle, { color: theme.textSecondary }]}
+            <TouchableOpacity
+              style={[
+                styles.guideBanner,
+                {
+                  backgroundColor: isDark
+                    ? theme.surfaceVariant
+                    : theme.primaryLight,
+                  borderColor: theme.border,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => router.push('/(tabs)/guide')}
             >
-              {t('home.exploreGuideSubtitle')}
-            </Text>
-          </View>
-          <ArrowRight size={18} color={theme.primary} />
-        </TouchableOpacity>
+              <View
+                style={[
+                  styles.guideIcon,
+                  { backgroundColor: isDark ? theme.surface : '#FFFFFF' },
+                ]}
+              >
+                <BookOpen size={20} color={theme.primary} />
+              </View>
+              <View style={styles.guideContent}>
+                <Text style={[styles.guideTitle, { color: theme.primaryDark }]}>
+                  {t('home.exploreGuide')}
+                </Text>
+                <Text
+                  style={[styles.guideSubtitle, { color: theme.textSecondary }]}
+                >
+                  {t('home.exploreGuideSubtitle')}
+                </Text>
+              </View>
+              <ArrowRight size={18} color={theme.primary} />
+            </TouchableOpacity>
 
-        <View
-          style={[
-            styles.disclaimerBox,
-            {
-              backgroundColor: theme.surface,
-              borderColor: theme.border,
-            },
-          ]}
-        >
-          <Info size={15} color={theme.primary} />
-          <View style={styles.disclaimerContent}>
-            <Text
-              style={[styles.disclaimerTitle, { color: theme.textPrimary }]}
+            <View
+              style={[
+                styles.disclaimerBox,
+                {
+                  backgroundColor: theme.surface,
+                  borderColor: theme.border,
+                },
+              ]}
             >
-              {t('common.disclaimerTitle')}
-            </Text>
-            <Text
-              style={[styles.disclaimerBody, { color: theme.textSecondary }]}
-            >
-              {t('common.disclaimerBody')}
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
+              <Info size={15} color={theme.primary} />
+              <View style={styles.disclaimerContent}>
+                <Text
+                  style={[styles.disclaimerTitle, { color: theme.textPrimary }]}
+                >
+                  {t('common.disclaimerTitle')}
+                </Text>
+                <Text
+                  style={[styles.disclaimerBody, { color: theme.textSecondary }]}
+                >
+                  {t('common.disclaimerBody')}
+                </Text>
+              </View>
+            </View>
+          </>
+        }
+      />
     </SafeAreaView>
   );
 }

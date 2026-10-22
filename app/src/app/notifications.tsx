@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   ChevronRight,
 } from 'lucide-react-native';
-import { Colors } from '../constants/theme';
+import { ThemeColors } from '../constants/theme';
 import { useApp } from '../store/AppContext';
 import { AppNotification } from '../types';
 
@@ -30,7 +30,9 @@ export default function NotificationsScreen() {
     markNotificationRead,
     markAllNotificationsRead,
     language,
+    theme,
   } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'visits' | 'changes'>('all');
 
@@ -50,12 +52,12 @@ export default function NotificationsScreen() {
   const getIcon = (type: AppNotification['type']) => {
     switch (type) {
       case 'visit_reminder':
-        return <Calendar size={18} color={Colors.primary} />;
+        return <Calendar size={18} color={theme.primary} />;
       case 'chamber_update':
-        return <Clock size={18} color={Colors.warning} />;
+        return <Clock size={18} color={theme.warning} />;
       case 'advisory':
       default:
-        return <AlertCircle size={18} color={Colors.info} />;
+        return <AlertCircle size={18} color={theme.info} />;
     }
   };
 
@@ -67,7 +69,7 @@ export default function NotificationsScreen() {
           activeOpacity={0.7}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={20} color={Colors.textPrimary} />
+          <ArrowLeft size={20} color={theme.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('notifications.title')}</Text>
         <TouchableOpacity
@@ -160,13 +162,13 @@ export default function NotificationsScreen() {
                     <Text style={styles.cardTime}>{item.timestamp}</Text>
                   </View>
 
-                  <ChevronRight size={16} color={Colors.textMuted} />
+                  <ChevronRight size={16} color={theme.textMuted} />
                 </TouchableOpacity>
               );
             })
           ) : (
             <View style={styles.emptyBox}>
-              <Bell size={36} color={Colors.textMuted} />
+              <Bell size={36} color={theme.textMuted} />
               <Text style={styles.emptyText}>{t('notifications.empty')}</Text>
             </View>
           )}
@@ -176,10 +178,11 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   header: {
     flexDirection: 'row',
@@ -188,8 +191,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderBottomColor: theme.border,
+    backgroundColor: theme.surface,
   },
   backButton: {
     width: 36,
@@ -201,33 +204,33 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   markReadBtn: {
     paddingVertical: 4,
   },
   markReadText: {
     fontSize: 12,
-    color: Colors.primary,
+    color: theme.primary,
     fontWeight: '600',
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     paddingBottom: 40,
   },
   subHeader: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   title: {
     fontSize: 17,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginBottom: 10,
   },
   filterRow: {
@@ -238,21 +241,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   filterChipActive: {
-    backgroundColor: Colors.primaryLight,
-    borderColor: Colors.primary,
+    backgroundColor: theme.primaryLight,
+    borderColor: theme.primary,
   },
   filterChipText: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     fontWeight: '500',
   },
   filterChipTextActive: {
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
     fontWeight: '700',
   },
   list: {
@@ -262,22 +265,22 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 12,
     gap: 12,
   },
   cardUnread: {
-    borderColor: Colors.primary,
-    backgroundColor: '#F7FCFC',
+    borderColor: theme.primary,
+    backgroundColor: theme.primaryMuted,
   },
   iconBox: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -292,29 +295,29 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     flex: 1,
   },
   cardTitleUnread: {
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   unreadDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     marginLeft: 6,
   },
   cardMessage: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 3,
     lineHeight: 16,
   },
   cardTime: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: theme.textMuted,
     marginTop: 4,
   },
   emptyBox: {
@@ -324,6 +327,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 13,
-    color: Colors.textMuted,
+    color: theme.textMuted,
   },
 });

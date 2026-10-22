@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -22,14 +22,15 @@ import {
 import { useDoctor } from '../../../hooks/useDoctors';
 import { LoadState } from '../../../components/common/LoadState';
 import { Doctor } from '../../../types';
-import { Colors } from '../../../constants/theme';
+import { ThemeColors } from '../../../constants/theme';
 import { useApp } from '../../../store/AppContext';
 import { StatusBadge } from '../../../components/common/StatusBadge';
 
 function DoctorAvailability({ doctor }: { doctor: Doctor }) {
   const router = useRouter();
   const { t } = useTranslation();
-  const { language } = useApp();
+  const { language, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
 
   const daysOfWeek = [
@@ -82,7 +83,7 @@ function DoctorAvailability({ doctor }: { doctor: Doctor }) {
           activeOpacity={0.7}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={20} color={Colors.textPrimary} />
+          <ArrowLeft size={20} color={theme.textPrimary} />
         </TouchableOpacity>
         <View style={styles.headerTitleBox}>
           <Text style={styles.headerTitle}>Doctor Availability</Text>
@@ -105,7 +106,7 @@ function DoctorAvailability({ doctor }: { doctor: Doctor }) {
         </View>
 
         <View style={styles.disclaimerAlert}>
-          <AlertCircle size={18} color={Colors.warning} />
+          <AlertCircle size={18} color={theme.warning} />
           <View style={styles.disclaimerContent}>
             <Text style={styles.disclaimerTitle}>{t('common.disclaimerTitle')}</Text>
             <Text style={styles.disclaimerBody}>{t('common.disclaimerBody')}</Text>
@@ -140,12 +141,12 @@ function DoctorAvailability({ doctor }: { doctor: Doctor }) {
                   sittings.map((sitting, idx) => (
                     <View key={idx} style={styles.sittingItem}>
                       <View style={styles.sittingMain}>
-                        <Building2 size={13} color={Colors.primary} />
+                        <Building2 size={13} color={theme.primary} />
                         <Text style={styles.chamberName}>{sitting.practiceName}</Text>
                       </View>
 
                       <View style={styles.slotRow}>
-                        <Clock size={12} color={Colors.textSecondary} />
+                        <Clock size={12} color={theme.textSecondary} />
                         <Text style={styles.slotText}>{sitting.slot}</Text>
                       </View>
 
@@ -158,7 +159,7 @@ function DoctorAvailability({ doctor }: { doctor: Doctor }) {
                         activeOpacity={0.8}
                         onPress={() => handleCall(sitting.phone)}
                       >
-                        <Phone size={12} color={Colors.primaryDark} />
+                        <Phone size={12} color={theme.primaryDark} />
                         <Text style={styles.callCounterText}>
                           {t('common.call')} ({sitting.phone})
                         </Text>
@@ -177,10 +178,11 @@ function DoctorAvailability({ doctor }: { doctor: Doctor }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   header: {
     flexDirection: 'row',
@@ -189,8 +191,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderBottomColor: theme.border,
+    backgroundColor: theme.surface,
   },
   backButton: {
     width: 36,
@@ -205,32 +207,32 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   headerSub: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     padding: 16,
     paddingBottom: 40,
   },
   statusBox: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     padding: 14,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     marginBottom: 12,
   },
   statusTitle: {
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     textTransform: 'uppercase',
     marginBottom: 8,
   },
@@ -241,10 +243,10 @@ const styles = StyleSheet.create({
   },
   verifiedText: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: theme.textMuted,
   },
   disclaimerAlert: {
-    backgroundColor: Colors.warningLight,
+    backgroundColor: theme.warningLight,
     borderRadius: 8,
     padding: 10,
     marginBottom: 16,
@@ -258,33 +260,33 @@ const styles = StyleSheet.create({
   disclaimerTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: Colors.warningText,
+    color: theme.warningText,
   },
   disclaimerBody: {
     fontSize: 11,
-    color: Colors.warningText,
+    color: theme.warningText,
     marginTop: 2,
     lineHeight: 16,
   },
   weeklyTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginBottom: 10,
   },
   rosterList: {
     gap: 10,
   },
   dayCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 12,
   },
   dayCardToday: {
-    borderColor: Colors.primary,
-    backgroundColor: '#FAFDFD',
+    borderColor: theme.primary,
+    backgroundColor: theme.primaryMuted,
   },
   dayHeader: {
     flexDirection: 'row',
@@ -292,19 +294,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
     paddingBottom: 6,
   },
   dayName: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   dayNameToday: {
-    color: Colors.primary,
+    color: theme.primary,
   },
   todayPill: {
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 4,
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
   todayPillText: {
     fontSize: 10,
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   sittingItem: {
     marginTop: 6,
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
   chamberName: {
     fontSize: 13,
     fontWeight: '600',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   slotRow: {
     flexDirection: 'row',
@@ -336,12 +338,12 @@ const styles = StyleSheet.create({
   },
   slotText: {
     fontSize: 12,
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
     fontWeight: '600',
   },
   notesText: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: theme.textMuted,
     marginTop: 3,
     fontStyle: 'italic',
   },
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 5,
     borderRadius: 6,
@@ -359,11 +361,11 @@ const styles = StyleSheet.create({
   callCounterText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   noSittingsText: {
     fontSize: 12,
-    color: Colors.textMuted,
+    color: theme.textMuted,
     fontStyle: 'italic',
   },
 });

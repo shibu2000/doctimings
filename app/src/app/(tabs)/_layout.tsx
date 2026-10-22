@@ -20,18 +20,22 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        lazy: true,
+        freezeOnBlur: true,
+        animation: 'shift',
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textMuted,
         tabBarStyle: {
           backgroundColor: theme.surface,
           borderTopWidth: 1,
           borderTopColor: theme.border,
-          height: 60 + insets.bottom,
+          height: 64 + insets.bottom,
           paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
           paddingTop: 6,
         },
         tabBarLabelStyle: {
           fontSize: 11,
+          lineHeight: 16,
           fontWeight: '600',
         },
       }}
@@ -53,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="guide"
         options={{
-          title: t('nav.guide'),
+          title: t('nav.guideTab'),
           tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} strokeWidth={2.2} />,
         }}
       />

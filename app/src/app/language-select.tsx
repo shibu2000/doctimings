@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -10,14 +10,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { X, Check, Globe } from 'lucide-react-native';
-import { Colors } from '../constants/theme';
+import { ThemeColors } from '../constants/theme';
 import { useApp } from '../store/AppContext';
 import { LanguageCode } from '../types';
 
 export default function LanguageSelectScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { language, changeLanguage } = useApp();
+  const { language, changeLanguage, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [selected, setSelected] = useState<LanguageCode>(language);
 
   const handleSelect = async (lang: LanguageCode) => {
@@ -35,7 +36,7 @@ export default function LanguageSelectScreen() {
           activeOpacity={0.7}
           onPress={() => router.back()}
         >
-          <X size={20} color={Colors.textPrimary} />
+          <X size={20} color={theme.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -45,10 +46,10 @@ export default function LanguageSelectScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heroBox}>
-          <Globe size={28} color={Colors.primary} />
-          <Text style={styles.heroTitle}>Choose Your Language</Text>
+          <Globe size={28} color={theme.primary} />
+          <Text style={styles.heroTitle}>{t('settings.chooseLanguage')}</Text>
           <Text style={styles.heroSubtitle}>
-            You can change your preferred language anytime in Settings.
+            {t('settings.languageHint')}
           </Text>
         </View>
 
@@ -68,7 +69,7 @@ export default function LanguageSelectScreen() {
               </View>
               {selected === 'en' && (
                 <View style={styles.checkBadge}>
-                  <Check size={14} color={Colors.surface} strokeWidth={3} />
+                  <Check size={14} color={theme.surface} strokeWidth={3} />
                 </View>
               )}
             </View>
@@ -92,7 +93,7 @@ export default function LanguageSelectScreen() {
               </View>
               {selected === 'bn' && (
                 <View style={styles.checkBadge}>
-                  <Check size={14} color={Colors.surface} strokeWidth={3} />
+                  <Check size={14} color={theme.surface} strokeWidth={3} />
                 </View>
               )}
             </View>
@@ -106,10 +107,11 @@ export default function LanguageSelectScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   header: {
     flexDirection: 'row',
@@ -118,12 +120,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   headerTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   closeBtn: {
     width: 32,
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     padding: 16,
@@ -147,11 +149,11 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   heroSubtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     textAlign: 'center',
     maxWidth: 280,
   },
@@ -160,15 +162,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 16,
   },
   cardSelected: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primaryLight,
+    borderColor: theme.primary,
+    backgroundColor: theme.primaryLight,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -180,14 +182,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
   langTagText: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   titleCol: {
     flex: 1,
@@ -195,24 +197,24 @@ const styles = StyleSheet.create({
   langName: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   langDesc: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 1,
   },
   checkBadge: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: Colors.primary,
+    backgroundColor: theme.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   bodyExplain: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     lineHeight: 18,
   },
 });

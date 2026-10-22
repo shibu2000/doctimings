@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppState, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LocationItem, MyVisit, AppNotification, LanguageCode, ThemeMode, UserProfile } from '../types';
-import { loadStoredLanguage, setAppLanguage } from '../locales/i18n';
+import { LocationItem, MyVisit, AppNotification, LanguageCode, ThemeMode, UserProfile, ReminderOutcome } from '../types';
+import i18n, { loadStoredLanguage, setAppLanguage } from '../locales/i18n';
 import { ThemeColors, getThemeColors } from '../constants/theme';
-import { api, Town } from '../services/api';
+import { api, onConnectivityChange, Town } from '../services/api';
+import { cancelReminders, ensureReminderPermission, scheduleVisitReminders } from '../services/reminders';
 import { canDetectWithoutPrompt, CURRENT_LOCATION_ID, detectCoords, locationFromCoords, MEDINIPUR } from '../services/location';
 
 export type LocationStatus = 'detecting' | 'ready' | 'denied' | 'off';
 
 interface AppContextType {
+  isReady: boolean;
   currentLocation: LocationItem;
   setCurrentLocation: (loc: LocationItem) => Promise<void>;
   locationStatus: LocationStatus;
@@ -26,19 +28,18 @@ interface AppContextType {
   saveProfile: (profile: UserProfile) => Promise<void>;
   skipProfile: () => Promise<void>;
   visits: MyVisit[];
-  addVisit: (visit: Omit<MyVisit, 'id' | 'createdAt'>) => Promise<void>;
+  addVisit: (visit: Omit<MyVisit, 'id' | 'createdAt'>) => Promise<ReminderOutcome>;
   cancelVisit: (id: string) => Promise<void>;
   notifications: AppNotification[];
   unreadNotificationsCount: number;
   markNotificationRead: (id: string) => Promise<void>;
   markAllNotificationsRead: () => Promise<void>;
   notificationsEnabled: boolean;
-  setNotificationsEnabled: (enabled: boolean) => Promise<void>;
+  setNotificationsEnabled: (enabled: boolean) => Promise<boolean>;
   clearLocalData: () => Promise<void>;
   isOffline: boolean;
-  setIsOffline: (offline: boolean) => void;
   lastSyncTime: string;
-  refreshSync: () => void;
+  refreshSync: () => Promise<boolean>;
   submitReport: (reportData: {
     doctorId?: string;
     establishmentId?: string;
@@ -70,13 +71,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [towns, setTowns] = useState<Town[]>([]);
   const [language, setLanguageState] = useState<LanguageCode>('en');
   const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [needsProfile, setNeedsProfile] = useState<boolean>(false);
   const [visits, setVisits] = useState<MyVisit[]>([]);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean>(true);
   const [isOffline, setIsOffline] = useState<boolean>(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string>('Just now');
+  const [lastSyncedAt, setLastSyncedAt] = useState<number | null>(null);
 
   const isDark = themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
   const theme = getThemeColors(isDark);
@@ -119,19 +121,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       } catch {}
 
+      setIsReady(true);
       resolveLocation();
-
-      api.checkHealth().then(healthy => {
-        setIsOffline(!healthy);
-        setLastSyncTime(healthy ? 'Just now' : 'Offline mode');
-      }).catch(() => {
-        setIsOffline(true);
-        setLastSyncTime('Offline mode');
-      });
+      api.checkHealth();
     };
 
     initializeState();
   }, []);
+
+  useEffect(
+    () =>
+      onConnectivityChange((online) => {
+        setIsOffline(!online);
+        if (online) setLastSyncedAt(Date.now());
+      }),
+    []
+  );
+
+  useEffect(() => {
+    if (!isOffline) return;
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') api.checkHealth();
+    });
+    return () => subscription.remove();
+  }, [isOffline]);
 
   const loadTowns = async (): Promise<{ towns: Town[]; fallback: LocationItem }> => {
     try {
@@ -219,14 +232,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch {}
   };
 
+  const saveVisits = async (updated: MyVisit[]) => {
+    setVisits(updated);
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.VISITS, JSON.stringify(updated));
+    } catch {}
+  };
+
   const setNotificationsEnabled = async (enabled: boolean) => {
+    if (enabled && !(await ensureReminderPermission())) return false;
     setNotificationsEnabledState(enabled);
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.NOTIFICATIONS_ENABLED, String(enabled));
     } catch {}
+    const updated = await Promise.all(
+      visits.map(async (visit) => {
+        if (!enabled) {
+          await cancelReminders(visit.reminderIds);
+          return { ...visit, reminderIds: [] };
+        }
+        if (visit.status !== 'planned' || !visit.reminderEnabled || visit.reminderIds?.length) return visit;
+        return { ...visit, reminderIds: await scheduleVisitReminders(visit) };
+      })
+    );
+    await saveVisits(updated);
+    return true;
   };
 
   const clearLocalData = async () => {
+    await Promise.all(visits.map((visit) => cancelReminders(visit.reminderIds)));
     setVisits([]);
     setNotifications([]);
     try {
@@ -235,25 +269,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch {}
   };
 
-  const addVisit = async (visitData: Omit<MyVisit, 'id' | 'createdAt'>) => {
+  const addVisit = async (visitData: Omit<MyVisit, 'id' | 'createdAt'>): Promise<ReminderOutcome> => {
     const newVisit: MyVisit = {
       ...visitData,
       id: `visit-${Date.now()}`,
       createdAt: new Date().toISOString(),
     };
-    const updated = [newVisit, ...visits];
-    setVisits(updated);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEYS.VISITS, JSON.stringify(updated));
-    } catch {}
+    const wantsReminder = notificationsEnabled && newVisit.reminderEnabled;
+    const allowed = wantsReminder && (await ensureReminderPermission());
+    const reminderIds = allowed ? await scheduleVisitReminders(newVisit) : [];
+    await saveVisits([{ ...newVisit, reminderIds }, ...visits]);
+    if (!allowed) return 'off';
+    return reminderIds.length ? 'scheduled' : 'none';
   };
 
   const cancelVisit = async (id: string) => {
-    const updated = visits.map((v) => (v.id === id ? { ...v, status: 'cancelled' as const } : v));
-    setVisits(updated);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEYS.VISITS, JSON.stringify(updated));
-    } catch {}
+    const target = visits.find((v) => v.id === id);
+    await cancelReminders(target?.reminderIds);
+    await saveVisits(visits.map((v) => (v.id === id ? { ...v, status: 'cancelled' as const, reminderIds: [] } : v)));
   };
 
   const markNotificationRead = async (id: string) => {
@@ -272,16 +305,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch {}
   };
 
-  const refreshSync = async () => {
-    try {
-      const healthy = await api.checkHealth();
-      setIsOffline(!healthy);
-      setLastSyncTime(healthy ? 'Just now' : 'Offline mode');
-    } catch {
-      setIsOffline(true);
-      setLastSyncTime('Offline mode');
-    }
-  };
+  const refreshSync = () => api.checkHealth();
 
   const submitReport = async (reportData: {
     doctorId?: string;
@@ -295,11 +319,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return api.submitReport(reportData);
   };
 
+  const lastSyncTime = lastSyncedAt
+    ? new Date(lastSyncedAt).toLocaleTimeString(language === 'bn' ? 'bn-IN' : 'en-IN', { hour: 'numeric', minute: '2-digit' })
+    : i18n.t('common.notSyncedYet');
+
   const unreadNotificationsCount = notifications.filter((n) => !n.read).length;
 
   return (
     <AppContext.Provider
       value={{
+        isReady,
         currentLocation,
         setCurrentLocation,
         locationStatus,
@@ -326,7 +355,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setNotificationsEnabled,
         clearLocalData,
         isOffline,
-        setIsOffline,
         lastSyncTime,
         refreshSync,
         submitReport,

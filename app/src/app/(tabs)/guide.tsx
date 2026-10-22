@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -20,14 +20,15 @@ import {
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
 import { HEALTH_TOPICS } from '../../data/mockData';
-import { Colors } from '../../constants/theme';
+import { ThemeColors } from '../../constants/theme';
 import { useApp } from '../../store/AppContext';
 import { HealthTopic } from '../../types';
 
 export default function GuideScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { language } = useApp();
+  const { language, theme } = useApp();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [searchFilter, setSearchFilter] = useState<string>('');
 
   const filteredTopics = HEALTH_TOPICS.filter((topic) => {
@@ -52,7 +53,7 @@ export default function GuideScreen() {
         <View style={styles.heroHeader}>
           <View style={styles.badgeRow}>
             <View style={styles.verifiedPill}>
-              <ShieldCheck size={12} color={Colors.primaryDark} strokeWidth={2.5} />
+              <ShieldCheck size={12} color={theme.primaryDark} strokeWidth={2.5} />
               <Text style={styles.verifiedPillText}>{t('guide.libraryTitle')}</Text>
             </View>
           </View>
@@ -60,13 +61,13 @@ export default function GuideScreen() {
           <Text style={styles.subtitle}>{t('guide.librarySubtitle')}</Text>
 
           <View style={styles.searchBox}>
-            <Search size={16} color={Colors.primary} />
+            <Search size={16} color={theme.primary} />
             <TextInput
               style={styles.searchInput}
               value={searchFilter}
               onChangeText={setSearchFilter}
-              placeholder="Search topics, symptoms, e.g. Stomach, Skin, Fever..."
-              placeholderTextColor={Colors.textMuted}
+              placeholder={t('guide.searchPlaceholder')}
+              placeholderTextColor={theme.textMuted}
             />
           </View>
         </View>
@@ -92,7 +93,7 @@ export default function GuideScreen() {
               >
                 <View style={styles.cardHeader}>
                   <View style={styles.iconCircle}>
-                    <HeartPulse size={20} color={Colors.primary} />
+                    <HeartPulse size={20} color={theme.primary} />
                   </View>
                   <View style={styles.headerInfo}>
                     <View style={styles.categoryRow}>
@@ -129,15 +130,15 @@ export default function GuideScreen() {
                       })
                     }
                   >
-                    <Stethoscope size={13} color={Colors.primary} />
+                    <Stethoscope size={13} color={theme.primary} />
                     <Text style={styles.findDoctorText}>
-                      {topic.relatedSpecialties[0]}
+                      {language === 'bn' ? topic.relatedSpecialtiesBn[0] : topic.relatedSpecialties[0]}
                     </Text>
                   </TouchableOpacity>
 
                   <View style={styles.readAction}>
-                    <Text style={styles.readActionText}>Read Guide</Text>
-                    <ArrowRight size={14} color={Colors.primary} />
+                    <Text style={styles.readActionText}>{t('guide.readGuide')}</Text>
+                    <ArrowRight size={14} color={theme.primary} />
                   </View>
                 </View>
               </TouchableOpacity>
@@ -149,25 +150,26 @@ export default function GuideScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     paddingBottom: 30,
   },
   heroHeader: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   badgeRow: {
     flexDirection: 'row',
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -185,25 +187,25 @@ const styles = StyleSheet.create({
   verifiedPillText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   subtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 3,
     lineHeight: 18,
   },
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 42,
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 13,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   topicsCountRow: {
     paddingHorizontal: 16,
@@ -223,16 +225,16 @@ const styles = StyleSheet.create({
   countText: {
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   topicsList: {
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: theme.surface,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     padding: 16,
     marginBottom: 12,
   },
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -259,22 +261,22 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.primary,
+    color: theme.primary,
     textTransform: 'uppercase',
   },
   readTime: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: theme.textMuted,
   },
   topicName: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginTop: 2,
   },
   description: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     lineHeight: 18,
     marginTop: 10,
   },
@@ -283,14 +285,14 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   symptomPill: {
-    backgroundColor: Colors.background,
+    backgroundColor: theme.background,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 4,
   },
   symptomText: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -299,13 +301,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
   },
   findDoctorLink: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: theme.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
   findDoctorText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.primaryDark,
+    color: theme.primaryDark,
   },
   readAction: {
     flexDirection: 'row',
@@ -323,6 +325,6 @@ const styles = StyleSheet.create({
   readActionText: {
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.primary,
+    color: theme.primary,
   },
 });

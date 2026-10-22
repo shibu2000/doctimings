@@ -12,6 +12,18 @@ export class ApiError extends Error {
   }
 }
 
+type ConnectivityListener = (online: boolean) => void;
+const connectivityListeners = new Set<ConnectivityListener>();
+
+export const onConnectivityChange = (listener: ConnectivityListener) => {
+  connectivityListeners.add(listener);
+  return () => {
+    connectivityListeners.delete(listener);
+  };
+};
+
+const reportConnectivity = (online: boolean) => connectivityListeners.forEach(listener => listener(online));
+
 const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -21,6 +33,7 @@ const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
       signal: controller.signal,
       headers: { 'Content-Type': 'application/json', ...init?.headers }
     });
+    reportConnectivity(true);
     const body = await res.json().catch(() => ({}));
     if (!res.ok || body.success === false) {
       throw new ApiError(body?.error?.message || `Request failed (${res.status})`, res.status);
@@ -28,6 +41,7 @@ const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
     return body as T;
   } catch (err) {
     if (err instanceof ApiError) throw err;
+    reportConnectivity(false);
     throw new ApiError('No internet connection', 0);
   } finally {
     clearTimeout(timer);
@@ -68,7 +82,10 @@ export interface SearchParams {
   longitude: number;
   townId?: string;
   availableOnly?: boolean;
+  page?: number;
 }
+
+export const SEARCH_PAGE_SIZE = 20;
 
 export interface SearchTown {
   id: string;
@@ -81,15 +98,17 @@ export interface SearchResult {
   doctors: Doctor[];
   total: number;
   town: SearchTown | null;
+  page: number;
+  totalPages: number;
 }
 
 export const api = {
   checkHealth: async (): Promise<boolean> => {
     try {
-      const body = await request<{ status: string }>('/health');
-      return body.status === 'ok';
-    } catch {
-      return false;
+      await request('/health');
+      return true;
+    } catch (err) {
+      return err instanceof ApiError && err.status !== 0;
     }
   },
 
@@ -102,7 +121,8 @@ export const api = {
     const query = new URLSearchParams({
       latitude: String(params.latitude),
       longitude: String(params.longitude),
-      limit: '50'
+      page: String(params.page ?? 1),
+      limit: String(SEARCH_PAGE_SIZE)
     });
     if (params.townId) query.set('townId', params.townId);
     if (params.q) query.set('q', params.q);
@@ -111,7 +131,7 @@ export const api = {
 
     const body = await request<{
       data: ApiDoctor[];
-      pagination: { total: number };
+      pagination: { page: number; total: number; totalPages: number };
       searchMeta: { town: SearchTown | null };
     }>(`/search?${query.toString()}`);
 
@@ -119,7 +139,9 @@ export const api = {
     return {
       doctors: body.data.map(d => mapDoctor(d, origin)),
       total: body.pagination.total,
-      town: body.searchMeta.town
+      town: body.searchMeta.town,
+      page: body.pagination.page,
+      totalPages: body.pagination.totalPages
     };
   },
 
