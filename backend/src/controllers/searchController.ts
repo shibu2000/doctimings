@@ -7,16 +7,7 @@ import { sessionsOnDate } from '../lib/availability.js';
 import { validQuery } from '../lib/http.js';
 import { isPubliclyListed } from '../lib/access.js';
 import { DAYS, Day, formatTo12Hour, istNow, nextDateFor } from '../lib/time.js';
-
-export const calculateHaversineDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
-  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 10) / 10;
-};
+import { calculateHaversineDistanceKm, findTown } from '../lib/towns.js';
 
 const asDay = (value?: string): Day | undefined =>
   DAYS.find(d => d.toLowerCase() === value?.toLowerCase());
@@ -25,7 +16,7 @@ export const searchController = {
   searchDoctors: async (c: Context) => {
     const query = validQuery<SearchQueryParams>(c);
     const q = query.q?.toLowerCase().trim() ?? '';
-    const { latitude: lat, longitude: lon, specialty, page, limit } = query;
+    const { specialty, townId, page, limit } = query;
     const availableOnly = query.availableOnly === 'true';
 
     const today = istNow();
@@ -39,7 +30,12 @@ export const searchController = {
       db.select().from(schema.schedules),
       db.select().from(schema.scheduleOverrides).where(gte(schema.scheduleOverrides.date, today.date))
     ]);
-    const establishmentMap = new Map(establishmentsList.filter(e => e.isActive).map(e => [e.id, e]));
+    const activeEstablishments = establishmentsList.filter(e => e.isActive);
+    const establishmentMap = new Map(activeEstablishments.map(e => [e.id, e]));
+    const town = townId ? findTown(activeEstablishments, townId) : null;
+    const townEstablishmentIds = new Set(town?.establishmentIds);
+    const lat = query.latitude ?? town?.latitude;
+    const lon = query.longitude ?? town?.longitude;
 
     let candidates = doctorsList.filter(isPubliclyListed);
 
@@ -84,6 +80,7 @@ export const searchController = {
       return {
         ...doctor,
         distanceKm,
+        inTown: town ? affiliatedEsts.some(e => townEstablishmentIds.has(e.id)) : undefined,
         primaryEstablishment,
         affiliatedEstablishments: affiliatedEsts,
         schedules,
@@ -108,23 +105,14 @@ export const searchController = {
       };
     });
 
-    let radiusKm = query.radiusKm;
-    let autoExpanded = false;
-
-    if (lat !== undefined && lon !== undefined) {
-      const within = (r: number) => enriched.filter(d => d.distanceKm !== undefined && d.distanceKm <= r);
-      let filtered = within(radiusKm);
-      const expanded = Math.min(radiusKm * 3, 100);
-      if (filtered.length === 0 && expanded > radiusKm) {
-        radiusKm = expanded;
-        filtered = within(radiusKm);
-        autoExpanded = true;
-      }
-      enriched = filtered.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
-    }
-
     if (availableOnly) {
       enriched = enriched.filter(d => d.todayAvailability.isAvailable);
+    }
+
+    if (lat !== undefined && lon !== undefined) {
+      enriched.sort(
+        (a, b) => Number(Boolean(b.inTown)) - Number(Boolean(a.inTown)) || (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity)
+      );
     }
 
     const total = enriched.length;
@@ -136,8 +124,9 @@ export const searchController = {
         query: q || null,
         specialty: specialty || null,
         coordinates: lat !== undefined && lon !== undefined ? { latitude: lat, longitude: lon } : null,
-        appliedRadiusKm: radiusKm,
-        autoExpandedRadius: autoExpanded,
+        town: town
+          ? { id: town.id, name: town.name, district: town.district, doctorCount: enriched.filter(d => d.inTown).length }
+          : null,
         targetDay,
         targetDate
       }

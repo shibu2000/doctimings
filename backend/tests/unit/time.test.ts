@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { istNow, dayOfDate, nextDateFor, formatTo12Hour, datesBetween, shiftNameFor } from '../../src/lib/time.js';
-import { calculateHaversineDistanceKm } from '../../src/controllers/searchController.js';
+import { calculateHaversineDistanceKm } from '../../src/lib/towns.js';
 
 describe('time helpers', () => {
   it('uses India time, not UTC, for the current date', () => {

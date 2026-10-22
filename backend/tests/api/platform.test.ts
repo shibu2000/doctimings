@@ -2,21 +2,43 @@ import { describe, it, expect } from 'vitest';
 import { adminAuth, call, patientAuth, staffAuth } from '../helpers.js';
 
 describe('search', () => {
-  it('sorts nearby doctors by distance', async () => {
-    const res = await call('GET', '/search?latitude=22.66&longitude=87.72&radiusKm=25');
-    expect(res.status).toBe(200);
-    const distances = res.body.data.map((d: { distanceKm: number }) => d.distanceKm);
-    expect(distances.length).toBeGreaterThan(0);
-    expect([...distances].sort((a, b) => a - b)).toEqual(distances);
+  const isSorted = (values: number[]) => values.every((v, i) => i === 0 || values[i - 1] <= v);
+
+  it('lists every doctor nearest first without a radius cut-off', async () => {
+    const near = await call('GET', '/search?latitude=22.7068&longitude=87.6215&limit=50');
+    expect(near.status).toBe(200);
+    const distances = near.body.data.map((d: { distanceKm: number }) => d.distanceKm);
+    expect(distances[0]).toBeLessThan(1);
+    expect(isSorted(distances)).toBe(true);
+    expect(near.body.searchMeta.town).toBeNull();
+
+    const far = await call('GET', '/search?latitude=10&longitude=70&limit=50');
+    expect(far.body.pagination.total).toBe(near.body.pagination.total);
+    expect(isSorted(far.body.data.map((d: { distanceKm: number }) => d.distanceKm))).toBe(true);
   });
 
-  it('expands the radius only when it helps', async () => {
-    const res = await call('GET', '/search?latitude=22.95&longitude=87.95&radiusKm=2');
-    expect(res.body.searchMeta.autoExpandedRadius).toBe(true);
-    expect(res.body.searchMeta.appliedRadiusKm).toBe(6);
+  it('puts doctors of the selected town first, then the rest by distance', async () => {
+    const towns = await call('GET', '/locations/towns');
+    const town = towns.body.data.find((t: { doctorCount: number }) => t.doctorCount > 0);
+    const res = await call('GET', `/search?townId=${town.id}&latitude=${town.latitude}&longitude=${town.longitude}&limit=50`);
+    const { doctorCount } = res.body.searchMeta.town;
+    expect(res.body.searchMeta.town.id).toBe(town.id);
+    expect(doctorCount).toBeGreaterThan(0);
 
-    const wide = await call('GET', '/search?latitude=10&longitude=70&radiusKm=150');
-    expect(wide.body.searchMeta.appliedRadiusKm).toBe(150);
+    const flags = res.body.data.map((d: { inTown: boolean }) => d.inTown);
+    expect(flags.slice(0, doctorCount).every(Boolean)).toBe(true);
+    expect(flags.slice(doctorCount).some(Boolean)).toBe(false);
+
+    const distances = res.body.data.map((d: { distanceKm: number }) => d.distanceKm);
+    expect(isSorted(distances.slice(0, doctorCount))).toBe(true);
+    expect(isSorted(distances.slice(doctorCount))).toBe(true);
+  });
+
+  it('falls back to nearest doctors for a town without doctors', async () => {
+    const res = await call('GET', '/search?townId=belpahari&limit=50');
+    expect(res.body.searchMeta.town).toMatchObject({ id: 'belpahari', name: 'Belpahari', doctorCount: 0 });
+    expect(res.body.data.length).toBeGreaterThan(0);
+    expect(isSorted(res.body.data.map((d: { distanceKm: number }) => d.distanceKm))).toBe(true);
   });
 
   it('matches specialty chips by prefix', async () => {

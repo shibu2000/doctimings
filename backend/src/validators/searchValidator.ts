@@ -4,7 +4,7 @@ export const searchQuerySchema = z.object({
   q: z.string().optional(),
   latitude: z.coerce.number().min(-90).max(90).optional(),
   longitude: z.coerce.number().min(-180).max(180).optional(),
-  radiusKm: z.coerce.number().min(1).max(200).default(15),
+  townId: z.string().trim().min(1).max(100).optional(),
   specialty: z.string().optional(),
   dayOfWeek: z.string().optional(),
   availableOnly: z.enum(['true', 'false']).default('false'),
