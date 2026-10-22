@@ -66,15 +66,21 @@ export interface SearchParams {
   specialty?: string;
   latitude: number;
   longitude: number;
-  radiusKm: number;
+  townId?: string;
   availableOnly?: boolean;
+}
+
+export interface SearchTown {
+  id: string;
+  name: string;
+  district: string;
+  doctorCount: number;
 }
 
 export interface SearchResult {
   doctors: Doctor[];
   total: number;
-  radiusKm: number;
-  autoExpanded: boolean;
+  town: SearchTown | null;
 }
 
 export const api = {
@@ -96,9 +102,9 @@ export const api = {
     const query = new URLSearchParams({
       latitude: String(params.latitude),
       longitude: String(params.longitude),
-      radiusKm: String(params.radiusKm),
       limit: '50'
     });
+    if (params.townId) query.set('townId', params.townId);
     if (params.q) query.set('q', params.q);
     if (params.specialty) query.set('specialty', params.specialty);
     if (params.availableOnly) query.set('availableOnly', 'true');
@@ -106,15 +112,14 @@ export const api = {
     const body = await request<{
       data: ApiDoctor[];
       pagination: { total: number };
-      searchMeta: { appliedRadiusKm: number; autoExpandedRadius: boolean };
+      searchMeta: { town: SearchTown | null };
     }>(`/search?${query.toString()}`);
 
     const origin: Origin = { latitude: params.latitude, longitude: params.longitude };
     return {
       doctors: body.data.map(d => mapDoctor(d, origin)),
       total: body.pagination.total,
-      radiusKm: body.searchMeta.appliedRadiusKm,
-      autoExpanded: body.searchMeta.autoExpandedRadius
+      town: body.searchMeta.town
     };
   },
 

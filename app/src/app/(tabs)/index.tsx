@@ -22,7 +22,8 @@ import {
   Mic,
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
-import { DoctorCard } from '../../components/common/DoctorCard';
+import { DoctorResults } from '../../components/common/DoctorResults';
+import { LocationNotice } from '../../components/common/LocationNotice';
 import { CategoryChip } from '../../components/common/CategoryChip';
 import { useDoctorSearch } from '../../hooks/useDoctors';
 import { useApp } from '../../store/AppContext';
@@ -316,6 +317,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.doctorList}>
+          <LocationNotice />
           {locationStatus === 'detecting' || (!nearby.data && nearby.isFetching) ? (
             <View style={styles.listState}>
               <ActivityIndicator color={theme.primary} />
@@ -333,16 +335,7 @@ export default function HomeScreen() {
               <Text style={[styles.listStateText, { color: theme.textSecondary }]}>{t('search.emptyTitle')}</Text>
             </View>
           ) : (
-            <>
-              {nearby.data?.autoExpanded && activeFilter === 'all' && (
-                <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
-                  {t('search.autoExpanded', { radius: nearby.data.radiusKm })}
-                </Text>
-              )}
-              {filteredDoctors.map((doc) => (
-                <DoctorCard key={doc.id} doctor={doc} />
-              ))}
-            </>
+            <DoctorResults doctors={filteredDoctors} town={nearby.data?.town ?? null} />
           )}
         </View>
 

@@ -51,6 +51,8 @@ export interface ApiDoctor {
   affiliatedEstablishments: ApiEstablishment[];
   schedules: ApiSchedule[];
   overrides?: ApiOverride[];
+  distanceKm?: number;
+  inTown?: boolean;
 }
 
 export interface Origin {
@@ -227,6 +229,8 @@ export const mapDoctor = (api: ApiDoctor, origin?: Origin): Doctor => {
     specialtiesBn: [SPECIALTY_BN[api.specialty] ?? api.specialty],
     languages: api.languages,
     practices,
-    todayAvailability: practices[0]?.availability ?? 'unknown'
+    todayAvailability: practices[0]?.availability ?? 'unknown',
+    distanceKm: api.distanceKm,
+    inTown: api.inTown
   };
 };

@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   Globe,
   MapPin,
-  Compass,
   RefreshCw,
   ShieldCheck,
   FileText,
@@ -42,7 +41,6 @@ export default function SettingsScreen() {
     currentLocation,
     language,
     changeLanguage,
-    searchRadius,
     lastSyncTime,
     refreshSync,
     isOffline,
@@ -130,7 +128,7 @@ export default function SettingsScreen() {
       visible: true,
       title: t('settings.privacyPolicy'),
       message:
-        'DocTimings operates with zero user accounts and zero cloud tracking. Your planned visits, reminder notifications, and search radius preferences are stored strictly inside this device’s local sandbox storage.',
+        'DocTimings operates with zero user accounts and zero cloud tracking. Your profile, planned visits, reminder notifications, and location preferences are stored strictly inside this device’s local sandbox storage.',
       variant: 'info',
       singleAction: true,
       confirmText: t('common.done'),
@@ -308,36 +306,6 @@ export default function SettingsScreen() {
               </Text>
               <Text style={[styles.itemHelper, { color: theme.textMuted }]}>
                 {t('settings.searchLocationDesc')}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.item,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => router.push('/(tabs)/search')}
-          >
-            <View
-              style={[
-                styles.iconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <Compass size={18} color={theme.primary} />
-            </View>
-            <View style={styles.itemInfo}>
-              <Text style={[styles.itemLabel, { color: theme.textPrimary }]}>
-                {t('search.filterDistance')}
-              </Text>
-              <Text style={[styles.itemSubHighlight, { color: theme.primaryDark }]}>
-                {searchRadius} km radius
               </Text>
             </View>
             <ChevronRight size={18} color={theme.textMuted} />

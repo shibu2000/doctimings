@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Tabs, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Search, BookOpen, CalendarCheck, User } from 'lucide-react-native';
@@ -7,8 +7,13 @@ import { useApp } from '../../store/AppContext';
 
 export default function TabLayout() {
   const { t } = useTranslation();
-  const { visits, theme } = useApp();
+  const { visits, theme, needsProfile } = useApp();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (needsProfile) router.push('/profile-setup');
+  }, [needsProfile, router]);
   const plannedCount = visits.filter((v) => v.status === 'planned').length;
 
   return (

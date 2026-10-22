@@ -69,6 +69,8 @@ export interface Doctor {
   languages: string[];
   practices: PracticeLocation[];
   todayAvailability: AvailabilityStatus;
+  distanceKm?: number;
+  inTown?: boolean;
 }
 
 export interface Establishment {
@@ -183,6 +185,11 @@ export interface ReportItem {
   message: string;
   reportedDate: string;
   status: 'pending' | 'verified' | 'rejected';
+}
+
+export interface UserProfile {
+  name: string;
+  phone: string;
 }
 
 export type LanguageCode = 'en' | 'bn';

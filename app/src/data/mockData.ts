@@ -1,4 +1,4 @@
-import { Doctor, Establishment, HealthTopic, LocationItem, MyVisit, AppNotification } from '../types';
+import { Doctor, Establishment, HealthTopic, LocationItem } from '../types';
 
 export const LOCATIONS: LocationItem[] = [
   {
@@ -843,61 +843,5 @@ export const HEALTH_TOPICS: HealthTopic[] = [
       { en: 'Sudden decrease or blurry loss of normal vision', bn: 'হঠাৎ দৃষ্টিশক্তি কমে যাওয়া বা ঝাপসা দেখা' },
       { en: 'Severe deep eyeball throbbing pain or extreme sensitivity to ambient daylight', bn: 'চোখের ভেতরে গভীর তীব্র ব্যথা বা আলো সহ্য করতে না পারা' },
     ],
-  },
-];
-
-export const INITIAL_VISITS: MyVisit[] = [
-  {
-    id: 'visit-1',
-    doctorId: 'doc-1',
-    doctorName: 'Dr. Amit Das',
-    doctorSpecialty: 'Dermatologist',
-    establishmentId: 'est-1',
-    establishmentName: 'Maa Medical Store',
-    establishmentAddress: 'Main Road, Gopiballavpur',
-    establishmentPhone: '+91 94341 82910',
-    visitDate: '2026-10-01',
-    visitTime: '5:00 PM – 8:00 PM',
-    reminderEnabled: true,
-    notes: 'Carry previous skin allergy prescription from last month.',
-    status: 'planned',
-    createdAt: '2026-09-24T10:30:00Z',
-  },
-];
-
-export const INITIAL_NOTIFICATIONS: AppNotification[] = [
-  {
-    id: 'notif-1',
-    title: 'Dr. Amit Das Sitting Today',
-    titleBn: 'ডাঃ অমিত দাস আজ চেম্বারে বসবেন',
-    message: 'Dr. Amit Das (Dermatologist) is scheduled today at Maa Medical Store from 5:00 PM to 8:00 PM. Call counter to verify queue token.',
-    messageBn: 'ডাঃ অমিত দাস (চর্মরোগ বিশেষজ্ঞ) আজ মা মেডিক্যাল স্টোরে সন্ধ্যা ৫:০০ থেকে রাত ৮:০০ পর্যন্ত বসবেন। টোকেনের জন্য কাউন্টারে ফোন করুন।',
-    type: 'visit_reminder',
-    timestamp: 'Today · 3:30 PM',
-    read: false,
-    targetId: 'doc-1',
-    targetType: 'doctor',
-  },
-  {
-    id: 'notif-2',
-    title: 'Schedule Updated: Belda Medicare',
-    titleBn: 'সময় পরিবর্তন: বেলদা মেডিকেয়ার',
-    message: 'Dr. Soumen Roy (Pediatrician) visiting hours on Friday updated to 4:30 PM at Belda Medicare Center.',
-    messageBn: 'বেলদা মেডিকেয়ার সেন্টারে শুক্রবার ডাঃ সৌমেন রায়ের বসার সময় পরিবর্তন হয়ে বিকাল ৪:৩০ হয়েছে।',
-    type: 'chamber_update',
-    timestamp: 'Yesterday',
-    read: false,
-    targetId: 'doc-2',
-    targetType: 'doctor',
-  },
-  {
-    id: 'notif-3',
-    title: 'Community Notice: Local Holiday',
-    titleBn: 'স্থানীয় বিজ্ঞপ্তি: ছুটি',
-    message: 'Pharmacies and evening chambers along Gopiballavpur Main Road will operate limited hours on upcoming festival day.',
-    messageBn: 'আসন্ন উৎসবের কারণে গোপীবল্লভপুর মেন রোডের ওষুধের দোকান ও চেম্বারের সময়সীমা সীমিত থাকবে।',
-    type: 'advisory',
-    timestamp: '3 days ago',
-    read: true,
   },
 ];

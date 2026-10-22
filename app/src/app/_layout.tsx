@@ -91,6 +91,14 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="profile-setup"
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}
+        />
+        <Stack.Screen
           name="notifications"
           options={{
             headerShown: false,

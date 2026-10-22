@@ -15,15 +15,12 @@ import {
   Search as SearchIcon,
   X,
   MapPin,
-  SlidersHorizontal,
   Compass,
   CheckCircle2,
-  Calendar,
-  ArrowRight,
 } from 'lucide-react-native';
 import { Header } from '../../components/common/Header';
-import { DoctorCard } from '../../components/common/DoctorCard';
-import { RadiusSelector } from '../../components/common/RadiusSelector';
+import { DoctorResults } from '../../components/common/DoctorResults';
+import { LocationNotice } from '../../components/common/LocationNotice';
 import { useDoctorSearch } from '../../hooks/useDoctors';
 import { Colors } from '../../constants/theme';
 import { useApp } from '../../store/AppContext';
@@ -32,11 +29,10 @@ export default function SearchScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ q?: string; specialty?: string }>();
-  const { currentLocation, searchRadius, setSearchRadius, language } = useApp();
+  const { currentLocation, language } = useApp();
 
   const [query, setQuery] = useState<string>(params.q || params.specialty || '');
   const [onlyAvailableToday, setOnlyAvailableToday] = useState<boolean>(false);
-  const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
 
   useEffect(() => {
     if (params.q) {
@@ -57,11 +53,6 @@ export default function SearchScreen() {
   const isLoading = !search.data && (search.isPending || search.isFetching);
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
-
-  const handleExpandRadius = () => {
-    const nextRadius = searchRadius >= 50 ? 50 : searchRadius >= 25 ? 50 : 25;
-    setSearchRadius(nextRadius);
-  };
 
   const quickSuggestions = [
     { label: t('categories.skin'), value: 'Skin doctor' },
@@ -93,17 +84,6 @@ export default function SearchScreen() {
 
         <View style={styles.controlsRow}>
           <TouchableOpacity
-            style={[styles.controlPill, showRadiusFilter && styles.controlPillActive]}
-            activeOpacity={0.7}
-            onPress={() => setShowRadiusFilter(!showRadiusFilter)}
-          >
-            <SlidersHorizontal size={13} color={showRadiusFilter ? Colors.primaryDark : Colors.textSecondary} />
-            <Text style={[styles.controlPillText, showRadiusFilter && styles.controlPillTextActive]}>
-              {t('search.withinRadius', { radius: searchRadius })}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
             style={[styles.controlPill, onlyAvailableToday && styles.controlPillActive]}
             activeOpacity={0.7}
             onPress={() => setOnlyAvailableToday(!onlyAvailableToday)}
@@ -117,18 +97,6 @@ export default function SearchScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-
-        {showRadiusFilter && (
-          <View style={styles.radiusContainer}>
-            <RadiusSelector
-              currentRadius={searchRadius}
-              onSelectRadius={(r) => {
-                setSearchRadius(r);
-                setShowRadiusFilter(false);
-              }}
-            />
-          </View>
-        )}
       </View>
 
       <ScrollView
@@ -146,11 +114,7 @@ export default function SearchScreen() {
           </View>
         </View>
 
-        {search.data?.autoExpanded && matchedDoctors.length > 0 && (
-          <Text style={styles.expandedNote}>
-            {t('search.autoExpanded', { radius: search.data.radiusKm })}
-          </Text>
-        )}
+        <LocationNotice />
 
         {isLoading ? (
           <View style={styles.loadingBox}>
@@ -164,11 +128,7 @@ export default function SearchScreen() {
             </TouchableOpacity>
           </View>
         ) : matchedDoctors.length > 0 ? (
-          <View style={styles.doctorList}>
-            {matchedDoctors.map((doc) => (
-              <DoctorCard key={doc.id} doctor={doc} />
-            ))}
-          </View>
+          <DoctorResults doctors={matchedDoctors} town={search.data?.town ?? null} />
         ) : (
           <View style={styles.emptyContainer}>
             <View style={styles.emptyIconCircle}>
@@ -176,25 +136,12 @@ export default function SearchScreen() {
             </View>
             <Text style={styles.emptyTitle}>{t('search.emptyTitle')}</Text>
             <Text style={styles.emptySubtitle}>
-              {t('search.emptySubtitle', { location: locationName })}
+              {t('search.emptySubtitle')}
             </Text>
 
             <View style={styles.emptyAdviceCard}>
               <Text style={styles.emptyAdviceText}>{t('search.emptyAdvice')}</Text>
             </View>
-
-            {searchRadius < 50 && (
-              <TouchableOpacity
-                style={styles.expandButton}
-                activeOpacity={0.8}
-                onPress={handleExpandRadius}
-              >
-                <Text style={styles.expandButtonText}>
-                  {t('search.expandRadius', { radius: searchRadius >= 25 ? 50 : 25 })}
-                </Text>
-                <ArrowRight size={16} color={Colors.textInverse} />
-              </TouchableOpacity>
-            )}
 
             <View style={styles.suggestionsSection}>
               <Text style={styles.suggestionsHeader}>{t('search.tryCategories')}</Text>
@@ -221,15 +168,6 @@ const styles = StyleSheet.create({
   loadingBox: {
     paddingVertical: 48,
     alignItems: 'center',
-  },
-  expandedNote: {
-    fontSize: 12,
-    color: Colors.warningText,
-    backgroundColor: Colors.warningLight,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    marginBottom: 10,
   },
   safeArea: {
     flex: 1,
@@ -288,12 +226,6 @@ const styles = StyleSheet.create({
     color: Colors.primaryDark,
     fontWeight: '700',
   },
-  radiusContainer: {
-    marginTop: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
-  },
   scroll: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -327,9 +259,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: Colors.primaryDark,
-  },
-  doctorList: {
-    paddingHorizontal: 16,
   },
   emptyContainer: {
     paddingHorizontal: 20,

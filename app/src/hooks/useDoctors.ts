@@ -1,18 +1,19 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { useApp } from '../store/AppContext';
+import { CURRENT_LOCATION_ID } from '../services/location';
 
 const PROBLEM_TO_SPECIALTY: { words: string[]; specialty: string }[] = [
-  { words: ['skin', 'rash', 'itch', 'চামড়া', 'চর্ম', 'চুলকানি'], specialty: 'Dermatology' },
-  { words: ['child', 'baby', 'kid', 'বাচ্চা', 'শিশু'], specialty: 'Pediatrics' },
-  { words: ['eye', 'vision', 'চোখ'], specialty: 'Ophthalmology' },
-  { words: ['stomach', 'gastric', 'acidity', 'পেট', 'হজম', 'গ্যাস্ট্রিক'], specialty: 'Gastroenterology' },
-  { words: ['bone', 'joint', 'হাড়', 'বাত', 'জয়েন্ট'], specialty: 'Orthopedics' },
-  { words: ['tooth', 'teeth', 'dental', 'দাঁত'], specialty: 'Dentistry' },
-  { words: ['women', 'pregnan', 'period', 'মহিলা', 'স্ত্রী', 'প্রসূতি'], specialty: 'Gynecology' },
-  { words: ['heart', 'chest', 'হৃদ', 'বুক'], specialty: 'Cardiology' },
+  { words: ['skin', 'rash', 'itch', 'derma', 'চামড়া', 'চর্ম', 'চুলকানি'], specialty: 'Dermatology' },
+  { words: ['child', 'baby', 'kid', 'pediatric', 'paediatric', 'বাচ্চা', 'শিশু'], specialty: 'Pediatrics' },
+  { words: ['eye', 'vision', 'ophthalm', 'চোখ'], specialty: 'Ophthalmology' },
+  { words: ['stomach', 'gastr', 'acidity', 'পেট', 'হজম', 'গ্যাস্ট্রিক', 'গ্যাস্ট্রো'], specialty: 'Gastroenterology' },
+  { words: ['tooth', 'teeth', 'dental', 'dentist', 'দাঁত'], specialty: 'Dentistry' },
+  { words: ['bone', 'joint', 'ortho', 'হাড়', 'বাত', 'জয়েন্ট'], specialty: 'Orthopedics' },
+  { words: ['women', 'pregnan', 'period', 'gyn', 'obstet', 'মহিলা', 'স্ত্রী', 'প্রসূতি'], specialty: 'Gynecology' },
+  { words: ['heart', 'chest', 'cardi', 'হৃদ', 'বুক'], specialty: 'Cardiology' },
   { words: ['ear', 'nose', 'throat', 'কান', 'নাক', 'গলা'], specialty: 'ENT' },
-  { words: ['general', 'fever', 'জ্বর', 'সাধারণ'], specialty: 'General Medicine' }
+  { words: ['general', 'fever', 'physician', 'জ্বর', 'সাধারণ'], specialty: 'General Medicine' }
 ];
 
 export const interpretQuery = (text: string): { q?: string; specialty?: string } => {
@@ -23,17 +24,18 @@ export const interpretQuery = (text: string): { q?: string; specialty?: string }
 };
 
 export const useDoctorSearch = (text: string, availableOnly = false) => {
-  const { currentLocation, searchRadius, locationStatus } = useApp();
+  const { currentLocation, locationStatus } = useApp();
   const client = useQueryClient();
   const interpreted = interpretQuery(text);
+  const townId = currentLocation.id === CURRENT_LOCATION_ID ? undefined : currentLocation.id;
   return useQuery({
-    queryKey: ['search', currentLocation.latitude, currentLocation.longitude, searchRadius, interpreted, availableOnly],
+    queryKey: ['search', currentLocation.latitude, currentLocation.longitude, townId, interpreted, availableOnly],
     queryFn: async () => {
       const result = await api.searchDoctors({
         ...interpreted,
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude,
-        radiusKm: searchRadius,
+        townId,
         availableOnly
       });
       result.doctors.forEach(d => client.setQueryData(['doctor', d.id], d));

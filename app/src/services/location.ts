@@ -4,6 +4,10 @@ import { distanceKm } from './doctorMapper';
 import type { Town } from './api';
 
 const NEAR_TOWN_KM = 15;
+const RECENT_FIX_MS = 10 * 60 * 1000;
+const FIX_TIMEOUT_MS = 25000;
+
+export const CURRENT_LOCATION_ID = 'current-location';
 
 export const MEDINIPUR: LocationItem = {
   id: 'medinipur-sadar',
@@ -27,15 +31,27 @@ export const detectCoords = async (): Promise<DetectResult> => {
     if (status !== 'granted') return { ok: false, reason: 'denied' };
     const servicesOn = await Location.hasServicesEnabledAsync();
     if (!servicesOn) return { ok: false, reason: 'off' };
-    const position = await Promise.race([
-      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
-      new Promise<null>(resolve => setTimeout(() => resolve(null), 12000))
-    ]);
+    const recent = await Location.getLastKnownPositionAsync({ maxAge: RECENT_FIX_MS });
+    const position =
+      recent ??
+      (await Promise.race([
+        Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
+        new Promise<null>(resolve => setTimeout(() => resolve(null), FIX_TIMEOUT_MS))
+      ]));
     const fix = position ?? (await Location.getLastKnownPositionAsync());
     if (!fix) return { ok: false, reason: 'off' };
     return { ok: true, latitude: fix.coords.latitude, longitude: fix.coords.longitude };
   } catch {
     return { ok: false, reason: 'off' };
+  }
+};
+
+export const canDetectWithoutPrompt = async (): Promise<boolean> => {
+  try {
+    const { granted } = await Location.getForegroundPermissionsAsync();
+    return granted && (await Location.hasServicesEnabledAsync());
+  } catch {
+    return false;
   }
 };
 
@@ -47,7 +63,7 @@ export const locationFromCoords = (towns: Town[], latitude: number, longitude: n
   }
   const close = nearest && nearest.km <= NEAR_TOWN_KM ? nearest.town : null;
   return {
-    id: 'current-location',
+    id: CURRENT_LOCATION_ID,
     name: close ? `Near ${close.name}` : 'Your location',
     nameBn: close ? `${close.nameBn}-এর কাছে` : 'আপনার অবস্থান',
     district: close?.district ?? '',

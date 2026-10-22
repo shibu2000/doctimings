@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { AppState, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LocationItem, MyVisit, AppNotification, LanguageCode, ThemeMode } from '../types';
-import { INITIAL_VISITS, INITIAL_NOTIFICATIONS } from '../data/mockData';
+import { LocationItem, MyVisit, AppNotification, LanguageCode, ThemeMode, UserProfile } from '../types';
 import { loadStoredLanguage, setAppLanguage } from '../locales/i18n';
 import { ThemeColors, getThemeColors } from '../constants/theme';
 import { api, Town } from '../services/api';
-import { detectCoords, locationFromCoords, MEDINIPUR } from '../services/location';
+import { canDetectWithoutPrompt, CURRENT_LOCATION_ID, detectCoords, locationFromCoords, MEDINIPUR } from '../services/location';
 
 export type LocationStatus = 'detecting' | 'ready' | 'denied' | 'off';
 
@@ -16,14 +15,16 @@ interface AppContextType {
   locationStatus: LocationStatus;
   detectLocation: () => Promise<LocationStatus>;
   towns: Town[];
-  searchRadius: number;
-  setSearchRadius: (radius: number) => void;
   language: LanguageCode;
   changeLanguage: (lang: LanguageCode) => Promise<void>;
   themeMode: ThemeMode;
   isDark: boolean;
   theme: ThemeColors;
   setThemeMode: (mode: ThemeMode) => Promise<void>;
+  profile: UserProfile | null;
+  needsProfile: boolean;
+  saveProfile: (profile: UserProfile) => Promise<void>;
+  skipProfile: () => Promise<void>;
   visits: MyVisit[];
   addVisit: (visit: Omit<MyVisit, 'id' | 'createdAt'>) => Promise<void>;
   cancelVisit: (id: string) => Promise<void>;
@@ -52,11 +53,12 @@ interface AppContextType {
 const STORAGE_KEYS = {
   LOCATION: 'user_selected_location',
   TOWNS: 'cached_towns',
-  RADIUS: 'user_search_radius',
   VISITS: 'user_saved_visits',
   NOTIFICATIONS: 'user_notifications',
   NOTIFICATIONS_ENABLED: 'user_notifications_enabled',
   THEME_MODE: 'user_theme_preference',
+  PROFILE: 'user_profile',
+  PROFILE_PROMPTED: 'user_profile_prompted',
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -66,11 +68,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentLocation, setCurrentLocationState] = useState<LocationItem>(MEDINIPUR);
   const [locationStatus, setLocationStatus] = useState<LocationStatus>('detecting');
   const [towns, setTowns] = useState<Town[]>([]);
-  const [searchRadius, setSearchRadiusState] = useState<number>(15);
   const [language, setLanguageState] = useState<LanguageCode>('en');
   const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
-  const [visits, setVisits] = useState<MyVisit[]>(INITIAL_VISITS);
-  const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [needsProfile, setNeedsProfile] = useState<boolean>(false);
+  const [visits, setVisits] = useState<MyVisit[]>([]);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean>(true);
   const [isOffline, setIsOffline] = useState<boolean>(false);
   const [lastSyncTime, setLastSyncTime] = useState<string>('Just now');
@@ -90,9 +93,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
 
 
-        const storedRadius = await AsyncStorage.getItem(STORAGE_KEYS.RADIUS);
-        if (storedRadius) {
-          setSearchRadiusState(Number(storedRadius));
+        const [storedProfile, profilePrompted] = await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEYS.PROFILE),
+          AsyncStorage.getItem(STORAGE_KEYS.PROFILE_PROMPTED),
+        ]);
+        if (storedProfile) {
+          setProfile(JSON.parse(storedProfile));
+        } else if (!profilePrompted) {
+          setNeedsProfile(true);
         }
 
         const storedVisits = await AsyncStorage.getItem(STORAGE_KEYS.VISITS);
@@ -152,7 +160,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return;
     }
     const manual = saved ? (JSON.parse(saved) as LocationItem) : null;
-    setCurrentLocationState(manual && manual.id !== 'current-location' ? manual : fallback);
+    setCurrentLocationState(manual && manual.id !== CURRENT_LOCATION_ID ? manual : fallback);
     setLocationStatus(position.reason);
   };
 
@@ -165,18 +173,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return 'ready';
   };
 
+  useEffect(() => {
+    if (locationStatus !== 'denied' && locationStatus !== 'off') return;
+    const subscription = AppState.addEventListener('change', async (state) => {
+      if (state === 'active' && (await canDetectWithoutPrompt())) detectLocation();
+    });
+    return () => subscription.remove();
+  }, [locationStatus, towns]);
+
   const setCurrentLocation = async (loc: LocationItem) => {
     setCurrentLocationState(loc);
     setLocationStatus('ready');
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.LOCATION, JSON.stringify(loc));
-    } catch {}
-  };
-
-  const setSearchRadius = async (radius: number) => {
-    setSearchRadiusState(radius);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEYS.RADIUS, String(radius));
     } catch {}
   };
 
@@ -189,6 +198,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setThemeModeState(mode);
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.THEME_MODE, mode);
+    } catch {}
+  };
+
+  const saveProfile = async (next: UserProfile) => {
+    setProfile(next);
+    setNeedsProfile(false);
+    try {
+      await AsyncStorage.multiSet([
+        [STORAGE_KEYS.PROFILE, JSON.stringify(next)],
+        [STORAGE_KEYS.PROFILE_PROMPTED, 'true'],
+      ]);
+    } catch {}
+  };
+
+  const skipProfile = async () => {
+    setNeedsProfile(false);
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.PROFILE_PROMPTED, 'true');
     } catch {}
   };
 
@@ -278,14 +305,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         locationStatus,
         detectLocation,
         towns,
-        searchRadius,
-        setSearchRadius,
         language,
         changeLanguage,
         themeMode,
         isDark,
         theme,
         setThemeMode,
+        profile,
+        needsProfile,
+        saveProfile,
+        skipProfile,
         visits,
         addVisit,
         cancelVisit,

@@ -10,17 +10,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
-  ShieldCheck,
   Globe,
   MapPin,
-  Compass,
   Bell,
   Sliders,
   HelpCircle,
   RefreshCw,
   ChevronRight,
-  WifiOff,
   Lock,
+  Pencil,
+  UserRound,
   Sun,
   Moon,
 } from 'lucide-react-native';
@@ -36,15 +35,13 @@ export default function ProfileScreen() {
     currentLocation,
     language,
     changeLanguage,
-    searchRadius,
-    isOffline,
-    setIsOffline,
     lastSyncTime,
     refreshSync,
     themeMode,
     setThemeMode,
     theme,
     isDark,
+    profile,
   } = useApp();
 
   const [confirmModal, setConfirmModal] = useState<{
@@ -80,6 +77,10 @@ export default function ProfileScreen() {
   };
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
+  const initials = profile
+    ? profile.name.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('')
+    : '';
+  const formattedPhone = profile?.phone ? `+91 ${profile.phone.slice(0, 5)} ${profile.phone.slice(5)}` : '';
 
   return (
     <SafeAreaView
@@ -92,7 +93,7 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View
+        <TouchableOpacity
           style={[
             styles.userCard,
             {
@@ -100,44 +101,57 @@ export default function ProfileScreen() {
               borderBottomColor: theme.border,
             },
           ]}
+          activeOpacity={0.7}
+          onPress={() => router.push('/profile-setup')}
         >
-          <GlowingIcon glowColor={theme.glowPrimary} size={54} pulse>
+          <GlowingIcon glowColor={theme.glowPrimary} size={54} pulse={!profile}>
             <View
               style={[
                 styles.avatar,
                 { backgroundColor: theme.primary },
               ]}
             >
-              <Text style={[styles.avatarText, { color: theme.textInverse }]}>
-                SD
-              </Text>
+              {profile ? (
+                <Text style={[styles.avatarText, { color: theme.textInverse }]}>
+                  {initials}
+                </Text>
+              ) : (
+                <UserRound size={22} color={theme.textInverse} />
+              )}
             </View>
           </GlowingIcon>
           <View style={styles.userInfo}>
             <Text style={[styles.userName, { color: theme.textPrimary }]}>
-              Shibu Dhara
+              {profile ? profile.name : t('profile.setupTitle')}
             </Text>
             <Text style={[styles.userPhone, { color: theme.textSecondary }]}>
-              +91 98324 10293
+              {profile ? formattedPhone || t('profile.deviceOnly') : t('profile.createHint')}
             </Text>
-            <View
-              style={[
-                styles.verifiedTag,
-                { backgroundColor: theme.primaryLight },
-              ]}
-            >
-              <ShieldCheck size={11} color={theme.primaryDark} />
-              <Text
+            {profile && formattedPhone ? (
+              <View
                 style={[
-                  styles.verifiedTagText,
-                  { color: theme.primaryDark },
+                  styles.verifiedTag,
+                  { backgroundColor: theme.primaryLight },
                 ]}
               >
-                Verified Patient Directory User
-              </Text>
-            </View>
+                <Lock size={11} color={theme.primaryDark} />
+                <Text
+                  style={[
+                    styles.verifiedTagText,
+                    { color: theme.primaryDark },
+                  ]}
+                >
+                  {t('profile.deviceOnly')}
+                </Text>
+              </View>
+            ) : null}
           </View>
-        </View>
+          {profile ? (
+            <Pencil size={16} color={theme.textMuted} />
+          ) : (
+            <ChevronRight size={18} color={theme.textMuted} />
+          )}
+        </TouchableOpacity>
 
         <View
           style={[
@@ -268,36 +282,6 @@ export default function ProfileScreen() {
               },
             ]}
             activeOpacity={0.7}
-            onPress={() => router.push('/(tabs)/search')}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <Compass size={18} color={theme.primary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {t('search.filterDistance')}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.primaryDark }]}>
-                {searchRadius} km radius
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
             onPress={() => router.push('/notifications')}
           >
             <View
@@ -355,40 +339,6 @@ export default function ProfileScreen() {
             <ChevronRight size={18} color={theme.textMuted} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.menuItem,
-              {
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => {
-              setIsOffline(!isOffline);
-              if (!isOffline) {
-                router.push('/offline');
-              }
-            }}
-          >
-            <View
-              style={[
-                styles.menuIconCircle,
-                { backgroundColor: isDark ? theme.surfaceVariant : theme.background },
-              ]}
-            >
-              <WifiOff size={18} color={isOffline ? theme.error : theme.textSecondary} />
-            </View>
-            <View style={styles.menuContent}>
-              <Text style={[styles.menuLabel, { color: theme.textPrimary }]}>
-                {isOffline ? 'Offline Mode Active' : 'Simulate Offline Mode'}
-              </Text>
-              <Text style={[styles.menuValue, { color: theme.textSecondary }]}>
-                {isOffline ? 'Tap to reconnect live updates' : 'Test offline cache discovery'}
-              </Text>
-            </View>
-            <ChevronRight size={18} color={theme.textMuted} />
-          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
