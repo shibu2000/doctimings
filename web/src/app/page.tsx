@@ -259,7 +259,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-baseline gap-2">
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                Verified Doctor Chambers
+                Doctors &amp; Chamber Timings
               </h2>
               <span className="text-xs text-slate-500 font-medium">
                 {!loading && meta && `(${meta.total} ${meta.total === 1 ? "doctor" : "doctors"})`}

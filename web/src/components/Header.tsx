@@ -21,8 +21,8 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="flex items-center gap-2 shrink-0">
             <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-xs shrink-0 bg-teal-50 border border-teal-100">
               <Image
                 src="/icon.svg"
@@ -32,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
                 priority
               />
             </div>
-            <div className="flex flex-col">
+            <div className="hidden sm:flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-slate-900 font-bold text-lg tracking-tight leading-tight">DocTimings</span>
                 <span className="hidden sm:inline-block text-[11px] font-semibold uppercase tracking-wider text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
@@ -47,16 +47,16 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onOpenLocationModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 border border-teal-200/80 text-teal-900 transition-colors text-xs sm:text-sm font-semibold group cursor-pointer"
+            className="flex min-w-0 items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 border border-teal-200/80 text-teal-900 transition-colors text-xs sm:text-sm font-semibold group cursor-pointer"
             aria-label="Change location"
           >
-            <MapPin className="w-3.5 h-3.5 text-teal-700 group-hover:scale-110 transition-transform" />
-            <span className="truncate max-w-[120px] sm:max-w-[160px]">{location?.name ?? (locating ? "Locating…" : "Choose town")}</span>
-            <ChevronDown className="w-3 h-3 text-teal-600 opacity-70" />
+            <MapPin className="w-3.5 h-3.5 shrink-0 text-teal-700 group-hover:scale-110 transition-transform" />
+            <span className="truncate sm:max-w-[200px]">{location?.name ?? (locating ? "Locating…" : "Choose town")}</span>
+            <ChevronDown className="w-3 h-3 shrink-0 text-teal-600 opacity-70" />
           </button>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={onOpenAppModal}
             className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm shadow-xs transition-all cursor-pointer active:scale-95"

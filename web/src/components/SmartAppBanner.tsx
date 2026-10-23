@@ -22,7 +22,8 @@ export const SmartAppBanner: React.FC<SmartAppBannerProps> = ({ onOpenAppModal }
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-xs sm:text-sm font-bold text-white truncate">
-                Get DocTimings Mobile App
+                <span className="sm:hidden">Get the app</span>
+                <span className="hidden sm:inline">Get DocTimings Mobile App</span>
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-teal-300 bg-teal-950 px-2 py-0.5 rounded-full border border-teal-800">
                 <Zap className="w-2.5 h-2.5" />
@@ -30,7 +31,7 @@ export const SmartAppBanner: React.FC<SmartAppBannerProps> = ({ onOpenAppModal }
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-300 truncate">
-              Verified doctor chamber timings, delay notices &amp; offline access across India.
+              Doctor chamber timings, delay notices &amp; visit reminders in Paschim Medinipur.
             </p>
           </div>
         </div>
@@ -41,7 +42,8 @@ export const SmartAppBanner: React.FC<SmartAppBannerProps> = ({ onOpenAppModal }
             className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 active:bg-teal-600 text-slate-950 font-bold text-xs sm:text-sm transition-transform active:scale-95 shadow-sm cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            <span>Install App</span>
+            <span className="sm:hidden">Install</span>
+            <span className="hidden sm:inline">Install App</span>
           </button>
           <button
             onClick={() => setDismissed(true)}
