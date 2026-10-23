@@ -91,3 +91,16 @@ export async function fetchTowns(): Promise<{ data: Town[]; defaultLocation: (Om
   }
   return res.json();
 }
+
+const DIRECT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://doctimings-api.docnear.workers.dev/api/v1";
+
+export async function fetchApproxLocation(): Promise<Omit<Town, "doctorCount" | "establishmentCount"> | null> {
+  try {
+    const res = await fetch(`${DIRECT_API_URL}/locations/approx`, { headers: { Accept: "application/json" }, cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data?.town ?? null;
+  } catch {
+    return null;
+  }
+}

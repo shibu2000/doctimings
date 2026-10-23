@@ -24,7 +24,7 @@ export const interpretQuery = (text: string): { q?: string; specialty?: string }
 };
 
 export const useDoctorSearch = (text: string, availableOnly = false) => {
-  const { currentLocation, locationStatus } = useApp();
+  const { currentLocation } = useApp();
   const client = useQueryClient();
   const interpreted = interpretQuery(text);
   const townId = currentLocation.id === CURRENT_LOCATION_ID ? undefined : currentLocation.id;
@@ -49,7 +49,6 @@ export const useDoctorSearch = (text: string, availableOnly = false) => {
       total: data.pages[0]?.total ?? 0,
       town: data.pages[0]?.town ?? null
     }),
-    enabled: locationStatus !== 'detecting',
     placeholderData: keepPreviousData,
     staleTime: 60_000
   });

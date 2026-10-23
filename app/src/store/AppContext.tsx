@@ -8,7 +8,7 @@ import { api, onConnectivityChange, Town } from '../services/api';
 import { cancelReminders, ensureReminderPermission, scheduleVisitReminders } from '../services/reminders';
 import { canDetectWithoutPrompt, CURRENT_LOCATION_ID, detectCoords, locationFromCoords, MEDINIPUR } from '../services/location';
 
-export type LocationStatus = 'detecting' | 'ready' | 'denied' | 'off';
+export type LocationStatus = 'detecting' | 'ready' | 'approximate' | 'denied' | 'off';
 
 interface AppContextType {
   isReady: boolean;
@@ -162,19 +162,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const resolveLocation = async () => {
     setLocationStatus('detecting');
-    const [{ towns: list, fallback }, position, saved] = await Promise.all([
-      loadTowns(),
-      detectCoords(),
-      AsyncStorage.getItem(STORAGE_KEYS.LOCATION).catch(() => null)
-    ]);
+    const saved = await AsyncStorage.getItem(STORAGE_KEYS.LOCATION).catch(() => null);
+    const parsed = saved ? (JSON.parse(saved) as LocationItem) : null;
+    const manual = parsed && parsed.id !== CURRENT_LOCATION_ID ? parsed : null;
+    if (manual) setCurrentLocationState(manual);
+
+    let settled = false;
+    const approxPromise = api.approxLocation();
+    if (!manual) {
+      approxPromise.then((approx) => {
+        if (approx && !settled) setCurrentLocationState(approx);
+      });
+    }
+
+    const [{ towns: list, fallback }, position] = await Promise.all([loadTowns(), detectCoords()]);
+    settled = true;
     if (position.ok) {
       setCurrentLocationState(locationFromCoords(list, position.latitude, position.longitude));
       setLocationStatus('ready');
       return;
     }
-    const manual = saved ? (JSON.parse(saved) as LocationItem) : null;
-    setCurrentLocationState(manual && manual.id !== CURRENT_LOCATION_ID ? manual : fallback);
-    setLocationStatus(position.reason);
+    if (manual) {
+      setCurrentLocationState(manual);
+      setLocationStatus(position.reason);
+      return;
+    }
+    const approx = await approxPromise;
+    setCurrentLocationState(approx ?? fallback);
+    setLocationStatus(approx ? 'approximate' : position.reason);
   };
 
   const detectLocation = async (): Promise<LocationStatus> => {
@@ -187,7 +202,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   useEffect(() => {
-    if (locationStatus !== 'denied' && locationStatus !== 'off') return;
+    if (locationStatus !== 'denied' && locationStatus !== 'off' && locationStatus !== 'approximate') return;
     const subscription = AppState.addEventListener('change', async (state) => {
       if (state === 'active' && (await canDetectWithoutPrompt())) detectLocation();
     });

@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Change location"
           >
             <MapPin className="w-3.5 h-3.5 text-teal-700 group-hover:scale-110 transition-transform" />
-            <span className="truncate max-w-[120px] sm:max-w-[160px]">{locating ? "Locating…" : location?.name ?? "Choose town"}</span>
+            <span className="truncate max-w-[120px] sm:max-w-[160px]">{location?.name ?? (locating ? "Locating…" : "Choose town")}</span>
             <ChevronDown className="w-3 h-3 text-teal-600 opacity-70" />
           </button>
         </div>

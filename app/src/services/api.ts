@@ -117,6 +117,15 @@ export const api = {
     return { towns: body.data.map(t => toLocation(t, t.doctorCount)), defaultLocation: toLocation(body.defaultLocation) };
   },
 
+  approxLocation: async (): Promise<Town | null> => {
+    try {
+      const body = await request<{ data: { town: Omit<ApiTown, 'doctorCount'> } | null }>('/locations/approx');
+      return body.data ? toLocation(body.data.town) : null;
+    } catch {
+      return null;
+    }
+  },
+
   searchDoctors: async (params: SearchParams): Promise<SearchResult> => {
     const query = new URLSearchParams({
       latitude: String(params.latitude),

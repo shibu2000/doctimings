@@ -5,7 +5,8 @@ import type { Town } from './api';
 
 const NEAR_TOWN_KM = 15;
 const RECENT_FIX_MS = 10 * 60 * 1000;
-const FIX_TIMEOUT_MS = 25000;
+const NETWORK_FIX_TIMEOUT_MS = 8000;
+const GPS_FIX_TIMEOUT_MS = 20000;
 
 export const CURRENT_LOCATION_ID = 'current-location';
 
@@ -25,25 +26,43 @@ export type DetectResult =
   | { ok: true; latitude: number; longitude: number }
   | { ok: false; reason: 'denied' | 'off' };
 
+const withTimeout = <T,>(promise: Promise<T>, ms: number) =>
+  Promise.race([promise, new Promise<null>((resolve) => setTimeout(() => resolve(null), ms))]);
+
+const currentFix = async (accuracy: Location.Accuracy, timeoutMs: number) => {
+  try {
+    return await withTimeout(Location.getCurrentPositionAsync({ accuracy }), timeoutMs);
+  } catch {
+    return null;
+  }
+};
+
+const lastKnownFix = async (maxAge?: number) => {
+  try {
+    return await Location.getLastKnownPositionAsync(maxAge ? { maxAge } : undefined);
+  } catch {
+    return null;
+  }
+};
+
 export const detectCoords = async (): Promise<DetectResult> => {
   try {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') return { ok: false, reason: 'denied' };
-    const servicesOn = await Location.hasServicesEnabledAsync();
-    if (!servicesOn) return { ok: false, reason: 'off' };
-    const recent = await Location.getLastKnownPositionAsync({ maxAge: RECENT_FIX_MS });
-    const position =
-      recent ??
-      (await Promise.race([
-        Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
-        new Promise<null>(resolve => setTimeout(() => resolve(null), FIX_TIMEOUT_MS))
-      ]));
-    const fix = position ?? (await Location.getLastKnownPositionAsync());
-    if (!fix) return { ok: false, reason: 'off' };
-    return { ok: true, latitude: fix.coords.latitude, longitude: fix.coords.longitude };
+    if (!(await Location.hasServicesEnabledAsync())) return { ok: false, reason: 'off' };
   } catch {
     return { ok: false, reason: 'off' };
   }
+
+  const fix =
+    (await lastKnownFix(RECENT_FIX_MS)) ??
+    (await currentFix(Location.Accuracy.Balanced, NETWORK_FIX_TIMEOUT_MS)) ??
+    (await currentFix(Location.Accuracy.High, GPS_FIX_TIMEOUT_MS)) ??
+    (await lastKnownFix());
+
+  return fix
+    ? { ok: true, latitude: fix.coords.latitude, longitude: fix.coords.longitude }
+    : { ok: false, reason: 'off' };
 };
 
 export const canDetectWithoutPrompt = async (): Promise<boolean> => {

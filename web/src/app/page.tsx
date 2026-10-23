@@ -30,7 +30,7 @@ import { Footer } from "@/components/Footer";
 const PAGE_SIZE = 20;
 
 export default function HomePage() {
-  const { towns, location, locating, locationFailed, locationDenied, retryLocation, setLocation } = useSearchLocation();
+  const { towns, location, locating, approximate, locationFailed, locationDenied, retryLocation, setLocation } = useSearchLocation();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -49,15 +49,15 @@ export default function HomePage() {
 
   const handleSelectTown = (town: Town) => setLocation(locationFromTown(town));
 
-  const placeName = location?.name ?? "your area";
+  const placeName = location.name;
 
   const fetchPage = useCallback(
     (page: number): Promise<SearchApiResponse> =>
       fetchDoctors({
         q: searchQuery.trim() || undefined,
-        latitude: location?.latitude,
-        longitude: location?.longitude,
-        townId: location?.source === "town" ? location.townId : undefined,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        townId: location.source !== "gps" ? location.townId : undefined,
         specialty: selectedSpecialty !== "All" ? selectedSpecialty : undefined,
         availableOnly,
         page,
@@ -123,10 +123,9 @@ export default function HomePage() {
   }, [hasMore, loadMore]);
 
   useEffect(() => {
-    if (locating) return;
     const timer = setTimeout(loadDoctors, 250);
     return () => clearTimeout(timer);
-  }, [loadDoctors, locating]);
+  }, [loadDoctors]);
 
   const handleResetFilters = () => {
     setSearchQuery("");
@@ -175,13 +174,8 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xs sm:text-sm text-teal-100 max-w-lg leading-relaxed">
-              {locating ? (
-                "Finding doctors near you…"
-              ) : (
-                <>
-                  Doctors and chamber timings around <span className="font-semibold text-white">{placeName}{location?.district ? ` (${location.district})` : ""}</span>
-                </>
-              )}
+              Doctors and chamber timings around{" "}
+              <span className="font-semibold text-white">{placeName}{location.district ? ` (${location.district})` : ""}</span>
             </p>
 
             <div className="w-full max-w-2xl mt-2 flex flex-col gap-2">
@@ -207,7 +201,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between text-xs text-teal-200/90 px-1 pt-1">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-teal-300" />
-                  <span>{locating ? "Detecting your location…" : `Searching around ${placeName}`}</span>
+                  <span>{locating ? `Finding your exact location… showing ${placeName}` : `Searching around ${placeName}`}</span>
                 </span>
                 <button
                   onClick={() => setIsLocationModalOpen(true)}
@@ -277,12 +271,18 @@ export default function HomePage() {
             </span>
           </div>
 
-          {!locating && locationFailed && (
-            <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {(locationFailed || approximate) && (
+            <div
+              className={`p-4 rounded-xl border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                approximate ? "bg-teal-50 border-teal-200 text-teal-900" : "bg-amber-50 border-amber-200 text-amber-900"
+              }`}
+            >
               <div className="flex items-center gap-2">
-                <MapPinOff className="w-4 h-4 shrink-0 text-amber-600" />
+                <MapPinOff className={`w-4 h-4 shrink-0 ${approximate ? "text-teal-600" : "text-amber-600"}`} />
                 <span>
-                  {locationDenied ? "Location access is blocked" : "Couldn't get your location"} · showing doctors for {placeName}.
+                  {approximate
+                    ? `Showing doctors near ${placeName} based on your internet connection. Turn on location for exact results.`
+                    : `${locationDenied ? "Location access is blocked" : "Couldn't get your location"} · showing doctors for ${placeName}.`}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -317,7 +317,7 @@ export default function HomePage() {
             </div>
           )}
 
-          {loading || locating ? (
+          {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
@@ -371,7 +371,7 @@ export default function HomePage() {
             renderGrid(doctors)
           )}
 
-          {!loading && !locating && hasMore && (
+          {!loading && hasMore && (
             <div ref={sentinelRef} className="flex justify-center py-4">
               <button
                 onClick={loadMore}

@@ -111,5 +111,5 @@ export interface SearchLocation {
   latitude: number;
   longitude: number;
   townId?: string;
-  source: "gps" | "town";
+  source: "gps" | "town" | "approx";
 }

@@ -66,15 +66,33 @@ export type DetectResult =
   | { ok: true; latitude: number; longitude: number }
   | { ok: false; reason: "unsupported" | "denied" | "unavailable" };
 
-export const detectPosition = (timeoutMs = 10000): Promise<DetectResult> =>
-  new Promise((resolve) => {
-    if (typeof navigator === "undefined" || !navigator.geolocation) {
-      resolve({ ok: false, reason: "unsupported" });
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => resolve({ ok: true, latitude: position.coords.latitude, longitude: position.coords.longitude }),
-      (error) => resolve({ ok: false, reason: error.code === error.PERMISSION_DENIED ? "denied" : "unavailable" }),
-      { timeout: timeoutMs, maximumAge: 10 * 60 * 1000, enableHighAccuracy: false }
-    );
-  });
+const NETWORK_FIX_TIMEOUT_MS = 8000;
+
+const getPosition = (options: PositionOptions) =>
+  new Promise<GeolocationPosition>((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options));
+
+const toResult = (position: GeolocationPosition): DetectResult => ({
+  ok: true,
+  latitude: position.coords.latitude,
+  longitude: position.coords.longitude,
+});
+
+const toFailure = (error: GeolocationPositionError): DetectResult => ({
+  ok: false,
+  reason: error.code === error.PERMISSION_DENIED ? "denied" : "unavailable",
+});
+
+export const detectPosition = async (timeoutMs = 20000): Promise<DetectResult> => {
+  if (typeof navigator === "undefined" || !navigator.geolocation) return { ok: false, reason: "unsupported" };
+  try {
+    return toResult(await getPosition({ enableHighAccuracy: false, timeout: NETWORK_FIX_TIMEOUT_MS, maximumAge: 10 * 60 * 1000 }));
+  } catch (error) {
+    const networkError = error as GeolocationPositionError;
+    if (networkError.code === networkError.PERMISSION_DENIED) return toFailure(networkError);
+  }
+  try {
+    return toResult(await getPosition({ enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 0 }));
+  } catch (error) {
+    return toFailure(error as GeolocationPositionError);
+  }
+};

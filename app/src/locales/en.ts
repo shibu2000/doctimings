@@ -236,6 +236,8 @@ export const en = {
     yourSearchLocation: 'Your search location',
     confirmSubtitle: 'Doctor and chamber timings will be shown for this place.',
     useThisLocation: 'Use this location',
+    findingExact: 'Finding your exact location…',
+    approximate: 'Showing doctors near {{town}} based on your internet connection. Turn on location for exact results.',
   },
   notifications: {
     title: 'Notifications',

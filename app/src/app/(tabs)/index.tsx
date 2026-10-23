@@ -32,7 +32,7 @@ import { GlowingIcon } from '../../components/common/GlowingIcon';
 export default function HomeScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { currentLocation, language, theme, isDark, locationStatus } = useApp();
+  const { currentLocation, language, theme, isDark } = useApp();
   const nearby = useDoctorSearch('');
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'today' | 'evening' | 'nearest'>('all');
@@ -82,7 +82,7 @@ export default function HomeScreen() {
   });
 
   const locationName = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
-  const loadingNearby = locationStatus === 'detecting' || (!nearby.data && nearby.isFetching);
+  const loadingNearby = !nearby.data && nearby.isFetching;
   const showNearby = !loadingNearby && !(nearby.isError && !nearby.data);
 
   return (
@@ -329,7 +329,7 @@ export default function HomeScreen() {
                 <View style={styles.listState}>
                   <ActivityIndicator color={theme.primary} />
                   <Text style={[styles.listStateText, { color: theme.textSecondary }]}>
-                    {locationStatus === 'detecting' ? t('location.detecting') : t('common.loading')}
+                    {t('common.loading')}
                   </Text>
                 </View>
               ) : !showNearby ? (

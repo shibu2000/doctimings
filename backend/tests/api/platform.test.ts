@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { app } from '../../src/index.js';
 import { adminAuth, call, patientAuth, staffAuth } from '../helpers.js';
 
 describe('search', () => {
@@ -44,6 +45,30 @@ describe('search', () => {
   it('matches specialty chips by prefix', async () => {
     const res = await call('GET', '/search?specialty=Gynecology');
     expect(res.body.data.length).toBe(4);
+  });
+});
+
+describe('approximate location', () => {
+  const approx = async (cf?: Record<string, string>) => {
+    const request = new Request('http://localhost/api/v1/locations/approx');
+    if (cf) Object.defineProperty(request, 'cf', { value: cf });
+    const res = await app.fetch(request);
+    return { status: res.status, body: await res.json() };
+  };
+
+  it('snaps a nearby network location to the closest served town', async () => {
+    const res = await approx({ latitude: '22.4210', longitude: '87.3305', city: 'Midnapore' });
+    expect(res.status).toBe(200);
+    expect(res.body.data.town.id).toBe('medinipur-sadar');
+    expect(res.body.data.distanceKm).toBeLessThan(40);
+  });
+
+  it('ignores network locations far from every served town', async () => {
+    expect((await approx({ latitude: '22.5726', longitude: '88.3639', city: 'Kolkata' })).body.data).toBeNull();
+  });
+
+  it('returns nothing when the platform gives no location', async () => {
+    expect((await approx()).body.data).toBeNull();
   });
 });
 

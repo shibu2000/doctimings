@@ -1,31 +1,47 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Linking, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { MapPinOff } from 'lucide-react-native';
+import { MapPinOff, Wifi } from 'lucide-react-native';
 import { useApp } from '../../store/AppContext';
 
 export const LocationNotice: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const { locationStatus, detectLocation, currentLocation, language, theme } = useApp();
+  const [retrying, setRetrying] = useState(false);
 
-  if (locationStatus !== 'denied' && locationStatus !== 'off') return null;
+  if (locationStatus === 'ready') return null;
+
+  if (locationStatus === 'detecting' || retrying) {
+    return (
+      <View style={styles.detecting}>
+        <ActivityIndicator size="small" color={theme.primary} />
+        <Text style={[styles.detectingText, { color: theme.textSecondary }]}>{t('location.findingExact')}</Text>
+      </View>
+    );
+  }
 
   const town = language === 'bn' ? currentLocation.nameBn : currentLocation.name;
+  const approximate = locationStatus === 'approximate';
+  const background = approximate ? theme.primaryMuted : theme.warningLight;
+  const foreground = approximate ? theme.primaryDark : theme.warningText;
+  const message = approximate
+    ? t('location.approximate', { town })
+    : t(locationStatus === 'denied' ? 'location.failedDenied' : 'location.failedOff', { town });
 
   const handleRetry = async () => {
+    setRetrying(true);
     const result = await detectLocation();
+    setRetrying(false);
     if (result === 'denied') Linking.openSettings();
   };
 
   return (
-    <View style={[styles.box, { backgroundColor: theme.warningLight }]}>
+    <View style={[styles.box, { backgroundColor: background }]}>
       <View style={styles.row}>
-        <MapPinOff size={16} color={theme.warningText} />
-        <Text style={[styles.text, { color: theme.warningText }]}>
-          {t(locationStatus === 'denied' ? 'location.failedDenied' : 'location.failedOff', { town })}
-        </Text>
+        {approximate ? <Wifi size={16} color={foreground} /> : <MapPinOff size={16} color={foreground} />}
+        <Text style={[styles.text, { color: foreground }]}>{message}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity
@@ -50,6 +66,16 @@ export const LocationNotice: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  detecting: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  detectingText: {
+    fontSize: 13,
+  },
   box: {
     borderRadius: 10,
     padding: 12,
