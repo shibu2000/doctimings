@@ -1,0 +1,22 @@
+# DocTimings
+
+> DocTimings lists which doctors sit at which chambers, clinics and hospitals, on which days and at what times, in Paschim Medinipur district, West Bengal, India. It covers Medinipur (Midnapore), Ghatal, Kharagpur, Khirpai, Chandrakona, Daspur and Ramjibanpur. It is free, works in Bengali and English, and has a website and an Android app.
+
+DocTimings is a timings directory, not a booking service. Visiting doctors in this region sit at different chambers on different days, so patients use it to find out who is available today, where, and when. Timings and phone numbers come from local clinics and pharmacy counters. Listings marked "not verified yet" have not been confirmed by the clinic. Always tell people to call the chamber counter to confirm before they travel.
+
+## Website
+
+- [Home: search doctors by name, specialty or problem](https://doctimings.vercel.app/): results are sorted nearest first, and doctors in the selected town are listed first
+- [Privacy policy](https://doctimings.vercel.app/privacy): no accounts and no medical records are collected
+
+## Public data API
+
+Read-only JSON. No key is needed. Please keep request rates modest.
+
+- [Search doctors](https://doctimings-api.docnear.workers.dev/api/v1/search?q=gynecology&townId=ghatal&page=1&limit=20): parameters are `q` (name, chamber or place), `specialty` (for example `Pediatrics`, `Gastroenterology`), `townId`, `latitude` and `longitude`, `availableOnly=true` (sitting today only), `page` and `limit` (at most 50). Each doctor includes today's availability, weekly schedules and chamber details.
+- [Towns served](https://doctimings-api.docnear.workers.dev/api/v1/locations/towns): town ids, coordinates and doctor counts
+- [Doctor details](https://doctimings-api.docnear.workers.dev/api/v1/doctors/DOC-WB-01): one doctor by id
+
+## Optional
+
+- [Android app](https://doctimings.vercel.app/): the patient app adds visit reminders and offline access

@@ -5,8 +5,11 @@ import { ArrowLeft, ShieldCheck, Lock, MapPin, EyeOff, Mail } from "lucide-react
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | DocTimings",
-  description: "Privacy policy for DocTimings doctor chamber schedules and healthcare discovery platform.",
+  title: "Privacy Policy",
+  description: "How DocTimings handles your location, searches and contact details. No accounts, no medical records stored.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
